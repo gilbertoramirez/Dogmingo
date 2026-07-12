@@ -486,4 +486,3 @@ window.addEventListener('hashchange', function() {
   else if (document.getElementById('standPortal').classList.contains('active')) closeStand();
 });
 if (location.hash === '#stand') openStand();
-</script>
