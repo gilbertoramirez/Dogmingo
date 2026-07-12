@@ -1,19 +1,18 @@
 function renderQRToCanvas(text, size) {
-  var typeNum = _getTypeNumber(text, QRErrorCorrectLevel.M);
-  var model = new QRCodeModel(typeNum, QRErrorCorrectLevel.M);
-  model.addData(text);
-  model.make();
+  var qr = qrcode(0, 'M');
+  qr.addData(text);
+  qr.make();
   var canvas = document.createElement('canvas');
   canvas.width = size; canvas.height = size;
   var ctx = canvas.getContext('2d');
-  var count = model.getModuleCount();
+  var count = qr.getModuleCount();
   var cellSize = size / count;
   ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(0, 0, size, size);
   ctx.fillStyle = '#191714';
   for (var row = 0; row < count; row++) {
     for (var col = 0; col < count; col++) {
-      if (model.isDark(row, col)) {
+      if (qr.isDark(row, col)) {
         ctx.fillRect(Math.floor(col * cellSize), Math.floor(row * cellSize), Math.ceil(cellSize), Math.ceil(cellSize));
       }
     }
@@ -131,15 +130,15 @@ function createDogImg(breed) {
   return img;
 }
 
-var heroBreeds = ['retriever/golden', 'husky', 'pug', 'dalmatian'];
+var heroBreeds = ['retriever/golden', 'husky', 'pug', 'dalmatian', 'samoyed'];
 var heroDogs = document.getElementById('heroDogs');
 heroBreeds.forEach(function(b) { heroDogs.appendChild(createDogImg(b)); });
 
-var midBreeds = ['corgi/cardigan', 'beagle', 'labrador', 'schnauzer/miniature'];
+var midBreeds = ['corgi/cardigan', 'beagle', 'labrador', 'schnauzer/miniature', 'germanshepherd', 'shibainu'];
 var midDogs = document.getElementById('midDogs');
 midBreeds.forEach(function(b) { midDogs.appendChild(createDogImg(b)); });
 
-var regBreeds = ['chihuahua', 'shiba'];
+var regBreeds = ['chihuahua', 'shiba', 'poodle/standard', 'papillon'];
 var regDogs = document.getElementById('registroDogs');
 regBreeds.forEach(function(b) { regDogs.appendChild(createDogImg(b)); });
 
@@ -308,7 +307,20 @@ var traePerro = document.getElementById('traePerro');
 var dogNameField = document.getElementById('dogNameField');
 
 function getRegs() { try { return JSON.parse(localStorage.getItem('dogmingo_registros') || '[]'); } catch(e) { return []; } }
-function updateCounter() { regCount.textContent = getRegs().length; }
+function updateCounter() {
+  regCount.textContent = getRegs().length;
+  fetch('/api/registros').then(function(r) { return r.json(); }).then(function(d) {
+    if (d.count > 0) regCount.textContent = d.count;
+  }).catch(function() {});
+}
+
+function syncRegistration(data) {
+  fetch('/api/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).catch(function() {});
+}
 
 (function restoreSession() {
   updateCounter();
@@ -374,6 +386,11 @@ form.addEventListener('submit', function(e) {
     localStorage.setItem('dogmingo_registros', JSON.stringify(regs));
     localStorage.setItem('dogmingo_user', JSON.stringify(data));
     localStorage.setItem('dogmingo_stamps', '[]');
+    syncRegistration({
+      folio: data.id, nombre: data.nombre, apellido: data.apellido,
+      email: data.email, telefono: data.telefono, adultos: data.adultos,
+      ninos: data.ninos, traePerro: data.traePerro, nombrePerro: data.nombrePerro
+    });
     document.getElementById('folioDisplay').textContent = data.id;
     var qrCanvas = renderQRToCanvas(data.id, 256);
     var qrArea = document.getElementById('qrArea');
