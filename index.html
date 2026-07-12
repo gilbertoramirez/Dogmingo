@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dogmingo — El Domingo más Perrón del Año</title>
+<style>
+  :root {
+    --salsa: #D93B1E;
+    --campo: #2D6A3F;
+    --sol: #F0C54D;
+    --lino: #FAF8F3;
+    --noche: #191714;
+    --text-primary: #191714;
+    --text-secondary: #5C584F;
+    --bg: #FAF8F3;
+    --bg-alt: #EDE9DF;
+    --card-bg: #FFFFFF;
+    --card-border: #E0DCD3;
+    --hero-bg: #191714;
+    --hero-text: #FAF8F3;
+    --nav-bg: rgba(250, 248, 243, 0.92);
+    --nav-border: rgba(25, 23, 20, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text-primary: #EDEAE4;
+      --text-secondary: #9E9A90;
+      --bg: #131210;
+      --bg-alt: #1E1C18;
+      --card-bg: #1E1C18;
+      --card-border: #2E2B25;
+      --hero-bg: #0A0908;
+      --hero-text: #FAF8F3;
+      --nav-bg: rgba(19, 18, 16, 0.92);
+      --nav-border: rgba(250, 248, 243, 0.06);
+    }
+  }
+  :root[data-theme="dark"] {
+    --text-primary: #EDEAE4;
+    --text-secondary: #9E9A90;
+    --bg: #131210;
+    --bg-alt: #1E1C18;
+    --card-bg: #1E1C18;
+    --card-border: #2E2B25;
+    --hero-bg: #0A0908;
+    --hero-text: #FAF8F3;
+    --nav-bg: rgba(19, 18, 16, 0.92);
+    --nav-border: rgba(250, 248, 243, 0.06);
+  }
+  :root[data-theme="light"] {
+    --text-primary: #191714;
+    --text-secondary: #5C584F;
+    --bg: #FAF8F3;
+    --bg-alt: #EDE9DF;
+    --card-bg: #FFFFFF;
+    --card-border: #E0DCD3;
+    --hero-bg: #191714;
+    --hero-text: #FAF8F3;
+    --nav-bg: rgba(250, 248, 243, 0.92);
+    --nav-border: rgba(25, 23, 20, 0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text-primary);
+    background: var(--bg);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .display {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+  }
+
+  .label {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.75rem;
+  }
+
+  /* ── NAV ── */
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--nav-border);
+    transform: translateY(-100%);
+    transition: transform 0.35s ease;
+    padding: 0 1.5rem;
+  }
+  .nav.visible { transform: translateY(0); }
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+  .nav-logo {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 900;
+    font-size: 1.25rem;
+    color: var(--salsa);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 1.75rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--salsa); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--hero-bg);
+    color: var(--hero-text);
+    overflow: hidden;
+    padding: 2rem 1.5rem;
+  }
+  .hero canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.15;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 900px;
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    background: var(--salsa);
+    color: #fff;
+    padding: 0.35rem 1rem;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+    font-size: 0.7rem;
+  }
+  .hero-title {
+    font-size: clamp(4rem, 15vw, 12rem);
+    color: var(--hero-text);
+    margin-bottom: 0.15em;
+  }
+  .hero-subtitle {
+    font-size: clamp(1.1rem, 3vw, 1.75rem);
+    font-weight: 400;
+    font-style: italic;
+    opacity: 0.7;
+    margin-bottom: 2.5rem;
+  }
+  .hero-date {
+    font-family: system-ui, sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    color: var(--sol);
+    margin-bottom: 0.5rem;
+  }
+  .hero-time {
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    opacity: 0.6;
+    margin-bottom: 3rem;
+  }
+  .hero-cta {
+    display: inline-block;
+    font-family: system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--salsa);
+    color: #fff;
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .hero-cta:hover { background: #C1321A; transform: translateY(-1px); }
+  .hero-cta:active { transform: translateY(0); }
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    width: 24px;
+    height: 40px;
+    border: 2px solid rgba(250,248,243,0.3);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    padding-top: 6px;
+  }
+  .hero-scroll-dot {
+    width: 4px;
+    height: 8px;
+    background: rgba(250,248,243,0.5);
+    border-radius: 2px;
+    animation: scrollBounce 2s ease-in-out infinite;
+  }
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50% { transform: translateY(12px); opacity: 1; }
+  }
+
+  /* ── SECTION COMMON ── */
+  .section {
+    padding: 6rem 1.5rem;
+  }
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-eyebrow {
+    color: var(--salsa);
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    text-wrap: balance;
+  }
+  .section-intro {
+    max-width: 600px;
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    margin-bottom: 3rem;
+  }
+
+  /* ── CAUSA ── */
+  .causa {
+    background: var(--bg-alt);
+  }
+  .causa-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .causa-badge {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: var(--campo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .causa-badge svg { width: 80px; height: 80px; }
+  .causa-text h3 {
+    font-family: system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+  .causa-text p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  .causa-highlight {
+    display: inline-block;
+    background: var(--sol);
+    color: var(--noche);
+    font-family: system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── ACTIVITIES ── */
+  .activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+  .activity-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 2rem;
+    border-radius: 4px;
+    transition: border-color 0.2s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .activity-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--campo);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.3s ease;
+  }
+  .activity-card:hover::before { transform: scaleY(1); }
+  .activity-card:hover { border-color: var(--campo); transform: translateY(-2px); }
+  .activity-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1.25rem;
+    color: var(--campo);
+  }
+  .activity-name {
+    font-family: system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+  .activity-desc {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  /* ── INFO ── */
+  .info { background: var(--bg-alt); }
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+  }
+  .info-block {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+  }
+  .info-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 1rem;
+    color: var(--salsa);
+  }
+  .info-label {
+    color: var(--salsa);
+    margin-bottom: 0.5rem;
+  }
+  .info-value {
+    font-family: system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 1.35rem;
+    color: var(--text-primary);
+    margin-bottom: 0.35rem;
+  }
+  .info-detail {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  /* ── TICKETS ── */
+  .tickets {
+    background: var(--hero-bg);
+    color: var(--hero-text);
+    text-align: center;
+  }
+  .tickets .section-eyebrow { color: var(--sol); }
+  .tickets .section-title { color: var(--hero-text); }
+  .tickets .section-intro {
+    margin-left: auto;
+    margin-right: auto;
+    color: rgba(250,248,243,0.6);
+  }
+  .ticket-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    max-width: 700px;
+    margin: 0 auto 3rem;
+  }
+  .ticket-card {
+    border: 1px solid rgba(250,248,243,0.12);
+    border-radius: 4px;
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .ticket-card:hover { border-color: rgba(250,248,243,0.25); }
+  .ticket-card.featured {
+    border-color: var(--salsa);
+    background: rgba(217, 59, 30, 0.06);
+  }
+  .ticket-card.featured:hover { border-color: var(--salsa); }
+  .ticket-type {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--sol);
+    margin-bottom: 1rem;
+  }
+  .ticket-price {
+    font-family: system-ui, sans-serif;
+    font-weight: 900;
+    font-size: 3rem;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .ticket-price span {
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.5;
+    vertical-align: super;
+  }
+  .ticket-note {
+    font-size: 0.9rem;
+    opacity: 0.5;
+  }
+  .donate-note {
+    font-size: 0.95rem;
+    opacity: 0.6;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  .donate-note strong {
+    color: var(--sol);
+    font-weight: 700;
+  }
+
+  /* ── LOCATION ── */
+  .location-flex {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  .location-details { }
+  .location-name {
+    font-family: system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+  }
+  .location-address {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+  }
+  .location-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .contact-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-secondary);
+    font-family: system-ui, sans-serif;
+    font-size: 0.9rem;
+  }
+  .contact-row svg {
+    width: 20px;
+    height: 20px;
+    color: var(--campo);
+    flex-shrink: 0;
+  }
+  .location-map {
+    background: var(--bg-alt);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .map-placeholder {
+    text-align: center;
+    color: var(--text-secondary);
+    font-family: system-ui, sans-serif;
+    font-size: 0.85rem;
+  }
+  .map-placeholder svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0.75rem;
+    opacity: 0.4;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    background: var(--bg-alt);
+    border-top: 1px solid var(--card-border);
+  }
+  .footer-logo {
+    font-family: system-ui, sans-serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: var(--salsa);
+    margin-bottom: 0.5rem;
+  }
+  .footer-tagline {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    list-style: none;
+    margin-bottom: 1.5rem;
+  }
+  .footer-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-family: system-ui, sans-serif;
+    font-size: 0.8rem;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--salsa); }
+  .footer-copy {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    opacity: 0.6;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .causa-grid,
+    .info-grid,
+    .ticket-cards,
+    .location-flex {
+      grid-template-columns: 1fr;
+    }
+    .nav-links { display: none; }
+    .section { padding: 4rem 1.25rem; }
+    .activities-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── REDUCED MOTION ── */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .hero-scroll-dot { animation: none; }
+    .activity-card, .activity-card::before { transition: none; }
+  }
+
+  /* ── FOCUS ── */
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--salsa);
+    outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">DOGMINGO</a>
+    <ul class="nav-links">
+      <li><a href="#causa">La Causa</a></li>
+      <li><a href="#actividades">Actividades</a></li>
+      <li><a href="#info">Info</a></li>
+      <li><a href="#boletos">Boletos</a></li>
+      <li><a href="#ubicacion">Ubicación</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <span class="label hero-eyebrow">Evento con Causa</span>
+    <h1 class="display hero-title">DOGMINGO</h1>
+    <p class="hero-subtitle">El Domingo más Perrón del Año</p>
+    <p class="hero-date">Domingo 26 de Julio</p>
+    <p class="hero-time">10:00 — 15:00 hrs</p>
+    <a href="#boletos" class="hero-cta">Quiero ir</a>
+  </div>
+  <div class="hero-scroll" aria-hidden="true">
+    <div class="hero-scroll-dot"></div>
+  </div>
+</section>
+
+<!-- CAUSA -->
+<section class="section causa" id="causa">
+  <div class="section-inner">
+    <span class="label section-eyebrow">La Causa</span>
+    <h2 class="display section-title">Todo lo recaudado se donará</h2>
+    <div class="causa-grid">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div class="causa-badge">
+          <svg viewBox="0 0 80 80" fill="none" stroke="#FAF8F3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M40 68C40 68 12 52 12 32C12 22 20 14 30 14C34.5 14 38.5 16.5 40 20C41.5 16.5 45.5 14 50 14C60 14 68 22 68 32C68 52 40 68 40 68Z"/>
+          </svg>
+        </div>
+        <span class="causa-highlight">Esperanza Animal</span>
+      </div>
+      <div class="causa-text">
+        <h3>Un evento perrón con propósito</h3>
+        <p>Dogmingo es una celebración para la comunidad amante de los perros. Cada peso recaudado va directo a <strong>Esperanza Animal</strong>, apoyando el rescate, rehabilitación y adopción de perritos en situación de calle.</p>
+        <p>Ven con tu mejor amigo de cuatro patas, disfruta de un domingo increíble y contribuye a una causa que cambia vidas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVIDADES -->
+<section class="section" id="actividades">
+  <div class="section-inner">
+    <span class="label section-eyebrow">Programa</span>
+    <h2 class="display section-title">Actividades del día</h2>
+    <p class="section-intro">Un domingo lleno de diversión, arte y amor por los perritos. Aquí todo lo que te espera.</p>
+    <div class="activities-grid">
+
+      <div class="activity-card">
+        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="24" cy="12" r="6"/>
+          <path d="M12 44V38C12 34 16 30 24 30C32 30 36 34 36 38V44"/>
+          <path d="M24 18V30"/>
+          <path d="M18 22L24 18L30 22"/>
+        </svg>
+        <h3 class="activity-name">Bendición Canina</h3>
+        <p class="activity-desc">Una ceremonia especial para bendecir a tu compañero peludo y celebrar el vínculo que los une.</p>
+      </div>
+
+      <div class="activity-card">
+        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="6" y="10" width="36" height="30" rx="2"/>
+          <circle cx="20" cy="26" r="5"/>
+          <circle cx="32" cy="22" r="3"/>
+          <path d="M6 34L16 26L24 32L34 22L42 28"/>
+        </svg>
+        <h3 class="activity-name">Huellas del Alma</h3>
+        <p class="activity-desc">Dinámica de pintura donde las patitas de tu perro se convierten en arte. Llévate un recuerdo único.</p>
+      </div>
+
+      <div class="activity-card">
+        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 38L24 10L38 38"/>
+          <path d="M16 28H32"/>
+          <circle cx="24" cy="34" r="2"/>
+        </svg>
+        <h3 class="activity-name">Exhibición de Adiestramiento</h3>
+        <p class="activity-desc">Observa demostraciones de entrenamiento profesional y aprende técnicas para tu mascota.</p>
+      </div>
+
+      <div class="activity-card">
+        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 36L16 20L24 28L32 16L40 36"/>
+          <line x1="8" y1="36" x2="40" y2="36"/>
+          <circle cx="16" cy="20" r="2"/>
+          <circle cx="32" cy="16" r="2"/>
+        </svg>
+        <h3 class="activity-name">Circuito de Agilidad</h3>
+        <p class="activity-desc">Pon a prueba las habilidades de tu perro en un recorrido de obstáculos lleno de diversión.</p>
+      </div>
+
+      <div class="activity-card">
+        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 14H42V38H6Z"/>
+          <path d="M6 14L24 6L42 14"/>
+          <line x1="16" y1="22" x2="16" y2="32"/>
+          <line x1="24" y1="22" x2="24" y2="32"/>
+          <line x1="32" y1="22" x2="32" y2="32"/>
+        </svg>
+        <h3 class="activity-name">Mercadito Pet-Friendly</h3>
+        <p class="activity-desc">Encuentra productos, accesorios, premios y todo lo que tu mascota necesita de emprendedores locales.</p>
+      </div>
+
+      <div class="activity-card">
+        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M24 42C24 42 8 32 8 20C8 14 12 8 18 8C21 8 23.5 9.5 24 12C24.5 9.5 27 8 30 8C36 8 40 14 40 20C40 32 24 42 24 42Z"/>
+          <path d="M18 24L22 28L30 20"/>
+        </svg>
+        <h3 class="activity-name">Pasarela de Adopción</h3>
+        <p class="activity-desc">Conoce perritos que buscan un hogar. Tal vez tu nuevo mejor amigo te esté esperando aquí.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- INFO -->
+<section class="section info" id="info">
+  <div class="section-inner">
+    <span class="label section-eyebrow">Detalles</span>
+    <h2 class="display section-title">Lo que necesitas saber</h2>
+    <div class="info-grid">
+      <div class="info-block">
+        <svg class="info-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <rect x="4" y="8" width="32" height="28" rx="3"/>
+          <line x1="4" y1="16" x2="36" y2="16"/>
+          <line x1="14" y1="4" x2="14" y2="12"/>
+          <line x1="26" y1="4" x2="26" y2="12"/>
+        </svg>
+        <p class="label info-label">Fecha</p>
+        <p class="info-value">26 de Julio</p>
+        <p class="info-detail">Domingo, 10:00 a 15:00 hrs</p>
+      </div>
+      <div class="info-block">
+        <svg class="info-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="20" cy="16" r="6"/>
+          <path d="M20 36L8 22C4 17 4 10 10 6C16 2 20 6 20 6C20 6 24 2 30 6C36 10 36 17 32 22L20 36Z"/>
+        </svg>
+        <p class="label info-label">Lugar</p>
+        <p class="info-value">Zitara Club & Golf</p>
+        <p class="info-detail">Salida a Calvillo, Aguascalientes</p>
+      </div>
+      <div class="info-block">
+        <svg class="info-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M20 4C14 4 6 8 6 20C6 26 10 32 20 38C30 32 34 26 34 20C34 8 26 4 20 4Z"/>
+          <path d="M14 18L18 22L26 14"/>
+        </svg>
+        <p class="label info-label">Acceso</p>
+        <p class="info-value">$100 MXN</p>
+        <p class="info-detail">Menores de 10 años: gratis</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOLETOS -->
+<section class="section tickets" id="boletos">
+  <div class="section-inner">
+    <span class="label section-eyebrow">Acceso</span>
+    <h2 class="display section-title">Donativo de entrada</h2>
+    <p class="section-intro">Tu donativo es tu boleto. Todo lo recaudado se dona íntegro a Esperanza Animal.</p>
+    <div class="ticket-cards">
+      <div class="ticket-card featured">
+        <p class="ticket-type">General</p>
+        <p class="ticket-price"><span>$</span>100</p>
+        <p class="ticket-note">Donativo por persona</p>
+      </div>
+      <div class="ticket-card">
+        <p class="ticket-type">Niños &lt; 10 años</p>
+        <p class="ticket-price">Gratis</p>
+        <p class="ticket-note">Entrada gratuita</p>
+      </div>
+    </div>
+    <p class="donate-note">También puedes traer tus <strong>donativos en croquetas</strong> para los perritos rescatados. ¡Cada granito ayuda!</p>
+  </div>
+</section>
+
+<!-- UBICACIÓN -->
+<section class="section" id="ubicacion">
+  <div class="section-inner">
+    <span class="label section-eyebrow">Cómo llegar</span>
+    <h2 class="display section-title">Ubicación</h2>
+    <div class="location-flex">
+      <div class="location-details">
+        <h3 class="location-name">Zitara Club & Golf</h3>
+        <p class="location-address">
+          Salida a Calvillo<br>
+          A 500 metros del Segundo Anillo<br>
+          Aguascalientes, México
+        </p>
+        <div class="location-contact">
+          <div class="contact-row">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M4 3H8L10 8L7.5 9.5C8.5 11.5 10 13 12 14L13.5 11.5L18 13.5V17C18 17.6 17.6 18 17 18C9 18 2 11 2 3C2 2.4 2.4 2 3 2"/>
+            </svg>
+            <span>449 831 0700</span>
+          </div>
+          <div class="contact-row">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <circle cx="10" cy="10" r="8"/>
+              <path d="M10 6V10L13 12"/>
+            </svg>
+            <span>Domingo 26 de Julio, 10:00 — 15:00 hrs</span>
+          </div>
+          <div class="contact-row">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <rect x="2" y="2" width="16" height="16" rx="4"/>
+              <circle cx="10" cy="10" r="4"/>
+              <circle cx="14.5" cy="5.5" r="1"/>
+            </svg>
+            <span>@zitaragolfclub</span>
+          </div>
+        </div>
+      </div>
+      <div class="location-map">
+        <div class="map-placeholder">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="24" cy="18" r="6"/>
+            <path d="M24 42L12 26C8 20 8 12 14 8C18 5 22 6 24 8C26 6 30 5 34 8C40 12 40 20 36 26L24 42Z"/>
+          </svg>
+          <p>Zitara Club & Golf<br>Salida a Calvillo, Ags.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p class="footer-logo">DOGMINGO</p>
+  <p class="footer-tagline">El Domingo más Perrón del Año · 26 de Julio 2025</p>
+  <ul class="footer-links">
+    <li><a href="#causa">La Causa</a></li>
+    <li><a href="#actividades">Actividades</a></li>
+    <li><a href="#boletos">Boletos</a></li>
+    <li><a href="#ubicacion">Ubicación</a></li>
+  </ul>
+  <p class="footer-copy">Evento organizado por Zitara Club & Golf en beneficio de Esperanza Animal</p>
+</footer>
+
+<script>
+// ── Nav show on scroll ──
+const nav = document.getElementById('nav');
+const hero = document.getElementById('hero');
+let lastScroll = 0;
+const observer = new IntersectionObserver(([entry]) => {
+  nav.classList.toggle('visible', !entry.isIntersecting);
+}, { threshold: 0.1 });
+observer.observe(hero);
+
+// ── Hero canvas: animated paw prints ──
+const canvas = document.getElementById('heroCanvas');
+const ctx = canvas.getContext('2d');
+let paws = [];
+let animId;
+
+function resize() {
+  canvas.width = canvas.offsetWidth * devicePixelRatio;
+  canvas.height = canvas.offsetHeight * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+}
+resize();
+window.addEventListener('resize', resize);
+
+function drawPaw(x, y, size, rotation, alpha) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rotation);
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = '#D93B1E';
+
+  // Main pad
+  ctx.beginPath();
+  ctx.ellipse(0, size * 0.3, size * 0.45, size * 0.35, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Toes
+  const toePositions = [
+    [-size * 0.35, -size * 0.15, size * 0.18],
+    [-size * 0.12, -size * 0.35, size * 0.16],
+    [size * 0.12, -size * 0.35, size * 0.16],
+    [size * 0.35, -size * 0.15, size * 0.18],
+  ];
+  toePositions.forEach(([tx, ty, tr]) => {
+    ctx.beginPath();
+    ctx.ellipse(tx, ty, tr, tr * 1.15, 0, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  ctx.restore();
+}
+
+function initPaws() {
+  const w = canvas.offsetWidth;
+  const h = canvas.offsetHeight;
+  paws = [];
+  const count = Math.floor((w * h) / 18000);
+  for (let i = 0; i < count; i++) {
+    paws.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      size: 12 + Math.random() * 18,
+      rotation: Math.random() * Math.PI * 2,
+      alpha: 0.15 + Math.random() * 0.4,
+      drift: 0.15 + Math.random() * 0.3,
+      phase: Math.random() * Math.PI * 2,
+    });
+  }
+}
+initPaws();
+
+let time = 0;
+function animate() {
+  const w = canvas.offsetWidth;
+  const h = canvas.offsetHeight;
+  ctx.clearRect(0, 0, w, h);
+  time += 0.003;
+  paws.forEach(p => {
+    const ox = Math.sin(time + p.phase) * p.drift * 8;
+    const oy = Math.cos(time * 0.7 + p.phase) * p.drift * 5;
+    drawPaw(p.x + ox, p.y + oy, p.size, p.rotation, p.alpha * (0.5 + 0.5 * Math.sin(time * 0.5 + p.phase)));
+  });
+  animId = requestAnimationFrame(animate);
+}
+
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+if (!prefersReduced.matches) {
+  animate();
+} else {
+  paws.forEach(p => drawPaw(p.x, p.y, p.size, p.rotation, p.alpha * 0.5));
+}
+</script>
+
+</body>
+</html>
