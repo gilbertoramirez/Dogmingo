@@ -469,6 +469,229 @@
     font-weight: 700;
   }
 
+  /* ── REGISTRO ── */
+  .registro { background: var(--bg-alt); }
+  .registro-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  .registro-info h3 {
+    font-family: system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 1.35rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+  .registro-info p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.6;
+  }
+  .registro-perks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .registro-perks li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: system-ui, sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+  .registro-perks li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--campo);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .form-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 2.5rem 2rem;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1.25rem;
+  }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-label {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+  }
+  .form-input,
+  .form-select {
+    font-family: system-ui, sans-serif;
+    font-size: 0.95rem;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--card-border);
+    border-radius: 3px;
+    background: var(--bg);
+    color: var(--text-primary);
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .form-input:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: var(--campo);
+    box-shadow: 0 0 0 3px rgba(45, 106, 63, 0.12);
+  }
+  .form-input::placeholder { color: var(--text-secondary); opacity: 0.5; }
+  .form-select { cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235C584F' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    padding-right: 2.5rem;
+  }
+  .form-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+  .form-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--campo);
+    cursor: pointer;
+  }
+  .form-checkbox-label {
+    font-family: system-ui, sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  .dog-name-field {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.3s ease;
+    margin-bottom: 0;
+  }
+  .dog-name-field.visible {
+    max-height: 100px;
+    opacity: 1;
+    margin-bottom: 1.25rem;
+  }
+  .form-submit {
+    display: block;
+    width: 100%;
+    font-family: system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--salsa);
+    color: #fff;
+    padding: 1rem;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .form-submit:hover { background: #C1321A; transform: translateY(-1px); }
+  .form-submit:active { transform: translateY(0); }
+  .form-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+  .form-success.visible { display: block; }
+  .form-success-icon {
+    width: 64px;
+    height: 64px;
+    background: var(--campo);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .form-success-icon svg { width: 32px; height: 32px; }
+  .form-success h3 {
+    font-family: system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 1.35rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+  .form-success p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+  .form-success .registro-id {
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--campo);
+    letter-spacing: 0.05em;
+    margin-top: 1rem;
+  }
+  .form-error {
+    font-family: system-ui, sans-serif;
+    font-size: 0.8rem;
+    color: var(--salsa);
+    margin-top: 0.25rem;
+    display: none;
+  }
+  .form-group.has-error .form-input,
+  .form-group.has-error .form-select {
+    border-color: var(--salsa);
+  }
+  .form-group.has-error .form-error { display: block; }
+
+  .registro-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--card-border);
+  }
+  .registro-counter svg {
+    width: 18px;
+    height: 18px;
+    color: var(--campo);
+  }
+  .registro-counter span {
+    font-family: system-ui, sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+  .registro-counter strong {
+    color: var(--text-primary);
+    font-weight: 800;
+  }
+
   /* ── LOCATION ── */
   .location-flex {
     display: grid;
@@ -578,7 +801,11 @@
     .causa-grid,
     .info-grid,
     .ticket-cards,
-    .location-flex {
+    .location-flex,
+    .registro-layout {
+      grid-template-columns: 1fr;
+    }
+    .form-row {
       grid-template-columns: 1fr;
     }
     .nav-links { display: none; }
@@ -611,6 +838,7 @@
       <li><a href="#actividades">Actividades</a></li>
       <li><a href="#info">Info</a></li>
       <li><a href="#boletos">Boletos</a></li>
+      <li><a href="#registro">Registro</a></li>
       <li><a href="#ubicacion">Ubicación</a></li>
     </ul>
   </div>
@@ -625,7 +853,7 @@
     <p class="hero-subtitle">El Domingo más Perrón del Año</p>
     <p class="hero-date">Domingo 26 de Julio</p>
     <p class="hero-time">10:00 — 15:00 hrs</p>
-    <a href="#boletos" class="hero-cta">Quiero ir</a>
+    <a href="#registro" class="hero-cta">Quiero ir</a>
   </div>
   <div class="hero-scroll" aria-hidden="true">
     <div class="hero-scroll-dot"></div>
@@ -792,6 +1020,106 @@
   </div>
 </section>
 
+<!-- REGISTRO -->
+<section class="section registro" id="registro">
+  <div class="section-inner">
+    <span class="label section-eyebrow">Registro</span>
+    <h2 class="display section-title">Aparta tu lugar</h2>
+    <div class="registro-layout">
+      <div class="registro-info">
+        <h3>Regístrate y asegura tu entrada</h3>
+        <p>Completa el formulario para confirmar tu asistencia al evento. El donativo de acceso ($100 MXN) se paga el día del evento en la entrada.</p>
+        <p>Al registrarte nos ayudas a planear mejor la logística y garantizar la mejor experiencia para ti y tu peludo.</p>
+        <ul class="registro-perks">
+          <li>Confirma tu lugar sin pagar por adelantado</li>
+          <li>Recibe recordatorio del evento</li>
+          <li>Acceso a todas las actividades incluido</li>
+          <li>Niños menores de 10 años entran gratis</li>
+          <li>Puedes traer donativos en croquetas</li>
+        </ul>
+      </div>
+      <div>
+        <div class="form-card">
+          <form id="registroForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="nombre">Nombre</label>
+                <input class="form-input" type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+                <span class="form-error">Ingresa tu nombre</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="apellido">Apellido</label>
+                <input class="form-input" type="text" id="apellido" name="apellido" placeholder="Tu apellido" required>
+                <span class="form-error">Ingresa tu apellido</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="email">Correo electrónico</label>
+              <input class="form-input" type="email" id="email" name="email" placeholder="tu@correo.com" required>
+              <span class="form-error">Ingresa un correo válido</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="telefono">Teléfono</label>
+              <input class="form-input" type="tel" id="telefono" name="telefono" placeholder="449 123 4567" required>
+              <span class="form-error">Ingresa tu teléfono</span>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="adultos">Adultos</label>
+                <select class="form-select" id="adultos" name="adultos">
+                  <option value="1">1 persona</option>
+                  <option value="2">2 personas</option>
+                  <option value="3">3 personas</option>
+                  <option value="4">4 personas</option>
+                  <option value="5">5 personas</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ninos">Niños (&lt; 10 años)</label>
+                <select class="form-select" id="ninos" name="ninos">
+                  <option value="0">Sin niños</option>
+                  <option value="1">1 niño</option>
+                  <option value="2">2 niños</option>
+                  <option value="3">3 niños</option>
+                  <option value="4">4 niños</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-checkbox-row">
+              <input class="form-checkbox" type="checkbox" id="traePerro" name="traePerro">
+              <label class="form-checkbox-label" for="traePerro">Voy a llevar a mi perro</label>
+            </div>
+            <div class="dog-name-field" id="dogNameField">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label" for="nombrePerro">Nombre de tu perro</label>
+                <input class="form-input" type="text" id="nombrePerro" name="nombrePerro" placeholder="¿Cómo se llama tu peludo?">
+              </div>
+            </div>
+            <button type="submit" class="form-submit" id="submitBtn">Registrarme</button>
+          </form>
+          <div class="form-success" id="formSuccess">
+            <div class="form-success-icon">
+              <svg viewBox="0 0 32 32" fill="none" stroke="#FAF8F3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 16L14 22L24 10"/>
+              </svg>
+            </div>
+            <h3>¡Registro exitoso!</h3>
+            <p>Te esperamos el <strong>26 de julio</strong> en Zitara Club & Golf. Recuerda que el donativo de acceso se paga en la entrada.</p>
+            <p class="registro-id" id="registroId"></p>
+          </div>
+        </div>
+        <div class="registro-counter">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <circle cx="9" cy="9" r="7.5"/>
+            <path d="M9 5V9L12 11"/>
+          </svg>
+          <span><strong id="regCount">0</strong> registrados</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- UBICACIÓN -->
 <section class="section" id="ubicacion">
   <div class="section-inner">
@@ -850,6 +1178,7 @@
     <li><a href="#causa">La Causa</a></li>
     <li><a href="#actividades">Actividades</a></li>
     <li><a href="#boletos">Boletos</a></li>
+    <li><a href="#registro">Registro</a></li>
     <li><a href="#ubicacion">Ubicación</a></li>
   </ul>
   <p class="footer-copy">Evento organizado por Zitara Club & Golf en beneficio de Esperanza Animal</p>
@@ -946,6 +1275,89 @@ if (!prefersReduced.matches) {
 } else {
   paws.forEach(p => drawPaw(p.x, p.y, p.size, p.rotation, p.alpha * 0.5));
 }
+
+// ── Registration form ──
+const form = document.getElementById('registroForm');
+const submitBtn = document.getElementById('submitBtn');
+const formSuccess = document.getElementById('formSuccess');
+const registroId = document.getElementById('registroId');
+const regCount = document.getElementById('regCount');
+const traePerro = document.getElementById('traePerro');
+const dogNameField = document.getElementById('dogNameField');
+
+function getRegistrations() {
+  try { return JSON.parse(localStorage.getItem('dogmingo_registros') || '[]'); }
+  catch { return []; }
+}
+
+function updateCounter() {
+  const regs = getRegistrations();
+  regCount.textContent = regs.length;
+}
+updateCounter();
+
+traePerro.addEventListener('change', () => {
+  dogNameField.classList.toggle('visible', traePerro.checked);
+  if (!traePerro.checked) document.getElementById('nombrePerro').value = '';
+});
+
+function validateField(field) {
+  const group = field.closest('.form-group');
+  if (!group) return true;
+  let valid = true;
+  if (field.required && !field.value.trim()) valid = false;
+  if (field.type === 'email' && field.value.trim()) {
+    valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim());
+  }
+  if (field.type === 'tel' && field.value.trim()) {
+    valid = field.value.replace(/\D/g, '').length >= 7;
+  }
+  group.classList.toggle('has-error', !valid);
+  return valid;
+}
+
+form.querySelectorAll('.form-input').forEach(input => {
+  input.addEventListener('blur', () => validateField(input));
+  input.addEventListener('input', () => {
+    const group = input.closest('.form-group');
+    if (group && group.classList.contains('has-error')) validateField(input);
+  });
+});
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const fields = form.querySelectorAll('.form-input[required]');
+  let allValid = true;
+  fields.forEach(f => { if (!validateField(f)) allValid = false; });
+  if (!allValid) return;
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Registrando...';
+
+  setTimeout(() => {
+    const data = {
+      id: 'DGM-' + Date.now().toString(36).toUpperCase(),
+      nombre: document.getElementById('nombre').value.trim(),
+      apellido: document.getElementById('apellido').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      telefono: document.getElementById('telefono').value.trim(),
+      adultos: parseInt(document.getElementById('adultos').value),
+      ninos: parseInt(document.getElementById('ninos').value),
+      traePerro: traePerro.checked,
+      nombrePerro: document.getElementById('nombrePerro').value.trim(),
+      fecha: new Date().toISOString()
+    };
+
+    const regs = getRegistrations();
+    regs.push(data);
+    localStorage.setItem('dogmingo_registros', JSON.stringify(regs));
+
+    form.style.display = 'none';
+    formSuccess.classList.add('visible');
+    registroId.textContent = 'Folio: ' + data.id;
+    updateCounter();
+  }, 800);
+});
 </script>
 
 </body>
