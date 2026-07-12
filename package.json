@@ -1,0 +1,13 @@
+{
+  "name": "dogmingo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dogmingo - El Domingo mas Perron del Ano",
+  "scripts": {
+    "dev": "npx serve .",
+    "db:migrate": "node api/_migrate.js"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4"
+  }
+}
