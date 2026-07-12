@@ -22,7 +22,6 @@
     --nav-bg: rgba(250, 248, 243, 0.92);
     --nav-border: rgba(25, 23, 20, 0.08);
   }
-
   @media (prefers-color-scheme: dark) {
     :root {
       --text-primary: #EDEAE4;
@@ -63,12 +62,7 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html {
-    scroll-behavior: smooth;
-    font-size: 16px;
-  }
-
+  html { scroll-behavior: smooth; font-size: 16px; }
   body {
     font-family: Georgia, 'Times New Roman', serif;
     color: var(--text-primary);
@@ -77,14 +71,12 @@
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
-
   .display {
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     font-weight: 900;
     line-height: 0.9;
     letter-spacing: -0.03em;
   }
-
   .label {
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     font-weight: 700;
@@ -92,751 +84,327 @@
     letter-spacing: 0.12em;
     font-size: 0.75rem;
   }
+  .sys { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
 
-  /* ── NAV ── */
+  /* NAV */
   .nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    background: var(--nav-bg);
-    backdrop-filter: blur(12px);
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--nav-bg); backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--nav-border);
-    transform: translateY(-100%);
-    transition: transform 0.35s ease;
+    transform: translateY(-100%); transition: transform 0.35s ease;
     padding: 0 1.5rem;
   }
   .nav.visible { transform: translateY(0); }
   .nav-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 56px;
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; height: 56px;
   }
-  .nav-logo {
-    font-family: system-ui, -apple-system, sans-serif;
-    font-weight: 900;
-    font-size: 1.25rem;
-    color: var(--salsa);
-    text-decoration: none;
-  }
-  .nav-links {
-    display: flex;
-    gap: 1.75rem;
-    list-style: none;
-  }
-  .nav-links a {
-    font-family: system-ui, sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
+  .nav-logo { font-family: system-ui, sans-serif; font-weight: 900; font-size: 1.25rem; color: var(--salsa); text-decoration: none; }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { font-family: system-ui, sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
   .nav-links a:hover { color: var(--salsa); }
 
-  /* ── HERO ── */
+  /* HERO */
   .hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: var(--hero-bg);
-    color: var(--hero-text);
-    overflow: hidden;
-    padding: 2rem 1.5rem;
+    position: relative; min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    background: var(--hero-bg); color: var(--hero-text); overflow: hidden; padding: 2rem 1.5rem;
   }
-  .hero canvas {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.15;
-  }
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    max-width: 900px;
-  }
+  .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.15; }
+  .hero-content { position: relative; z-index: 2; text-align: center; max-width: 900px; }
   .hero-eyebrow {
-    display: inline-block;
-    background: var(--salsa);
-    color: #fff;
-    padding: 0.35rem 1rem;
-    border-radius: 2px;
-    margin-bottom: 2rem;
-    font-size: 0.7rem;
+    display: inline-block; background: var(--salsa); color: #fff;
+    padding: 0.35rem 1rem; border-radius: 2px; margin-bottom: 2rem; font-size: 0.7rem;
   }
-  .hero-title {
-    font-size: clamp(4rem, 15vw, 12rem);
-    color: var(--hero-text);
-    margin-bottom: 0.15em;
+  .hero-title { font-size: clamp(4rem, 15vw, 12rem); color: var(--hero-text); margin-bottom: 0.15em; }
+  .hero-subtitle { font-size: clamp(1.1rem, 3vw, 1.75rem); font-weight: 400; font-style: italic; opacity: 0.7; margin-bottom: 2.5rem; }
+  .hero-date { font-family: system-ui, sans-serif; font-weight: 800; font-size: clamp(1.2rem, 3vw, 1.6rem); color: var(--sol); margin-bottom: 0.5rem; }
+  .hero-time { font-family: system-ui, sans-serif; font-weight: 600; font-size: 1rem; opacity: 0.6; margin-bottom: 3rem; }
+  .hero-dogs {
+    display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 2.5rem; flex-wrap: wrap;
   }
-  .hero-subtitle {
-    font-size: clamp(1.1rem, 3vw, 1.75rem);
-    font-weight: 400;
-    font-style: italic;
-    opacity: 0.7;
-    margin-bottom: 2.5rem;
+  .hero-dogs canvas { position: static; width: 80px; height: 80px; opacity: 1; }
+  .btn-primary {
+    display: inline-block; font-family: system-ui, sans-serif; font-weight: 800; font-size: 1rem;
+    text-transform: uppercase; letter-spacing: 0.08em; background: var(--salsa); color: #fff;
+    padding: 1rem 2.5rem; border: none; border-radius: 3px; cursor: pointer;
+    text-decoration: none; transition: background 0.2s, transform 0.15s;
   }
-  .hero-date {
-    font-family: system-ui, sans-serif;
-    font-weight: 800;
-    font-size: clamp(1.2rem, 3vw, 1.6rem);
-    color: var(--sol);
-    margin-bottom: 0.5rem;
+  .btn-primary:hover { background: #C1321A; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-secondary {
+    display: inline-block; font-family: system-ui, sans-serif; font-weight: 800; font-size: 0.9rem;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    background: var(--campo); color: #fff;
+    padding: 0.85rem 2rem; border: none; border-radius: 3px; cursor: pointer;
+    text-decoration: none; transition: background 0.2s, transform 0.15s;
   }
-  .hero-time {
-    font-family: system-ui, sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    opacity: 0.6;
-    margin-bottom: 3rem;
-  }
-  .hero-cta {
-    display: inline-block;
-    font-family: system-ui, sans-serif;
-    font-weight: 800;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    background: var(--salsa);
-    color: #fff;
-    padding: 1rem 2.5rem;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.2s, transform 0.15s;
-  }
-  .hero-cta:hover { background: #C1321A; transform: translateY(-1px); }
-  .hero-cta:active { transform: translateY(0); }
+  .btn-secondary:hover { background: #245332; transform: translateY(-1px); }
   .hero-scroll {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    width: 24px;
-    height: 40px;
-    border: 2px solid rgba(250,248,243,0.3);
-    border-radius: 12px;
-    display: flex;
-    justify-content: center;
-    padding-top: 6px;
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 2;
+    width: 24px; height: 40px; border: 2px solid rgba(250,248,243,0.3); border-radius: 12px;
+    display: flex; justify-content: center; padding-top: 6px;
   }
-  .hero-scroll-dot {
-    width: 4px;
-    height: 8px;
-    background: rgba(250,248,243,0.5);
-    border-radius: 2px;
-    animation: scrollBounce 2s ease-in-out infinite;
-  }
+  .hero-scroll-dot { width: 4px; height: 8px; background: rgba(250,248,243,0.5); border-radius: 2px; animation: scrollBounce 2s ease-in-out infinite; }
   @keyframes scrollBounce {
     0%, 100% { transform: translateY(0); opacity: 0.5; }
     50% { transform: translateY(12px); opacity: 1; }
   }
 
-  /* ── SECTION COMMON ── */
-  .section {
-    padding: 6rem 1.5rem;
+  /* SECTIONS */
+  .section { padding: 6rem 1.5rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-eyebrow { color: var(--salsa); margin-bottom: 0.75rem; }
+  .section-title { font-size: clamp(2rem, 5vw, 3rem); color: var(--text-primary); margin-bottom: 1.5rem; text-wrap: balance; }
+  .section-intro { max-width: 600px; color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 3rem; }
+
+  /* PASSPORT PROMO */
+  .passport-promo { background: var(--hero-bg); color: var(--hero-text); overflow: hidden; }
+  .passport-promo .section-eyebrow { color: var(--sol); }
+  .passport-promo .section-title { color: var(--hero-text); }
+  .passport-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+  .passport-preview {
+    background: #F7F3EB; border-radius: 12px; padding: 2rem; position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3); transform: rotate(-2deg);
   }
-  .section-inner {
-    max-width: 1100px;
-    margin: 0 auto;
+  .passport-preview-inner {
+    border: 2px dashed #D4C9B5; border-radius: 8px; padding: 1.5rem; text-align: center;
   }
-  .section-eyebrow {
-    color: var(--salsa);
-    margin-bottom: 0.75rem;
+  .passport-preview h4 {
+    font-family: system-ui, sans-serif; font-weight: 900; font-size: 1.1rem; color: #191714;
+    margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em;
   }
-  .section-title {
-    font-size: clamp(2rem, 5vw, 3rem);
-    color: var(--text-primary);
-    margin-bottom: 1.5rem;
-    text-wrap: balance;
+  .passport-preview .pp-sub {
+    font-family: system-ui, sans-serif; font-size: 0.7rem; color: #8A8378;
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;
   }
-  .section-intro {
-    max-width: 600px;
-    color: var(--text-secondary);
-    font-size: 1.05rem;
-    margin-bottom: 3rem;
+  .stamp-grid-preview {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem;
+  }
+  .stamp-slot-preview {
+    aspect-ratio: 1; border: 1.5px dashed #C9BDA8; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: system-ui, sans-serif; font-size: 0.55rem; color: #B5A998;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .stamp-slot-preview.filled { border-color: var(--campo); background: rgba(45,106,63,0.1); }
+  .stamp-slot-preview.filled::after { content: '✓'; color: var(--campo); font-size: 1rem; font-weight: 800; }
+  .passport-info-text h3 {
+    font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.5rem;
+    color: var(--hero-text); margin-bottom: 1rem;
+  }
+  .passport-info-text p { color: rgba(250,248,243,0.65); font-size: 0.95rem; margin-bottom: 1.25rem; line-height: 1.6; }
+  .passport-steps { list-style: none; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+  .passport-steps li {
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    font-family: system-ui, sans-serif; font-size: 0.9rem; color: rgba(250,248,243,0.8);
+  }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--salsa); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.75rem; flex-shrink: 0;
   }
 
-  /* ── CAUSA ── */
-  .causa {
-    background: var(--bg-alt);
-  }
-  .causa-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: center;
-  }
+  /* CAUSA */
+  .causa { background: var(--bg-alt); }
+  .causa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
   .causa-badge {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: var(--campo);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
+    width: 160px; height: 160px; border-radius: 50%; background: var(--campo);
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;
   }
   .causa-badge svg { width: 80px; height: 80px; }
-  .causa-text h3 {
-    font-family: system-ui, sans-serif;
-    font-weight: 800;
-    font-size: 1.5rem;
-    color: var(--text-primary);
-    margin-bottom: 1rem;
-  }
-  .causa-text p {
-    color: var(--text-secondary);
-    font-size: 1rem;
-    margin-bottom: 1rem;
-  }
+  .causa-text h3 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--text-primary); margin-bottom: 1rem; }
+  .causa-text p { color: var(--text-secondary); font-size: 1rem; margin-bottom: 1rem; }
   .causa-highlight {
-    display: inline-block;
-    background: var(--sol);
-    color: var(--noche);
-    font-family: system-ui, sans-serif;
-    font-weight: 800;
-    font-size: 0.85rem;
-    padding: 0.4rem 1rem;
-    border-radius: 2px;
-    letter-spacing: 0.05em;
+    display: inline-block; background: var(--sol); color: var(--noche);
+    font-family: system-ui, sans-serif; font-weight: 800; font-size: 0.85rem;
+    padding: 0.4rem 1rem; border-radius: 2px; letter-spacing: 0.05em;
   }
 
-  /* ── ACTIVITIES ── */
-  .activities-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.25rem;
+  /* DOG ILLUSTRATIONS ROW */
+  .dogs-row {
+    display: flex; justify-content: center; gap: 2rem; padding: 2rem 0; flex-wrap: wrap;
   }
+  .dogs-row canvas { width: 100px; height: 100px; }
+
+  /* ACTIVITIES */
+  .activities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
   .activity-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    padding: 2rem;
-    border-radius: 4px;
-    transition: border-color 0.2s, transform 0.15s;
-    position: relative;
-    overflow: hidden;
+    background: var(--card-bg); border: 1px solid var(--card-border); padding: 2rem;
+    border-radius: 4px; transition: border-color 0.2s, transform 0.15s;
+    position: relative; overflow: hidden;
   }
   .activity-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--campo);
-    transform: scaleY(0);
-    transform-origin: bottom;
-    transition: transform 0.3s ease;
+    content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+    background: var(--campo); transform: scaleY(0); transform-origin: bottom; transition: transform 0.3s ease;
   }
   .activity-card:hover::before { transform: scaleY(1); }
   .activity-card:hover { border-color: var(--campo); transform: translateY(-2px); }
-  .activity-icon {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 1.25rem;
-    color: var(--campo);
-  }
-  .activity-name {
-    font-family: system-ui, sans-serif;
-    font-weight: 800;
-    font-size: 1.1rem;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-  }
-  .activity-desc {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.55;
-  }
+  .activity-icon { width: 48px; height: 48px; margin-bottom: 1.25rem; color: var(--campo); }
+  .activity-name { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.5rem; }
+  .activity-desc { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.55; }
+  .activity-stamp { display: inline-block; margin-top: 0.75rem; font-family: system-ui, sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--campo); background: rgba(45,106,63,0.1); padding: 0.25rem 0.6rem; border-radius: 2px; }
 
-  /* ── INFO ── */
+  /* INFO */
   .info { background: var(--bg-alt); }
-  .info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 2rem;
-  }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; }
   .info-block {
-    text-align: center;
-    padding: 2.5rem 1.5rem;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 4px;
+    text-align: center; padding: 2.5rem 1.5rem; background: var(--card-bg);
+    border: 1px solid var(--card-border); border-radius: 4px;
   }
-  .info-icon {
-    width: 40px;
-    height: 40px;
-    margin: 0 auto 1rem;
-    color: var(--salsa);
-  }
-  .info-label {
-    color: var(--salsa);
-    margin-bottom: 0.5rem;
-  }
-  .info-value {
-    font-family: system-ui, sans-serif;
-    font-weight: 800;
-    font-size: 1.35rem;
-    color: var(--text-primary);
-    margin-bottom: 0.35rem;
-  }
-  .info-detail {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-  }
+  .info-icon { width: 40px; height: 40px; margin: 0 auto 1rem; color: var(--salsa); }
+  .info-label { color: var(--salsa); margin-bottom: 0.5rem; }
+  .info-value { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.35rem; color: var(--text-primary); margin-bottom: 0.35rem; }
+  .info-detail { color: var(--text-secondary); font-size: 0.9rem; }
 
-  /* ── TICKETS ── */
-  .tickets {
-    background: var(--hero-bg);
-    color: var(--hero-text);
-    text-align: center;
-  }
+  /* TICKETS */
+  .tickets { background: var(--hero-bg); color: var(--hero-text); text-align: center; }
   .tickets .section-eyebrow { color: var(--sol); }
   .tickets .section-title { color: var(--hero-text); }
-  .tickets .section-intro {
-    margin-left: auto;
-    margin-right: auto;
-    color: rgba(250,248,243,0.6);
-  }
-  .ticket-cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    max-width: 700px;
-    margin: 0 auto 3rem;
-  }
-  .ticket-card {
-    border: 1px solid rgba(250,248,243,0.12);
-    border-radius: 4px;
-    padding: 2.5rem 2rem;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
+  .tickets .section-intro { margin-left: auto; margin-right: auto; color: rgba(250,248,243,0.6); }
+  .ticket-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 700px; margin: 0 auto 3rem; }
+  .ticket-card { border: 1px solid rgba(250,248,243,0.12); border-radius: 4px; padding: 2.5rem 2rem; transition: border-color 0.2s; }
   .ticket-card:hover { border-color: rgba(250,248,243,0.25); }
-  .ticket-card.featured {
-    border-color: var(--salsa);
-    background: rgba(217, 59, 30, 0.06);
-  }
-  .ticket-card.featured:hover { border-color: var(--salsa); }
-  .ticket-type {
-    font-family: system-ui, sans-serif;
-    font-weight: 700;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--sol);
-    margin-bottom: 1rem;
-  }
-  .ticket-price {
-    font-family: system-ui, sans-serif;
-    font-weight: 900;
-    font-size: 3rem;
-    line-height: 1;
-    margin-bottom: 0.5rem;
-  }
-  .ticket-price span {
-    font-size: 1rem;
-    font-weight: 600;
-    opacity: 0.5;
-    vertical-align: super;
-  }
-  .ticket-note {
-    font-size: 0.9rem;
-    opacity: 0.5;
-  }
-  .donate-note {
-    font-size: 0.95rem;
-    opacity: 0.6;
-    max-width: 500px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
-  .donate-note strong {
-    color: var(--sol);
-    font-weight: 700;
-  }
+  .ticket-card.featured { border-color: var(--salsa); background: rgba(217,59,30,0.06); }
+  .ticket-type { font-family: system-ui, sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--sol); margin-bottom: 1rem; }
+  .ticket-price { font-family: system-ui, sans-serif; font-weight: 900; font-size: 3rem; line-height: 1; margin-bottom: 0.5rem; }
+  .ticket-price span { font-size: 1rem; font-weight: 600; opacity: 0.5; vertical-align: super; }
+  .ticket-note { font-size: 0.9rem; opacity: 0.5; }
+  .ticket-passport { font-family: system-ui, sans-serif; font-size: 0.75rem; color: var(--sol); margin-top: 0.75rem; font-weight: 600; }
+  .donate-note { font-size: 0.95rem; opacity: 0.6; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+  .donate-note strong { color: var(--sol); font-weight: 700; }
 
-  /* ── REGISTRO ── */
+  /* REGISTRO */
   .registro { background: var(--bg-alt); }
-  .registro-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: start;
-  }
-  .registro-info h3 {
-    font-family: system-ui, sans-serif;
-    font-weight: 800;
-    font-size: 1.35rem;
-    color: var(--text-primary);
-    margin-bottom: 1rem;
-  }
-  .registro-info p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    margin-bottom: 1.25rem;
-    line-height: 1.6;
-  }
-  .registro-perks {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
+  .registro-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .registro-info h3 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.35rem; color: var(--text-primary); margin-bottom: 1rem; }
+  .registro-info p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.25rem; line-height: 1.6; }
+  .registro-perks { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
   .registro-perks li {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-family: system-ui, sans-serif;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
+    display: flex; align-items: center; gap: 0.6rem;
+    font-family: system-ui, sans-serif; font-size: 0.85rem; color: var(--text-secondary);
   }
-  .registro-perks li::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    background: var(--campo);
-    border-radius: 50%;
-    flex-shrink: 0;
+  .registro-perks li::before { content: ''; width: 6px; height: 6px; background: var(--campo); border-radius: 50%; flex-shrink: 0; }
+  .form-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 4px; padding: 2.5rem 2rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1.25rem; }
+  .form-label { font-family: system-ui, sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); }
+  .form-input, .form-select {
+    font-family: system-ui, sans-serif; font-size: 0.95rem; padding: 0.7rem 0.85rem;
+    border: 1px solid var(--card-border); border-radius: 3px; background: var(--bg);
+    color: var(--text-primary); transition: border-color 0.2s; width: 100%;
   }
-  .form-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 4px;
-    padding: 2.5rem 2rem;
-  }
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    margin-bottom: 1.25rem;
-  }
-  .form-group.full { grid-column: 1 / -1; }
-  .form-label {
-    font-family: system-ui, sans-serif;
-    font-weight: 700;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-secondary);
-  }
-  .form-input,
-  .form-select {
-    font-family: system-ui, sans-serif;
-    font-size: 0.95rem;
-    padding: 0.7rem 0.85rem;
-    border: 1px solid var(--card-border);
-    border-radius: 3px;
-    background: var(--bg);
-    color: var(--text-primary);
-    transition: border-color 0.2s;
-    width: 100%;
-  }
-  .form-input:focus,
-  .form-select:focus {
-    outline: none;
-    border-color: var(--campo);
-    box-shadow: 0 0 0 3px rgba(45, 106, 63, 0.12);
-  }
+  .form-input:focus, .form-select:focus { outline: none; border-color: var(--campo); box-shadow: 0 0 0 3px rgba(45,106,63,0.12); }
   .form-input::placeholder { color: var(--text-secondary); opacity: 0.5; }
-  .form-select { cursor: pointer; appearance: none;
+  .form-select {
+    cursor: pointer; appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235C584F' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.85rem center;
-    padding-right: 2.5rem;
+    background-repeat: no-repeat; background-position: right 0.85rem center; padding-right: 2.5rem;
   }
-  .form-checkbox-row {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin-bottom: 1.25rem;
-  }
-  .form-checkbox {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--campo);
-    cursor: pointer;
-  }
-  .form-checkbox-label {
-    font-family: system-ui, sans-serif;
-    font-size: 0.9rem;
-    color: var(--text-primary);
-    cursor: pointer;
-  }
+  .form-checkbox-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.25rem; }
+  .form-checkbox { width: 18px; height: 18px; accent-color: var(--campo); cursor: pointer; }
+  .form-checkbox-label { font-family: system-ui, sans-serif; font-size: 0.9rem; color: var(--text-primary); cursor: pointer; }
   .dog-name-field {
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.3s ease;
-    margin-bottom: 0;
+    overflow: hidden; max-height: 0; opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.3s ease; margin-bottom: 0;
   }
-  .dog-name-field.visible {
-    max-height: 100px;
-    opacity: 1;
-    margin-bottom: 1.25rem;
-  }
+  .dog-name-field.visible { max-height: 100px; opacity: 1; margin-bottom: 1.25rem; }
   .form-submit {
-    display: block;
-    width: 100%;
-    font-family: system-ui, sans-serif;
-    font-weight: 800;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    background: var(--salsa);
-    color: #fff;
-    padding: 1rem;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
+    display: block; width: 100%; font-family: system-ui, sans-serif; font-weight: 800; font-size: 1rem;
+    text-transform: uppercase; letter-spacing: 0.08em; background: var(--salsa); color: #fff;
+    padding: 1rem; border: none; border-radius: 3px; cursor: pointer; transition: background 0.2s, transform 0.15s;
   }
   .form-submit:hover { background: #C1321A; transform: translateY(-1px); }
   .form-submit:active { transform: translateY(0); }
-  .form-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  .form-success {
-    display: none;
-    text-align: center;
-    padding: 2rem 1rem;
-  }
-  .form-success.visible { display: block; }
-  .form-success-icon {
-    width: 64px;
-    height: 64px;
-    background: var(--campo);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-  }
-  .form-success-icon svg { width: 32px; height: 32px; }
-  .form-success h3 {
-    font-family: system-ui, sans-serif;
-    font-weight: 800;
-    font-size: 1.35rem;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-  }
-  .form-success p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin-bottom: 0.5rem;
-  }
-  .form-success .registro-id {
-    font-family: system-ui, sans-serif;
-    font-weight: 700;
-    font-size: 0.8rem;
-    color: var(--campo);
-    letter-spacing: 0.05em;
-    margin-top: 1rem;
-  }
-  .form-error {
-    font-family: system-ui, sans-serif;
-    font-size: 0.8rem;
-    color: var(--salsa);
-    margin-top: 0.25rem;
-    display: none;
-  }
+  .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .form-error { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--salsa); margin-top: 0.25rem; display: none; }
   .form-group.has-error .form-input,
-  .form-group.has-error .form-select {
-    border-color: var(--salsa);
-  }
+  .form-group.has-error .form-select { border-color: var(--salsa); }
   .form-group.has-error .form-error { display: block; }
 
-  .registro-counter {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--card-border);
+  /* SUCCESS + PASSPORT */
+  .form-success { display: none; text-align: center; padding: 2rem 0; }
+  .form-success.visible { display: block; }
+  .form-success-icon {
+    width: 64px; height: 64px; background: var(--campo); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;
   }
-  .registro-counter svg {
-    width: 18px;
-    height: 18px;
-    color: var(--campo);
-  }
-  .registro-counter span {
-    font-family: system-ui, sans-serif;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-  }
-  .registro-counter strong {
-    color: var(--text-primary);
-    font-weight: 800;
-  }
-
-  /* ── LOCATION ── */
-  .location-flex {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: start;
-  }
-  .location-details { }
-  .location-name {
-    font-family: system-ui, sans-serif;
-    font-weight: 800;
-    font-size: 1.5rem;
-    color: var(--text-primary);
-    margin-bottom: 0.75rem;
-  }
-  .location-address {
-    color: var(--text-secondary);
-    font-size: 1rem;
-    margin-bottom: 2rem;
-    line-height: 1.7;
-  }
-  .location-contact {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  .contact-row {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: var(--text-secondary);
-    font-family: system-ui, sans-serif;
-    font-size: 0.9rem;
-  }
-  .contact-row svg {
-    width: 20px;
-    height: 20px;
-    color: var(--campo);
-    flex-shrink: 0;
-  }
-  .location-map {
-    background: var(--bg-alt);
-    border: 1px solid var(--card-border);
+  .form-success-icon svg { width: 32px; height: 32px; }
+  .form-success h3 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.35rem; color: var(--text-primary); margin-bottom: 0.5rem; }
+  .form-success p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 0.75rem; }
+  .passport-download-area {
+    margin-top: 1.5rem; padding: 1.5rem; background: var(--bg); border: 1px solid var(--card-border);
     border-radius: 4px;
-    aspect-ratio: 4/3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
   }
-  .map-placeholder {
-    text-align: center;
-    color: var(--text-secondary);
-    font-family: system-ui, sans-serif;
-    font-size: 0.85rem;
+  .passport-download-area canvas {
+    width: 100%; max-width: 400px; border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 1rem;
   }
-  .map-placeholder svg {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 0.75rem;
-    opacity: 0.4;
+  .btn-download {
+    display: inline-block; font-family: system-ui, sans-serif; font-weight: 800; font-size: 0.9rem;
+    text-transform: uppercase; letter-spacing: 0.08em; background: var(--campo); color: #fff;
+    padding: 0.85rem 2rem; border: none; border-radius: 3px; cursor: pointer;
+    transition: background 0.2s, transform 0.15s; text-decoration: none;
   }
+  .btn-download:hover { background: #245332; transform: translateY(-1px); }
+  .registro-counter {
+    display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+    margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--card-border);
+  }
+  .registro-counter svg { width: 18px; height: 18px; color: var(--campo); }
+  .registro-counter span { font-family: system-ui, sans-serif; font-size: 0.85rem; color: var(--text-secondary); }
+  .registro-counter strong { color: var(--text-primary); font-weight: 800; }
 
-  /* ── FOOTER ── */
-  .footer {
-    padding: 3rem 1.5rem;
-    text-align: center;
-    background: var(--bg-alt);
-    border-top: 1px solid var(--card-border);
+  /* LOCATION */
+  .location-flex { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .location-name { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--text-primary); margin-bottom: 0.75rem; }
+  .location-address { color: var(--text-secondary); font-size: 1rem; margin-bottom: 2rem; line-height: 1.7; }
+  .location-contact { display: flex; flex-direction: column; gap: 0.75rem; }
+  .contact-row { display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary); font-family: system-ui, sans-serif; font-size: 0.9rem; }
+  .contact-row svg { width: 20px; height: 20px; color: var(--campo); flex-shrink: 0; }
+  .location-map {
+    background: var(--bg-alt); border: 1px solid var(--card-border); border-radius: 4px;
+    aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center;
+    text-decoration: none; cursor: pointer; transition: border-color 0.2s;
   }
-  .footer-logo {
-    font-family: system-ui, sans-serif;
-    font-weight: 900;
-    font-size: 1.5rem;
-    color: var(--salsa);
-    margin-bottom: 0.5rem;
-  }
-  .footer-tagline {
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-    margin-bottom: 1.5rem;
-  }
-  .footer-links {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    list-style: none;
-    margin-bottom: 1.5rem;
-  }
-  .footer-links a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-family: system-ui, sans-serif;
-    font-size: 0.8rem;
-    transition: color 0.2s;
-  }
+  .location-map:hover { border-color: var(--campo); }
+  .map-placeholder { text-align: center; color: var(--text-secondary); font-family: system-ui, sans-serif; font-size: 0.85rem; }
+  .map-placeholder svg { width: 48px; height: 48px; margin-bottom: 0.75rem; opacity: 0.4; }
+
+  /* FOOTER */
+  .footer { padding: 3rem 1.5rem; text-align: center; background: var(--bg-alt); border-top: 1px solid var(--card-border); }
+  .footer-logo { font-family: system-ui, sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--salsa); margin-bottom: 0.5rem; }
+  .footer-tagline { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .footer-links { display: flex; justify-content: center; gap: 1.5rem; list-style: none; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .footer-links a { color: var(--text-secondary); text-decoration: none; font-family: system-ui, sans-serif; font-size: 0.8rem; transition: color 0.2s; }
   .footer-links a:hover { color: var(--salsa); }
-  .footer-copy {
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    opacity: 0.6;
-  }
+  .footer-copy { color: var(--text-secondary); font-size: 0.75rem; opacity: 0.6; }
 
-  /* ── RESPONSIVE ── */
+  /* RESPONSIVE */
   @media (max-width: 768px) {
-    .causa-grid,
-    .info-grid,
-    .ticket-cards,
-    .location-flex,
-    .registro-layout {
-      grid-template-columns: 1fr;
-    }
-    .form-row {
-      grid-template-columns: 1fr;
-    }
+    .causa-grid, .info-grid, .ticket-cards, .location-flex, .registro-layout, .passport-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
     .nav-links { display: none; }
     .section { padding: 4rem 1.25rem; }
     .activities-grid { grid-template-columns: 1fr; }
+    .passport-preview { transform: rotate(0); }
   }
-
-  /* ── REDUCED MOTION ── */
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .hero-scroll-dot { animation: none; }
     .activity-card, .activity-card::before { transition: none; }
   }
-
-  /* ── FOCUS ── */
-  a:focus-visible, button:focus-visible {
-    outline: 2px solid var(--salsa);
-    outline-offset: 2px;
-  }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--salsa); outline-offset: 2px; }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
     <a href="#hero" class="nav-logo">DOGMINGO</a>
     <ul class="nav-links">
-      <li><a href="#causa">La Causa</a></li>
+      <li><a href="#pasaporte">Pasaporte</a></li>
       <li><a href="#actividades">Actividades</a></li>
-      <li><a href="#info">Info</a></li>
       <li><a href="#boletos">Boletos</a></li>
       <li><a href="#registro">Registro</a></li>
       <li><a href="#ubicacion">Ubicación</a></li>
@@ -851,12 +419,53 @@
     <span class="label hero-eyebrow">Evento con Causa</span>
     <h1 class="display hero-title">DOGMINGO</h1>
     <p class="hero-subtitle">El Domingo más Perrón del Año</p>
+    <div class="hero-dogs">
+      <canvas class="dog-canvas" data-dog="golden" width="160" height="160"></canvas>
+      <canvas class="dog-canvas" data-dog="husky" width="160" height="160"></canvas>
+      <canvas class="dog-canvas" data-dog="pug" width="160" height="160"></canvas>
+      <canvas class="dog-canvas" data-dog="dalmatian" width="160" height="160"></canvas>
+    </div>
     <p class="hero-date">Domingo 26 de Julio</p>
     <p class="hero-time">10:00 — 15:00 hrs</p>
-    <a href="#registro" class="hero-cta">Quiero ir</a>
+    <a href="#registro" class="btn-primary">Registrarme</a>
   </div>
-  <div class="hero-scroll" aria-hidden="true">
-    <div class="hero-scroll-dot"></div>
+  <div class="hero-scroll" aria-hidden="true"><div class="hero-scroll-dot"></div></div>
+</section>
+
+<!-- PASAPORTE PERRUNO PROMO -->
+<section class="section passport-promo" id="pasaporte">
+  <div class="section-inner">
+    <span class="label section-eyebrow">Nuevo</span>
+    <h2 class="display section-title">Pasaporte Perruno</h2>
+    <div class="passport-grid">
+      <div class="passport-info-text">
+        <h3>Colecciona sellos, gana premios</h3>
+        <p>Al registrarte recibirás tu Pasaporte Perruno digital. Visita cada estación del evento para que los vendedores sellen tu pasaporte.</p>
+        <p>Al completar todos los sellos, presenta tu pasaporte en el stand principal y recibe un regalo especial para ti y tu peludo.</p>
+        <ol class="passport-steps">
+          <li><span class="step-num">1</span><span>Regístrate y descarga tu pasaporte</span></li>
+          <li><span class="step-num">2</span><span>Visita las estaciones y pide tu sello</span></li>
+          <li><span class="step-num">3</span><span>Completa 6 sellos y reclama tu premio</span></li>
+        </ol>
+        <a href="#registro" class="btn-secondary">Obtener mi pasaporte</a>
+      </div>
+      <div class="passport-preview">
+        <div class="passport-preview-inner">
+          <h4>Pasaporte Perruno</h4>
+          <p class="pp-sub">Dogmingo 2025</p>
+          <canvas id="passportDogPreview" width="120" height="120" style="width:60px;height:60px;margin:0 auto 0.75rem;display:block;"></canvas>
+          <div class="stamp-grid-preview">
+            <div class="stamp-slot-preview filled"></div>
+            <div class="stamp-slot-preview filled"></div>
+            <div class="stamp-slot-preview">sello</div>
+            <div class="stamp-slot-preview">sello</div>
+            <div class="stamp-slot-preview">sello</div>
+            <div class="stamp-slot-preview">sello</div>
+          </div>
+          <p style="font-family:system-ui,sans-serif;font-size:0.65rem;color:#8A8378;">Completa 6 sellos → Premio</p>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -888,73 +497,49 @@
   <div class="section-inner">
     <span class="label section-eyebrow">Programa</span>
     <h2 class="display section-title">Actividades del día</h2>
-    <p class="section-intro">Un domingo lleno de diversión, arte y amor por los perritos. Aquí todo lo que te espera.</p>
+    <p class="section-intro">Cada actividad es una estación de tu Pasaporte Perruno. ¡Visítalas todas!</p>
     <div class="activities-grid">
-
       <div class="activity-card">
-        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="24" cy="12" r="6"/>
-          <path d="M12 44V38C12 34 16 30 24 30C32 30 36 34 36 38V44"/>
-          <path d="M24 18V30"/>
-          <path d="M18 22L24 18L30 22"/>
-        </svg>
+        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="12" r="6"/><path d="M12 44V38C12 34 16 30 24 30C32 30 36 34 36 38V44"/><path d="M24 18V30"/><path d="M18 22L24 18L30 22"/></svg>
         <h3 class="activity-name">Bendición Canina</h3>
         <p class="activity-desc">Una ceremonia especial para bendecir a tu compañero peludo y celebrar el vínculo que los une.</p>
+        <span class="activity-stamp">Sello 1</span>
       </div>
-
       <div class="activity-card">
-        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="6" y="10" width="36" height="30" rx="2"/>
-          <circle cx="20" cy="26" r="5"/>
-          <circle cx="32" cy="22" r="3"/>
-          <path d="M6 34L16 26L24 32L34 22L42 28"/>
-        </svg>
+        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="36" height="30" rx="2"/><circle cx="20" cy="26" r="5"/><circle cx="32" cy="22" r="3"/><path d="M6 34L16 26L24 32L34 22L42 28"/></svg>
         <h3 class="activity-name">Huellas del Alma</h3>
         <p class="activity-desc">Dinámica de pintura donde las patitas de tu perro se convierten en arte. Llévate un recuerdo único.</p>
+        <span class="activity-stamp">Sello 2</span>
       </div>
-
       <div class="activity-card">
-        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M10 38L24 10L38 38"/>
-          <path d="M16 28H32"/>
-          <circle cx="24" cy="34" r="2"/>
-        </svg>
+        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 38L24 10L38 38"/><path d="M16 28H32"/><circle cx="24" cy="34" r="2"/></svg>
         <h3 class="activity-name">Exhibición de Adiestramiento</h3>
         <p class="activity-desc">Observa demostraciones de entrenamiento profesional y aprende técnicas para tu mascota.</p>
+        <span class="activity-stamp">Sello 3</span>
       </div>
-
       <div class="activity-card">
-        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M8 36L16 20L24 28L32 16L40 36"/>
-          <line x1="8" y1="36" x2="40" y2="36"/>
-          <circle cx="16" cy="20" r="2"/>
-          <circle cx="32" cy="16" r="2"/>
-        </svg>
+        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 36L16 20L24 28L32 16L40 36"/><line x1="8" y1="36" x2="40" y2="36"/><circle cx="16" cy="20" r="2"/><circle cx="32" cy="16" r="2"/></svg>
         <h3 class="activity-name">Circuito de Agilidad</h3>
         <p class="activity-desc">Pon a prueba las habilidades de tu perro en un recorrido de obstáculos lleno de diversión.</p>
+        <span class="activity-stamp">Sello 4</span>
       </div>
-
       <div class="activity-card">
-        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 14H42V38H6Z"/>
-          <path d="M6 14L24 6L42 14"/>
-          <line x1="16" y1="22" x2="16" y2="32"/>
-          <line x1="24" y1="22" x2="24" y2="32"/>
-          <line x1="32" y1="22" x2="32" y2="32"/>
-        </svg>
+        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14H42V38H6Z"/><path d="M6 14L24 6L42 14"/><line x1="16" y1="22" x2="16" y2="32"/><line x1="24" y1="22" x2="24" y2="32"/><line x1="32" y1="22" x2="32" y2="32"/></svg>
         <h3 class="activity-name">Mercadito Pet-Friendly</h3>
         <p class="activity-desc">Encuentra productos, accesorios, premios y todo lo que tu mascota necesita de emprendedores locales.</p>
+        <span class="activity-stamp">Sello 5</span>
       </div>
-
       <div class="activity-card">
-        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M24 42C24 42 8 32 8 20C8 14 12 8 18 8C21 8 23.5 9.5 24 12C24.5 9.5 27 8 30 8C36 8 40 14 40 20C40 32 24 42 24 42Z"/>
-          <path d="M18 24L22 28L30 20"/>
-        </svg>
+        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M24 42C24 42 8 32 8 20C8 14 12 8 18 8C21 8 23.5 9.5 24 12C24.5 9.5 27 8 30 8C36 8 40 14 40 20C40 32 24 42 24 42Z"/><path d="M18 24L22 28L30 20"/></svg>
         <h3 class="activity-name">Pasarela de Adopción</h3>
         <p class="activity-desc">Conoce perritos que buscan un hogar. Tal vez tu nuevo mejor amigo te esté esperando aquí.</p>
+        <span class="activity-stamp">Sello 6</span>
       </div>
-
+    </div>
+    <div class="dogs-row">
+      <canvas class="dog-canvas" data-dog="corgi" width="200" height="200"></canvas>
+      <canvas class="dog-canvas" data-dog="beagle" width="200" height="200"></canvas>
+      <canvas class="dog-canvas" data-dog="schnauzer" width="200" height="200"></canvas>
     </div>
   </div>
 </section>
@@ -966,30 +551,19 @@
     <h2 class="display section-title">Lo que necesitas saber</h2>
     <div class="info-grid">
       <div class="info-block">
-        <svg class="info-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <rect x="4" y="8" width="32" height="28" rx="3"/>
-          <line x1="4" y1="16" x2="36" y2="16"/>
-          <line x1="14" y1="4" x2="14" y2="12"/>
-          <line x1="26" y1="4" x2="26" y2="12"/>
-        </svg>
+        <svg class="info-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="8" width="32" height="28" rx="3"/><line x1="4" y1="16" x2="36" y2="16"/><line x1="14" y1="4" x2="14" y2="12"/><line x1="26" y1="4" x2="26" y2="12"/></svg>
         <p class="label info-label">Fecha</p>
         <p class="info-value">26 de Julio</p>
         <p class="info-detail">Domingo, 10:00 a 15:00 hrs</p>
       </div>
       <div class="info-block">
-        <svg class="info-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <circle cx="20" cy="16" r="6"/>
-          <path d="M20 36L8 22C4 17 4 10 10 6C16 2 20 6 20 6C20 6 24 2 30 6C36 10 36 17 32 22L20 36Z"/>
-        </svg>
+        <svg class="info-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="20" cy="16" r="6"/><path d="M20 36L8 22C4 17 4 10 10 6C16 2 20 6 20 6C20 6 24 2 30 6C36 10 36 17 32 22L20 36Z"/></svg>
         <p class="label info-label">Lugar</p>
         <p class="info-value">Zitara Club & Golf</p>
         <p class="info-detail">Salida a Calvillo, Aguascalientes</p>
       </div>
       <div class="info-block">
-        <svg class="info-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M20 4C14 4 6 8 6 20C6 26 10 32 20 38C30 32 34 26 34 20C34 8 26 4 20 4Z"/>
-          <path d="M14 18L18 22L26 14"/>
-        </svg>
+        <svg class="info-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 4C14 4 6 8 6 20C6 26 10 32 20 38C30 32 34 26 34 20C34 8 26 4 20 4Z"/><path d="M14 18L18 22L26 14"/></svg>
         <p class="label info-label">Acceso</p>
         <p class="info-value">$100 MXN</p>
         <p class="info-detail">Menores de 10 años: gratis</p>
@@ -1009,11 +583,13 @@
         <p class="ticket-type">General</p>
         <p class="ticket-price"><span>$</span>100</p>
         <p class="ticket-note">Donativo por persona</p>
+        <p class="ticket-passport">Incluye Pasaporte Perruno</p>
       </div>
       <div class="ticket-card">
         <p class="ticket-type">Niños &lt; 10 años</p>
         <p class="ticket-price">Gratis</p>
         <p class="ticket-note">Entrada gratuita</p>
+        <p class="ticket-passport">Incluye Pasaporte Perruno</p>
       </div>
     </div>
     <p class="donate-note">También puedes traer tus <strong>donativos en croquetas</strong> para los perritos rescatados. ¡Cada granito ayuda!</p>
@@ -1027,16 +603,21 @@
     <h2 class="display section-title">Aparta tu lugar</h2>
     <div class="registro-layout">
       <div class="registro-info">
-        <h3>Regístrate y asegura tu entrada</h3>
-        <p>Completa el formulario para confirmar tu asistencia al evento. El donativo de acceso ($100 MXN) se paga el día del evento en la entrada.</p>
-        <p>Al registrarte nos ayudas a planear mejor la logística y garantizar la mejor experiencia para ti y tu peludo.</p>
+        <h3>Regístrate y obtén tu Pasaporte Perruno</h3>
+        <p>Completa el formulario para confirmar tu asistencia. Al finalizar podrás descargar tu Pasaporte Perruno con espacios para 6 sellos.</p>
+        <p>El donativo de acceso ($100 MXN) se paga el día del evento en la entrada.</p>
         <ul class="registro-perks">
           <li>Confirma tu lugar sin pagar por adelantado</li>
-          <li>Recibe recordatorio del evento</li>
+          <li>Descarga tu Pasaporte Perruno al registrarte</li>
+          <li>Colecciona 6 sellos y gana un premio</li>
           <li>Acceso a todas las actividades incluido</li>
           <li>Niños menores de 10 años entran gratis</li>
           <li>Puedes traer donativos en croquetas</li>
         </ul>
+        <div class="dogs-row" style="justify-content:flex-start;padding:1rem 0 0;">
+          <canvas class="dog-canvas" data-dog="chihuahua" width="160" height="160" style="width:70px;height:70px;"></canvas>
+          <canvas class="dog-canvas" data-dog="labrador" width="160" height="160" style="width:70px;height:70px;"></canvas>
+        </div>
       </div>
       <div>
         <div class="form-card">
@@ -1067,21 +648,15 @@
               <div class="form-group">
                 <label class="form-label" for="adultos">Adultos</label>
                 <select class="form-select" id="adultos" name="adultos">
-                  <option value="1">1 persona</option>
-                  <option value="2">2 personas</option>
-                  <option value="3">3 personas</option>
-                  <option value="4">4 personas</option>
-                  <option value="5">5 personas</option>
+                  <option value="1">1 persona</option><option value="2">2 personas</option>
+                  <option value="3">3 personas</option><option value="4">4 personas</option><option value="5">5 personas</option>
                 </select>
               </div>
               <div class="form-group">
                 <label class="form-label" for="ninos">Niños (&lt; 10 años)</label>
                 <select class="form-select" id="ninos" name="ninos">
-                  <option value="0">Sin niños</option>
-                  <option value="1">1 niño</option>
-                  <option value="2">2 niños</option>
-                  <option value="3">3 niños</option>
-                  <option value="4">4 niños</option>
+                  <option value="0">Sin niños</option><option value="1">1 niño</option>
+                  <option value="2">2 niños</option><option value="3">3 niños</option><option value="4">4 niños</option>
                 </select>
               </div>
             </div>
@@ -1095,24 +670,24 @@
                 <input class="form-input" type="text" id="nombrePerro" name="nombrePerro" placeholder="¿Cómo se llama tu peludo?">
               </div>
             </div>
-            <button type="submit" class="form-submit" id="submitBtn">Registrarme</button>
+            <button type="submit" class="form-submit" id="submitBtn">Registrarme y obtener pasaporte</button>
           </form>
           <div class="form-success" id="formSuccess">
             <div class="form-success-icon">
-              <svg viewBox="0 0 32 32" fill="none" stroke="#FAF8F3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M8 16L14 22L24 10"/>
-              </svg>
+              <svg viewBox="0 0 32 32" fill="none" stroke="#FAF8F3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16L14 22L24 10"/></svg>
             </div>
             <h3>¡Registro exitoso!</h3>
-            <p>Te esperamos el <strong>26 de julio</strong> en Zitara Club & Golf. Recuerda que el donativo de acceso se paga en la entrada.</p>
-            <p class="registro-id" id="registroId"></p>
+            <p>Te esperamos el <strong>26 de julio</strong> en Zitara Club & Golf.</p>
+            <div class="passport-download-area">
+              <p class="sys" style="font-weight:700;font-size:0.9rem;margin-bottom:1rem;color:var(--text-primary);">Tu Pasaporte Perruno</p>
+              <canvas id="passportCanvas" width="800" height="1100"></canvas>
+              <br>
+              <button class="btn-download" id="downloadPassport">Descargar Pasaporte</button>
+            </div>
           </div>
         </div>
         <div class="registro-counter">
-          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-            <circle cx="9" cy="9" r="7.5"/>
-            <path d="M9 5V9L12 11"/>
-          </svg>
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="9" cy="9" r="7.5"/><path d="M9 5V9L12 11"/></svg>
           <span><strong id="regCount">0</strong> registrados</span>
         </div>
       </div>
@@ -1126,43 +701,27 @@
     <span class="label section-eyebrow">Cómo llegar</span>
     <h2 class="display section-title">Ubicación</h2>
     <div class="location-flex">
-      <div class="location-details">
+      <div>
         <h3 class="location-name">Zitara Club & Golf</h3>
-        <p class="location-address">
-          Salida a Calvillo<br>
-          A 500 metros del Segundo Anillo<br>
-          Aguascalientes, México
-        </p>
+        <p class="location-address">Salida a Calvillo<br>A 500 metros del Segundo Anillo<br>Aguascalientes, México</p>
         <div class="location-contact">
           <div class="contact-row">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-              <path d="M4 3H8L10 8L7.5 9.5C8.5 11.5 10 13 12 14L13.5 11.5L18 13.5V17C18 17.6 17.6 18 17 18C9 18 2 11 2 3C2 2.4 2.4 2 3 2"/>
-            </svg>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 3H8L10 8L7.5 9.5C8.5 11.5 10 13 12 14L13.5 11.5L18 13.5V17C18 17.6 17.6 18 17 18C9 18 2 11 2 3C2 2.4 2.4 2 3 2"/></svg>
             <span>449 831 0700</span>
           </div>
           <div class="contact-row">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-              <circle cx="10" cy="10" r="8"/>
-              <path d="M10 6V10L13 12"/>
-            </svg>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M10 6V10L13 12"/></svg>
             <span>Domingo 26 de Julio, 10:00 — 15:00 hrs</span>
           </div>
           <div class="contact-row">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-              <rect x="2" y="2" width="16" height="16" rx="4"/>
-              <circle cx="10" cy="10" r="4"/>
-              <circle cx="14.5" cy="5.5" r="1"/>
-            </svg>
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="16" height="16" rx="4"/><circle cx="10" cy="10" r="4"/><circle cx="14.5" cy="5.5" r="1"/></svg>
             <span>@zitaragolfclub</span>
           </div>
         </div>
       </div>
-      <a href="https://maps.app.goo.gl/PZjCzL897KvePRmR9" target="_blank" rel="noopener" class="location-map" style="text-decoration:none;cursor:pointer;">
+      <a href="https://maps.app.goo.gl/PZjCzL897KvePRmR9" target="_blank" rel="noopener" class="location-map">
         <div class="map-placeholder">
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="24" cy="18" r="6"/>
-            <path d="M24 42L12 26C8 20 8 12 14 8C18 5 22 6 24 8C26 6 30 5 34 8C40 12 40 20 36 26L24 42Z"/>
-          </svg>
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="24" cy="18" r="6"/><path d="M24 42L12 26C8 20 8 12 14 8C18 5 22 6 24 8C26 6 30 5 34 8C40 12 40 20 36 26L24 42Z"/></svg>
           <p>Zitara Club & Golf<br>Salida a Calvillo, Ags.</p>
           <p style="margin-top:0.75rem;color:var(--campo);font-weight:700;font-size:0.8rem;">Abrir en Google Maps &rarr;</p>
         </div>
@@ -1171,12 +730,11 @@
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer class="footer">
   <p class="footer-logo">DOGMINGO</p>
   <p class="footer-tagline">El Domingo más Perrón del Año · 26 de Julio 2025</p>
   <ul class="footer-links">
-    <li><a href="#causa">La Causa</a></li>
+    <li><a href="#pasaporte">Pasaporte</a></li>
     <li><a href="#actividades">Actividades</a></li>
     <li><a href="#boletos">Boletos</a></li>
     <li><a href="#registro">Registro</a></li>
@@ -1186,115 +744,297 @@
 </footer>
 
 <script>
-// ── Nav show on scroll ──
-const nav = document.getElementById('nav');
-const hero = document.getElementById('hero');
-let lastScroll = 0;
-const observer = new IntersectionObserver(([entry]) => {
-  nav.classList.toggle('visible', !entry.isIntersecting);
-}, { threshold: 0.1 });
-observer.observe(hero);
+// ── Dog drawing engine ──
+function drawDog(canvas, type) {
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const cx = w / 2, cy = h / 2;
+  const s = w / 160;
+  ctx.clearRect(0, 0, w, h);
 
-// ── Hero canvas: animated paw prints ──
-const canvas = document.getElementById('heroCanvas');
-const ctx = canvas.getContext('2d');
-let paws = [];
-let animId;
+  const dogs = {
+    golden: { body: '#D4A54A', dark: '#B8893A', nose: '#3D2B1A', tongue: '#E06B6B', ear: '#C49340' },
+    husky: { body: '#B8C4D0', dark: '#6B7B8D', nose: '#2A2A2A', tongue: '#D4696E', ear: '#8A9AAA' },
+    pug: { body: '#D4B896', dark: '#A08060', nose: '#2A2A2A', tongue: '#D47878', ear: '#B89A78' },
+    dalmatian: { body: '#F0EDE8', dark: '#2A2A2A', nose: '#2A2A2A', tongue: '#D47878', ear: '#E0DCD3' },
+    corgi: { body: '#E8A840', dark: '#CC8E2E', nose: '#2A2A2A', tongue: '#E06B6B', ear: '#D49530' },
+    beagle: { body: '#C4935A', dark: '#8B6838', nose: '#2A2A2A', tongue: '#D47878', ear: '#7A5028' },
+    schnauzer: { body: '#8A8A8A', dark: '#5A5A5A', nose: '#2A2A2A', tongue: '#D47878', ear: '#6A6A6A' },
+    chihuahua: { body: '#D4A870', dark: '#B88C52', nose: '#2A2A2A', tongue: '#E06B6B', ear: '#C49660' },
+    labrador: { body: '#D4A54A', dark: '#B08030', nose: '#3D2B1A', tongue: '#D47878', ear: '#C09038' },
+  };
+  const c = dogs[type] || dogs.golden;
 
-function resize() {
-  canvas.width = canvas.offsetWidth * devicePixelRatio;
-  canvas.height = canvas.offsetHeight * devicePixelRatio;
-  ctx.scale(devicePixelRatio, devicePixelRatio);
-}
-resize();
-window.addEventListener('resize', resize);
-
-function drawPaw(x, y, size, rotation, alpha) {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(rotation);
-  ctx.globalAlpha = alpha;
-  ctx.fillStyle = '#D93B1E';
-
-  // Main pad
+  // Body
+  ctx.fillStyle = c.body;
   ctx.beginPath();
-  ctx.ellipse(0, size * 0.3, size * 0.45, size * 0.35, 0, 0, Math.PI * 2);
+  ctx.ellipse(cx, cy + 20*s, 40*s, 35*s, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Toes
-  const toePositions = [
-    [-size * 0.35, -size * 0.15, size * 0.18],
-    [-size * 0.12, -size * 0.35, size * 0.16],
-    [size * 0.12, -size * 0.35, size * 0.16],
-    [size * 0.35, -size * 0.15, size * 0.18],
-  ];
-  toePositions.forEach(([tx, ty, tr]) => {
-    ctx.beginPath();
-    ctx.ellipse(tx, ty, tr, tr * 1.15, 0, 0, Math.PI * 2);
-    ctx.fill();
-  });
+  // Head
+  ctx.beginPath();
+  ctx.ellipse(cx, cy - 15*s, 32*s, 30*s, 0, 0, Math.PI * 2);
+  ctx.fill();
 
-  ctx.restore();
-}
+  // Ears
+  ctx.fillStyle = c.ear;
+  if (type === 'corgi' || type === 'chihuahua') {
+    // Pointy ears
+    ctx.beginPath(); ctx.moveTo(cx - 25*s, cy - 35*s); ctx.lineTo(cx - 38*s, cy - 60*s); ctx.lineTo(cx - 8*s, cy - 40*s); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx + 25*s, cy - 35*s); ctx.lineTo(cx + 38*s, cy - 60*s); ctx.lineTo(cx + 8*s, cy - 40*s); ctx.fill();
+  } else if (type === 'husky') {
+    ctx.beginPath(); ctx.moveTo(cx - 22*s, cy - 32*s); ctx.lineTo(cx - 34*s, cy - 58*s); ctx.lineTo(cx - 6*s, cy - 36*s); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx + 22*s, cy - 32*s); ctx.lineTo(cx + 34*s, cy - 58*s); ctx.lineTo(cx + 6*s, cy - 36*s); ctx.fill();
+  } else {
+    // Floppy ears
+    ctx.beginPath(); ctx.ellipse(cx - 28*s, cy - 8*s, 12*s, 22*s, -0.3, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx + 28*s, cy - 8*s, 12*s, 22*s, 0.3, 0, Math.PI * 2); ctx.fill();
+  }
 
-function initPaws() {
-  const w = canvas.offsetWidth;
-  const h = canvas.offsetHeight;
-  paws = [];
-  const count = Math.floor((w * h) / 18000);
-  for (let i = 0; i < count; i++) {
-    paws.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      size: 12 + Math.random() * 18,
-      rotation: Math.random() * Math.PI * 2,
-      alpha: 0.15 + Math.random() * 0.4,
-      drift: 0.15 + Math.random() * 0.3,
-      phase: Math.random() * Math.PI * 2,
+  // Husky mask
+  if (type === 'husky') {
+    ctx.fillStyle = '#F0EDE8';
+    ctx.beginPath(); ctx.ellipse(cx, cy - 8*s, 18*s, 22*s, 0, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // Snout
+  ctx.fillStyle = type === 'husky' ? '#F0EDE8' : (type === 'dalmatian' ? '#F0EDE8' : '#F0E0C8');
+  ctx.beginPath(); ctx.ellipse(cx, cy - 2*s, 16*s, 12*s, 0, 0, Math.PI * 2); ctx.fill();
+
+  // Pug flat face
+  if (type === 'pug') {
+    ctx.fillStyle = c.dark;
+    ctx.beginPath(); ctx.ellipse(cx, cy - 5*s, 20*s, 18*s, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#F0E0C8';
+    ctx.beginPath(); ctx.ellipse(cx, cy, 14*s, 10*s, 0, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // Dalmatian spots
+  if (type === 'dalmatian') {
+    ctx.fillStyle = c.dark;
+    [[cx-15*s, cy-28*s, 5*s], [cx+12*s, cy-25*s, 4*s], [cx-8*s, cy+25*s, 6*s], [cx+18*s, cy+15*s, 4*s], [cx+5*s, cy-35*s, 3*s]].forEach(([x,y,r]) => {
+      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill();
     });
   }
-}
-initPaws();
 
-let time = 0;
-function animate() {
-  const w = canvas.offsetWidth;
-  const h = canvas.offsetHeight;
-  ctx.clearRect(0, 0, w, h);
-  time += 0.003;
-  paws.forEach(p => {
-    const ox = Math.sin(time + p.phase) * p.drift * 8;
-    const oy = Math.cos(time * 0.7 + p.phase) * p.drift * 5;
-    drawPaw(p.x + ox, p.y + oy, p.size, p.rotation, p.alpha * (0.5 + 0.5 * Math.sin(time * 0.5 + p.phase)));
+  // Eyes
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath(); ctx.ellipse(cx - 12*s, cy - 20*s, 7*s, 7*s, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx + 12*s, cy - 20*s, 7*s, 7*s, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#2A1A0A';
+  ctx.beginPath(); ctx.arc(cx - 11*s, cy - 20*s, 4*s, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx + 13*s, cy - 20*s, 4*s, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath(); ctx.arc(cx - 9*s, cy - 22*s, 1.5*s, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx + 15*s, cy - 22*s, 1.5*s, 0, Math.PI * 2); ctx.fill();
+
+  // Nose
+  ctx.fillStyle = c.nose;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - 6*s); ctx.lineTo(cx - 5*s, cy - 1*s); ctx.lineTo(cx + 5*s, cy - 1*s); ctx.closePath();
+  ctx.arc(cx, cy - 3*s, 5*s, 0, Math.PI); ctx.fill();
+
+  // Mouth + tongue
+  ctx.strokeStyle = c.dark; ctx.lineWidth = 1.5*s; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(cx, cy + 1*s); ctx.lineTo(cx - 8*s, cy + 8*s); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, cy + 1*s); ctx.lineTo(cx + 8*s, cy + 8*s); ctx.stroke();
+  ctx.fillStyle = c.tongue;
+  ctx.beginPath(); ctx.ellipse(cx + 3*s, cy + 10*s, 5*s, 7*s, 0.2, 0, Math.PI * 2); ctx.fill();
+
+  // Paws
+  ctx.fillStyle = c.body;
+  ctx.beginPath(); ctx.ellipse(cx - 20*s, cy + 52*s, 10*s, 6*s, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx + 20*s, cy + 52*s, 10*s, 6*s, 0, 0, Math.PI * 2); ctx.fill();
+}
+
+document.querySelectorAll('.dog-canvas').forEach(c => drawDog(c, c.dataset.dog));
+drawDog(document.getElementById('passportDogPreview'), 'golden');
+
+// ── Nav ──
+const navEl = document.getElementById('nav');
+const heroEl = document.getElementById('hero');
+new IntersectionObserver(([e]) => navEl.classList.toggle('visible', !e.isIntersecting), { threshold: 0.1 }).observe(heroEl);
+
+// ── Hero paw prints canvas ──
+const hCanvas = document.getElementById('heroCanvas');
+const hCtx = hCanvas.getContext('2d');
+let pawsList = [];
+function hResize() { hCanvas.width = hCanvas.offsetWidth * devicePixelRatio; hCanvas.height = hCanvas.offsetHeight * devicePixelRatio; hCtx.scale(devicePixelRatio, devicePixelRatio); }
+hResize(); window.addEventListener('resize', hResize);
+function drawPaw(x, y, sz, rot, a) {
+  hCtx.save(); hCtx.translate(x, y); hCtx.rotate(rot); hCtx.globalAlpha = a; hCtx.fillStyle = '#D93B1E';
+  hCtx.beginPath(); hCtx.ellipse(0, sz*0.3, sz*0.45, sz*0.35, 0, 0, Math.PI*2); hCtx.fill();
+  [[-sz*0.35,-sz*0.15,sz*0.18],[-sz*0.12,-sz*0.35,sz*0.16],[sz*0.12,-sz*0.35,sz*0.16],[sz*0.35,-sz*0.15,sz*0.18]].forEach(([tx,ty,tr])=>{
+    hCtx.beginPath(); hCtx.ellipse(tx, ty, tr, tr*1.15, 0, 0, Math.PI*2); hCtx.fill();
   });
-  animId = requestAnimationFrame(animate);
+  hCtx.restore();
+}
+(function initPaws(){
+  const w=hCanvas.offsetWidth, h=hCanvas.offsetHeight;
+  for(let i=0;i<Math.floor((w*h)/18000);i++) pawsList.push({x:Math.random()*w,y:Math.random()*h,size:12+Math.random()*18,rotation:Math.random()*Math.PI*2,alpha:0.15+Math.random()*0.4,drift:0.15+Math.random()*0.3,phase:Math.random()*Math.PI*2});
+})();
+let t=0;
+function animPaws(){
+  const w=hCanvas.offsetWidth, h=hCanvas.offsetHeight; hCtx.clearRect(0,0,w,h); t+=0.003;
+  pawsList.forEach(p=>{drawPaw(p.x+Math.sin(t+p.phase)*p.drift*8,p.y+Math.cos(t*0.7+p.phase)*p.drift*5,p.size,p.rotation,p.alpha*(0.5+0.5*Math.sin(t*0.5+p.phase)));});
+  requestAnimationFrame(animPaws);
+}
+if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches) animPaws();
+else pawsList.forEach(p=>drawPaw(p.x,p.y,p.size,p.rotation,p.alpha*0.5));
+
+// ── Passport Generator ──
+function generatePassport(data) {
+  const c = document.getElementById('passportCanvas');
+  const ctx = c.getContext('2d');
+  const W = 800, H = 1100;
+  c.width = W; c.height = H;
+
+  // Background
+  ctx.fillStyle = '#F7F3EB';
+  ctx.beginPath();
+  ctx.roundRect(0, 0, W, H, 20);
+  ctx.fill();
+
+  // Border
+  ctx.strokeStyle = '#D4C9B5';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([8, 4]);
+  ctx.beginPath();
+  ctx.roundRect(20, 20, W-40, H-40, 16);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Header stripe
+  ctx.fillStyle = '#D93B1E';
+  ctx.beginPath();
+  ctx.roundRect(40, 40, W-80, 100, [12, 12, 0, 0]);
+  ctx.fill();
+
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = '900 36px system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('PASAPORTE PERRUNO', W/2, 105);
+
+  // Subtitle
+  ctx.fillStyle = '#8A8378';
+  ctx.font = '700 16px system-ui, sans-serif';
+  ctx.letterSpacing = '3px';
+  ctx.fillText('DOGMINGO · 26 JULIO 2025', W/2, 175);
+
+  // Dog illustration
+  const dogCanvas = document.createElement('canvas');
+  dogCanvas.width = 200; dogCanvas.height = 200;
+  drawDog(dogCanvas, 'golden');
+  ctx.drawImage(dogCanvas, W/2-60, 195, 120, 120);
+
+  // Owner info
+  ctx.fillStyle = '#191714';
+  ctx.font = '800 28px system-ui, sans-serif';
+  ctx.fillText(data.nombre + ' ' + data.apellido, W/2, 355);
+
+  if (data.nombrePerro) {
+    ctx.fillStyle = '#5C584F';
+    ctx.font = '600 20px system-ui, sans-serif';
+    ctx.fillText('y su perro ' + data.nombrePerro, W/2, 385);
+  }
+
+  // Folio
+  ctx.fillStyle = '#2D6A3F';
+  ctx.font = '700 14px system-ui, sans-serif';
+  ctx.fillText('Folio: ' + data.id, W/2, 420);
+
+  // Divider
+  ctx.strokeStyle = '#D4C9B5';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(80, 445); ctx.lineTo(W-80, 445); ctx.stroke();
+
+  // Stamps section title
+  ctx.fillStyle = '#191714';
+  ctx.font = '800 22px system-ui, sans-serif';
+  ctx.fillText('SELLOS DE ESTACIONES', W/2, 485);
+
+  ctx.fillStyle = '#8A8378';
+  ctx.font = '400 14px system-ui, sans-serif';
+  ctx.fillText('Visita cada estación para obtener tu sello', W/2, 510);
+
+  // Stamp slots
+  const stations = ['Bendición\nCanina', 'Huellas\ndel Alma', 'Exhibición\nAdiestramiento', 'Circuito\nAgilidad', 'Mercadito\nPet-Friendly', 'Pasarela\nAdopción'];
+  const cols = 3, rows = 2;
+  const slotSize = 140, gapX = 40, gapY = 30;
+  const gridW = cols * slotSize + (cols-1) * gapX;
+  const startX = (W - gridW) / 2;
+  const startY = 540;
+
+  stations.forEach((name, i) => {
+    const col = i % cols, row = Math.floor(i / cols);
+    const x = startX + col * (slotSize + gapX) + slotSize/2;
+    const y = startY + row * (slotSize + gapY) + slotSize/2;
+
+    // Circle
+    ctx.strokeStyle = '#C9BDA8';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath(); ctx.arc(x, y, slotSize/2 - 5, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Station name
+    ctx.fillStyle = '#B5A998';
+    ctx.font = '600 12px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    const lines = name.split('\n');
+    lines.forEach((line, li) => {
+      ctx.fillText(line, x, y + (li - (lines.length-1)/2) * 16);
+    });
+
+    // Number
+    ctx.fillStyle = '#D4C9B5';
+    ctx.font = '800 11px system-ui, sans-serif';
+    ctx.fillText((i+1).toString(), x, y + slotSize/2 - 15);
+  });
+
+  // Bottom instructions
+  const bottomY = startY + rows * (slotSize + gapY) + 20;
+  ctx.fillStyle = '#D93B1E';
+  ctx.beginPath();
+  ctx.roundRect(40, bottomY, W-80, 80, [0, 0, 12, 12]);
+  ctx.fill();
+
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = '700 16px system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('¡Completa los 6 sellos y reclama tu premio!', W/2, bottomY + 35);
+  ctx.font = '400 13px system-ui, sans-serif';
+  ctx.fillText('Presenta tu pasaporte en el stand principal de Dogmingo', W/2, bottomY + 58);
+
+  // Paw watermark
+  ctx.globalAlpha = 0.04;
+  ctx.fillStyle = '#D93B1E';
+  for (let i = 0; i < 8; i++) {
+    const px = 80 + Math.random() * (W-160), py = 200 + Math.random() * (H-300);
+    drawPawOnCtx(ctx, px, py, 20 + Math.random() * 15, Math.random() * Math.PI * 2);
+  }
+  ctx.globalAlpha = 1;
 }
 
-const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-if (!prefersReduced.matches) {
-  animate();
-} else {
-  paws.forEach(p => drawPaw(p.x, p.y, p.size, p.rotation, p.alpha * 0.5));
+function drawPawOnCtx(ctx, x, y, sz, rot) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot);
+  ctx.beginPath(); ctx.ellipse(0, sz*0.3, sz*0.45, sz*0.35, 0, 0, Math.PI*2); ctx.fill();
+  [[-sz*0.35,-sz*0.15,sz*0.18],[-sz*0.12,-sz*0.35,sz*0.16],[sz*0.12,-sz*0.35,sz*0.16],[sz*0.35,-sz*0.15,sz*0.18]].forEach(([tx,ty,tr])=>{
+    ctx.beginPath(); ctx.ellipse(tx, ty, tr, tr*1.15, 0, 0, Math.PI*2); ctx.fill();
+  });
+  ctx.restore();
 }
 
 // ── Registration form ──
 const form = document.getElementById('registroForm');
 const submitBtn = document.getElementById('submitBtn');
 const formSuccess = document.getElementById('formSuccess');
-const registroId = document.getElementById('registroId');
 const regCount = document.getElementById('regCount');
 const traePerro = document.getElementById('traePerro');
 const dogNameField = document.getElementById('dogNameField');
 
-function getRegistrations() {
-  try { return JSON.parse(localStorage.getItem('dogmingo_registros') || '[]'); }
-  catch { return []; }
-}
-
-function updateCounter() {
-  const regs = getRegistrations();
-  regCount.textContent = regs.length;
-}
+function getRegs() { try { return JSON.parse(localStorage.getItem('dogmingo_registros') || '[]'); } catch { return []; } }
+function updateCounter() { regCount.textContent = getRegs().length; }
 updateCounter();
 
 traePerro.addEventListener('change', () => {
@@ -1307,33 +1047,25 @@ function validateField(field) {
   if (!group) return true;
   let valid = true;
   if (field.required && !field.value.trim()) valid = false;
-  if (field.type === 'email' && field.value.trim()) {
-    valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim());
-  }
-  if (field.type === 'tel' && field.value.trim()) {
-    valid = field.value.replace(/\D/g, '').length >= 7;
-  }
+  if (field.type === 'email' && field.value.trim()) valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim());
+  if (field.type === 'tel' && field.value.trim()) valid = field.value.replace(/\D/g, '').length >= 7;
   group.classList.toggle('has-error', !valid);
   return valid;
 }
 
 form.querySelectorAll('.form-input').forEach(input => {
   input.addEventListener('blur', () => validateField(input));
-  input.addEventListener('input', () => {
-    const group = input.closest('.form-group');
-    if (group && group.classList.contains('has-error')) validateField(input);
-  });
+  input.addEventListener('input', () => { const g = input.closest('.form-group'); if (g && g.classList.contains('has-error')) validateField(input); });
 });
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  const fields = form.querySelectorAll('.form-input[required]');
   let allValid = true;
-  fields.forEach(f => { if (!validateField(f)) allValid = false; });
+  form.querySelectorAll('.form-input[required]').forEach(f => { if (!validateField(f)) allValid = false; });
   if (!allValid) return;
 
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Registrando...';
+  submitBtn.textContent = 'Generando pasaporte...';
 
   setTimeout(() => {
     const data = {
@@ -1349,17 +1081,24 @@ form.addEventListener('submit', (e) => {
       fecha: new Date().toISOString()
     };
 
-    const regs = getRegistrations();
-    regs.push(data);
+    const regs = getRegs(); regs.push(data);
     localStorage.setItem('dogmingo_registros', JSON.stringify(regs));
+
+    generatePassport(data);
 
     form.style.display = 'none';
     formSuccess.classList.add('visible');
-    registroId.textContent = 'Folio: ' + data.id;
     updateCounter();
-  }, 800);
+  }, 1000);
+});
+
+document.getElementById('downloadPassport').addEventListener('click', () => {
+  const c = document.getElementById('passportCanvas');
+  const link = document.createElement('a');
+  link.download = 'pasaporte-perruno-dogmingo.png';
+  link.href = c.toDataURL('image/png');
+  link.click();
 });
 </script>
-
 </body>
 </html>
