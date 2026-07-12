@@ -153,6 +153,19 @@ var navEl = document.getElementById('nav');
 var heroEl = document.getElementById('hero');
 new IntersectionObserver(function(entries) { navEl.classList.toggle('visible', !entries[0].isIntersecting); }, { threshold: 0.1 }).observe(heroEl);
 
+var navToggle = document.getElementById('navToggle');
+var navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', function() {
+  navToggle.classList.toggle('open');
+  navLinks.classList.toggle('open');
+});
+navLinks.querySelectorAll('a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    navToggle.classList.remove('open');
+    navLinks.classList.remove('open');
+  });
+});
+
 // ══════════════════════════════════════════════════════
 // Hero paw prints
 // ══════════════════════════════════════════════════════
