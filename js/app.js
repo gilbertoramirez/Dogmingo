@@ -207,7 +207,10 @@ function drawPawOnCtx(ctx, x, y, sz, rot) {
   ctx.restore();
 }
 
-function generatePassport(data) {
+var currentUserData = null;
+var currentStamps = [];
+
+function generatePassport(data, stamps) {
   var c = document.getElementById('passportCanvas');
   var ctx = c.getContext('2d');
   var W = 800, H = 1100;
@@ -224,8 +227,8 @@ function generatePassport(data) {
   drawDog(dogCanvas, 'golden'); ctx.drawImage(dogCanvas, W/2-60, 195, 120, 120);
   ctx.fillStyle = '#191714'; ctx.font = '800 28px system-ui, sans-serif';
   ctx.fillText(data.nombre + ' ' + data.apellido, W/2, 355);
-  if (data.nombrePerro) { ctx.fillStyle = '#5C584F'; ctx.font = '600 20px system-ui, sans-serif'; ctx.fillText('y su perro ' + data.nombrePerro, W/2, 385); }
-  ctx.fillStyle = '#2D6A3F'; ctx.font = '700 14px system-ui, sans-serif'; ctx.fillText('Folio: ' + data.id, W/2, 420);
+  if (data.nombre_perro) { ctx.fillStyle = '#5C584F'; ctx.font = '600 20px system-ui, sans-serif'; ctx.fillText('y su perro ' + data.nombre_perro, W/2, 385); }
+  ctx.fillStyle = '#2D6A3F'; ctx.font = '700 14px system-ui, sans-serif'; ctx.fillText('Folio: ' + data.folio, W/2, 420);
   ctx.strokeStyle = '#D4C9B5'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(80, 445); ctx.lineTo(W-80, 445); ctx.stroke();
   ctx.fillStyle = '#191714'; ctx.font = '800 22px system-ui, sans-serif'; ctx.fillText('SELLOS DE ESTACIONES', W/2, 485);
   ctx.fillStyle = '#8A8378'; ctx.font = '400 14px system-ui, sans-serif'; ctx.fillText('Visita cada estación para obtener tu sello', W/2, 510);
@@ -233,7 +236,6 @@ function generatePassport(data) {
   var cols = 3, rows = 2, slotSize = 140, gapX = 40, gapY = 30;
   var gridW = cols * slotSize + (cols-1) * gapX;
   var startX = (W - gridW) / 2, startY = 540;
-  var stamps = getUserStamps();
   stations.forEach(function(name, i) {
     var col = i % cols, row = Math.floor(i / cols);
     var x = startX + col * (slotSize + gapX) + slotSize/2;
@@ -263,20 +265,11 @@ function generatePassport(data) {
 }
 
 // ══════════════════════════════════════════════════════
-// Stamp tracking (user side)
+// Stamp tracking (user side) — all from DB
 // ══════════════════════════════════════════════════════
-function getUserData() { try { return JSON.parse(localStorage.getItem('dogmingo_user') || 'null'); } catch(e) { return null; } }
-function getUserStamps() { try { return JSON.parse(localStorage.getItem('dogmingo_stamps') || '[]'); } catch(e) { return []; } }
-function saveStamp(standNum) {
-  var stamps = getUserStamps();
-  if (stamps.indexOf(standNum) < 0) { stamps.push(standNum); localStorage.setItem('dogmingo_stamps', JSON.stringify(stamps)); }
-  return stamps;
-}
-
-function renderStampGrid() {
+function renderStampGrid(stamps) {
   var grid = document.getElementById('stampGrid');
   if (!grid) return;
-  var stamps = getUserStamps();
   grid.innerHTML = '';
   STATION_NAMES.forEach(function(name, i) {
     var slot = document.createElement('div');
@@ -293,24 +286,45 @@ function renderStampGrid() {
 function addStampCode() {
   var input = document.getElementById('stampCodeInput');
   var msg = document.getElementById('stampMsg');
-  var userData = getUserData();
-  if (!userData) { msg.className = 'stamp-msg error'; msg.textContent = 'Primero debes registrarte.'; return; }
+  if (!currentUserData) { msg.className = 'stamp-msg error'; msg.textContent = 'Primero debes registrarte.'; return; }
   var code = input.value.trim().toUpperCase();
   if (!code) { msg.className = 'stamp-msg error'; msg.textContent = 'Ingresa un código de sello.'; return; }
-  var standNum = verifyStampCode(userData.id, code);
+  var standNum = verifyStampCode(currentUserData.folio, code);
   if (standNum === 0) { msg.className = 'stamp-msg error'; msg.textContent = 'Código inválido. Verifica e intenta de nuevo.'; return; }
-  var stamps = getUserStamps();
-  if (stamps.indexOf(standNum) >= 0) { msg.className = 'stamp-msg error'; msg.textContent = 'Ya tienes el sello de ' + STATION_NAMES[standNum - 1] + '.'; return; }
-  saveStamp(standNum);
+  if (currentStamps.indexOf(standNum) >= 0) { msg.className = 'stamp-msg error'; msg.textContent = 'Ya tienes el sello de ' + STATION_NAMES[standNum - 1] + '.'; return; }
+  currentStamps.push(standNum);
   msg.className = 'stamp-msg success';
   msg.textContent = '¡Sello ' + standNum + ' (' + STATION_NAMES[standNum - 1] + ') agregado!';
   input.value = '';
-  renderStampGrid();
-  generatePassport(userData);
+  renderStampGrid(currentStamps);
+  generatePassport(currentUserData, currentStamps);
 }
 
 // ══════════════════════════════════════════════════════
-// Registration
+// Show success screen with user data from DB
+// ══════════════════════════════════════════════════════
+function showSuccessScreen(registro, stamps) {
+  currentUserData = registro;
+  currentStamps = stamps;
+
+  form.style.display = 'none';
+  formSuccess.classList.add('visible');
+  document.getElementById('folioDisplay').textContent = registro.folio;
+
+  var qrCanvas = renderQRToCanvas(registro.folio, 256);
+  var qrArea = document.getElementById('qrArea');
+  qrArea.innerHTML = '';
+  qrArea.appendChild(qrCanvas);
+  var p = document.createElement('p');
+  p.textContent = 'Muestra este QR en cada stand';
+  qrArea.appendChild(p);
+
+  renderStampGrid(stamps);
+  generatePassport(registro, stamps);
+}
+
+// ══════════════════════════════════════════════════════
+// Registration — DB first, localStorage only stores folio
 // ══════════════════════════════════════════════════════
 var form = document.getElementById('registroForm');
 var submitBtn = document.getElementById('submitBtn');
@@ -319,11 +333,8 @@ var regCount = document.getElementById('regCount');
 var traePerro = document.getElementById('traePerro');
 var dogNameField = document.getElementById('dogNameField');
 
-function getRegs() { try { return JSON.parse(localStorage.getItem('dogmingo_registros') || '[]'); } catch(e) { return []; } }
 function updateCounter() {
-  var localCount = getRegs().length;
-  regCount.textContent = localCount;
-  regCount.closest('.registro-counter').style.display = localCount > 0 ? '' : 'none';
+  regCount.closest('.registro-counter').style.display = 'none';
   fetch('/api/registros').then(function(r) { return r.json(); }).then(function(d) {
     if (d.count > 0) {
       regCount.textContent = d.count;
@@ -332,79 +343,38 @@ function updateCounter() {
   }).catch(function() {});
 }
 
-function syncRegistration(data) {
-  fetch('/api/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  }).then(function(r) {
-    return r.json().then(function(d) {
-      if (!r.ok) console.error('Registration sync failed:', d.error);
-      else console.log('Registration synced to DB:', d.folio);
-    });
-  }).catch(function(err) {
-    console.error('Registration sync error:', err);
-  });
-}
-
-function sendPassportEmail(userData) {
+function sendPassportEmail(registro) {
   var c = document.getElementById('passportCanvas');
   var passportImage = c.toDataURL('image/png');
   fetch('/api/send-passport', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      email: userData.email,
-      nombre: userData.nombre + ' ' + userData.apellido,
-      folio: userData.id,
+      email: registro.email,
+      nombre: registro.nombre + ' ' + registro.apellido,
+      folio: registro.folio,
       passportImage: passportImage
     })
   }).catch(function() {});
 }
 
-function syncStampsFromDB() {
-  var userData = getUserData();
-  if (!userData) return;
-  fetch('/api/stamps?folio=' + encodeURIComponent(userData.id))
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      if (d.stamps && d.stamps.length > 0) {
-        var localStamps = getUserStamps();
-        var changed = false;
-        d.stamps.forEach(function(s) {
-          if (localStamps.indexOf(s.stand_num) < 0) {
-            localStamps.push(s.stand_num);
-            changed = true;
-          }
-        });
-        if (changed) {
-          localStorage.setItem('dogmingo_stamps', JSON.stringify(localStamps));
-          renderStampGrid();
-          generatePassport(userData);
-        }
-      }
-    })
-    .catch(function() {});
-}
-
+// Restore session from DB using saved folio
 (function restoreSession() {
   updateCounter();
-  var userData = getUserData();
-  if (userData) {
-    form.style.display = 'none';
-    formSuccess.classList.add('visible');
-    document.getElementById('folioDisplay').textContent = userData.id;
-    var qrCanvas = renderQRToCanvas(userData.id, 256);
-    var qrArea = document.getElementById('qrArea');
-    qrArea.innerHTML = '';
-    qrArea.appendChild(qrCanvas);
-    var p = document.createElement('p');
-    p.textContent = 'Muestra este QR en cada stand';
-    qrArea.appendChild(p);
-    renderStampGrid();
-    generatePassport(userData);
-    syncStampsFromDB();
-  }
+  var folio = localStorage.getItem('dogmingo_folio');
+  if (!folio) return;
+
+  fetch('/api/registro?folio=' + encodeURIComponent(folio))
+    .then(function(r) {
+      if (!r.ok) throw new Error('Not found');
+      return r.json();
+    })
+    .then(function(d) {
+      showSuccessScreen(d.registro, d.stamps);
+    })
+    .catch(function() {
+      localStorage.removeItem('dogmingo_folio');
+    });
 })();
 
 traePerro.addEventListener('change', function() {
@@ -433,45 +403,54 @@ form.addEventListener('submit', function(e) {
   var allValid = true;
   form.querySelectorAll('.form-input[required]').forEach(function(f) { if (!validateField(f)) allValid = false; });
   if (!allValid) return;
+
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Generando pasaporte...';
-  setTimeout(function() {
-    var data = {
-      id: 'DGM-' + Date.now().toString(36).toUpperCase(),
-      nombre: document.getElementById('nombre').value.trim(),
-      apellido: document.getElementById('apellido').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      telefono: document.getElementById('telefono').value.trim(),
-      adultos: parseInt(document.getElementById('adultos').value),
-      ninos: parseInt(document.getElementById('ninos').value),
-      traePerro: traePerro.checked,
-      nombrePerro: document.getElementById('nombrePerro').value.trim(),
-      fecha: new Date().toISOString()
-    };
-    var regs = getRegs(); regs.push(data);
-    localStorage.setItem('dogmingo_registros', JSON.stringify(regs));
-    localStorage.setItem('dogmingo_user', JSON.stringify(data));
-    localStorage.setItem('dogmingo_stamps', '[]');
-    syncRegistration({
-      folio: data.id, nombre: data.nombre, apellido: data.apellido,
-      email: data.email, telefono: data.telefono, adultos: data.adultos,
-      ninos: data.ninos, traePerro: data.traePerro, nombrePerro: data.nombrePerro
+  submitBtn.textContent = 'Registrando...';
+
+  var folio = 'DGM-' + Date.now().toString(36).toUpperCase();
+  var payload = {
+    folio: folio,
+    nombre: document.getElementById('nombre').value.trim(),
+    apellido: document.getElementById('apellido').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    telefono: document.getElementById('telefono').value.trim(),
+    adultos: parseInt(document.getElementById('adultos').value),
+    ninos: parseInt(document.getElementById('ninos').value),
+    traePerro: traePerro.checked,
+    nombrePerro: document.getElementById('nombrePerro').value.trim()
+  };
+
+  fetch('/api/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function(r) {
+    return r.json().then(function(d) {
+      if (!r.ok) throw new Error(d.error || 'Error al registrar');
+      return d;
     });
-    document.getElementById('folioDisplay').textContent = data.id;
-    var qrCanvas = renderQRToCanvas(data.id, 256);
-    var qrArea = document.getElementById('qrArea');
-    qrArea.innerHTML = '';
-    qrArea.appendChild(qrCanvas);
-    var p = document.createElement('p');
-    p.textContent = 'Muestra este QR en cada stand';
-    qrArea.appendChild(p);
-    generatePassport(data);
-    renderStampGrid();
-    form.style.display = 'none';
-    formSuccess.classList.add('visible');
+  }).then(function() {
+    localStorage.setItem('dogmingo_folio', folio);
+
+    var registro = {
+      folio: folio,
+      nombre: payload.nombre,
+      apellido: payload.apellido,
+      email: payload.email,
+      telefono: payload.telefono,
+      adultos: payload.adultos,
+      ninos: payload.ninos,
+      nombre_perro: payload.nombrePerro || null
+    };
+
+    showSuccessScreen(registro, []);
     updateCounter();
-    setTimeout(function() { sendPassportEmail(data); }, 500);
-  }, 1000);
+    setTimeout(function() { sendPassportEmail(registro); }, 500);
+  }).catch(function(err) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Registrarme y obtener pasaporte';
+    alert('Error: ' + err.message);
+  });
 });
 
 document.getElementById('downloadPassport').addEventListener('click', function() {
@@ -481,7 +460,6 @@ document.getElementById('downloadPassport').addEventListener('click', function()
   link.href = c.toDataURL('image/png');
   link.click();
 });
-
 
 // ══════════════════════════════════════════════════════
 // Stand Portal
