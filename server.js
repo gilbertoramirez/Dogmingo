@@ -379,6 +379,10 @@ app.get('/api/vendor/list', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log('Dogmingo server running on port ' + PORT);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log('Dogmingo server running on port ' + PORT);
+  });
+}
+
+module.exports = app;
