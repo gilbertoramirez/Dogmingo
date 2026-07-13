@@ -337,7 +337,14 @@ function syncRegistration(data) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
-  }).catch(function() {});
+  }).then(function(r) {
+    return r.json().then(function(d) {
+      if (!r.ok) console.error('Registration sync failed:', d.error);
+      else console.log('Registration synced to DB:', d.folio);
+    });
+  }).catch(function(err) {
+    console.error('Registration sync error:', err);
+  });
 }
 
 function sendPassportEmail(userData) {
@@ -473,6 +480,18 @@ document.getElementById('downloadPassport').addEventListener('click', function()
   link.download = 'pasaporte-perruno-dogmingo.png';
   link.href = c.toDataURL('image/png');
   link.click();
+});
+
+document.getElementById('resetRegistro').addEventListener('click', function() {
+  if (!confirm('¿Seguro que quieres borrar tu registro actual y hacer uno nuevo?')) return;
+  localStorage.removeItem('dogmingo_user');
+  localStorage.removeItem('dogmingo_stamps');
+  formSuccess.classList.remove('visible');
+  form.style.display = '';
+  form.reset();
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Registrarme y obtener pasaporte';
+  dogNameField.classList.remove('visible');
 });
 
 // ══════════════════════════════════════════════════════
