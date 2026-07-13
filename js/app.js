@@ -482,17 +482,6 @@ document.getElementById('downloadPassport').addEventListener('click', function()
   link.click();
 });
 
-document.getElementById('resetRegistro').addEventListener('click', function() {
-  if (!confirm('¿Seguro que quieres borrar tu registro actual y hacer uno nuevo?')) return;
-  localStorage.removeItem('dogmingo_user');
-  localStorage.removeItem('dogmingo_stamps');
-  formSuccess.classList.remove('visible');
-  form.style.display = '';
-  form.reset();
-  submitBtn.disabled = false;
-  submitBtn.textContent = 'Registrarme y obtener pasaporte';
-  dogNameField.classList.remove('visible');
-});
 
 // ══════════════════════════════════════════════════════
 // Stand Portal
