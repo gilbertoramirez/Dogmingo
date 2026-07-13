@@ -324,7 +324,7 @@ function showSuccessScreen(registro, stamps) {
 }
 
 // ══════════════════════════════════════════════════════
-// Registration — DB first, localStorage only stores folio
+// Registration — DB first, duplicates checked by email
 // ══════════════════════════════════════════════════════
 var form = document.getElementById('registroForm');
 var submitBtn = document.getElementById('submitBtn');
@@ -358,24 +358,7 @@ function sendPassportEmail(registro) {
   }).catch(function() {});
 }
 
-// Restore session from DB using saved folio
-(function restoreSession() {
-  updateCounter();
-  var folio = localStorage.getItem('dogmingo_folio');
-  if (!folio) return;
-
-  fetch('/api/registro?folio=' + encodeURIComponent(folio))
-    .then(function(r) {
-      if (!r.ok) throw new Error('Not found');
-      return r.json();
-    })
-    .then(function(d) {
-      showSuccessScreen(d.registro, d.stamps);
-    })
-    .catch(function() {
-      localStorage.removeItem('dogmingo_folio');
-    });
-})();
+updateCounter();
 
 traePerro.addEventListener('change', function() {
   dogNameField.classList.toggle('visible', traePerro.checked);
@@ -429,10 +412,8 @@ form.addEventListener('submit', function(e) {
       if (!r.ok) throw new Error(d.error || 'Error al registrar');
       return d;
     });
-  }).then(function() {
-    localStorage.setItem('dogmingo_folio', folio);
-
-    var registro = {
+  }).then(function(d) {
+    var registro = d.registro || {
       folio: folio,
       nombre: payload.nombre,
       apellido: payload.apellido,
@@ -442,10 +423,13 @@ form.addEventListener('submit', function(e) {
       ninos: payload.ninos,
       nombre_perro: payload.nombrePerro || null
     };
+    var stamps = d.stamps || [];
 
-    showSuccessScreen(registro, []);
+    showSuccessScreen(registro, stamps);
     updateCounter();
-    setTimeout(function() { sendPassportEmail(registro); }, 500);
+    if (!d.existing) {
+      setTimeout(function() { sendPassportEmail(registro); }, 500);
+    }
   }).catch(function(err) {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Registrarme y obtener pasaporte';
