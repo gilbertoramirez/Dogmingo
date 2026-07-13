@@ -1,5 +1,6 @@
-const { neon } = require('@neondatabase/serverless');
+const { getDb, vendedores } = require('../../db');
 const { createToken, hashPassword } = require('../_auth');
+const { eq, and } = require('drizzle-orm');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -25,18 +26,21 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  if (!process.env.DATABASE_URL) {
-    return res.status(500).json({ error: 'Database not configured' });
-  }
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
 
   try {
-    const sql = neon(process.env.DATABASE_URL);
     const hash = hashPassword(password);
-    const rows = await sql`
-      SELECT id, nombre, email, stand_num, es_admin
-      FROM vendedores
-      WHERE email = ${email} AND password_hash = ${hash} AND activo = true
-    `;
+    const rows = await db.select({
+      id: vendedores.id,
+      nombre: vendedores.nombre,
+      email: vendedores.email,
+      stand_num: vendedores.stand_num,
+      es_admin: vendedores.es_admin,
+    }).from(vendedores).where(
+      and(eq(vendedores.email, email), eq(vendedores.password_hash, hash), eq(vendedores.activo, true))
+    );
+
     if (rows.length === 0) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }

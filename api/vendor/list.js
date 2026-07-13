@@ -1,5 +1,6 @@
-const { neon } = require('@neondatabase/serverless');
+const { getDb, vendedores, registros, sellos } = require('../../db');
 const { verifyToken } = require('../_auth');
+const { asc, count } = require('drizzle-orm');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,27 +16,23 @@ module.exports = async function handler(req, res) {
     return res.status(403).json({ error: 'Acceso de administrador requerido' });
   }
 
-  if (!process.env.DATABASE_URL) {
-    return res.status(500).json({ error: 'Database not configured' });
-  }
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
 
   try {
-    const sql = neon(process.env.DATABASE_URL);
-    const vendors = await sql`
-      SELECT id, nombre, email, stand_num, es_admin, activo, created_at
-      FROM vendedores ORDER BY stand_num, nombre
-    `;
+    const vendors = await db.select().from(vendedores)
+      .orderBy(asc(vendedores.stand_num), asc(vendedores.nombre));
 
-    const stats = await sql`
-      SELECT
-        (SELECT COUNT(*)::int FROM registros) AS total_registros,
-        (SELECT COUNT(*)::int FROM sellos) AS total_sellos
-    `;
+    const regCount = await db.select({ total: count() }).from(registros);
+    const stampCount = await db.select({ total: count() }).from(sellos);
 
     return res.status(200).json({
       ok: true,
       vendors,
-      stats: stats[0]
+      stats: {
+        total_registros: regCount[0].total,
+        total_sellos: stampCount[0].total,
+      }
     });
   } catch (err) {
     console.error('List vendors error:', err);

@@ -1,4 +1,5 @@
-const { neon } = require('@neondatabase/serverless');
+const { getDb, registros } = require('../db');
+const { sql } = require('drizzle-orm');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -14,17 +15,18 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  if (!process.env.DATABASE_URL) {
-    return res.status(500).json({ error: 'Database not configured' });
-  }
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
 
   try {
-    const sql = neon(process.env.DATABASE_URL);
-    await sql`
-      INSERT INTO registros (folio, nombre, apellido, email, telefono, adultos, ninos, trae_perro, nombre_perro)
-      VALUES (${folio}, ${nombre}, ${apellido}, ${email}, ${telefono}, ${adultos || 1}, ${ninos || 0}, ${!!traePerro}, ${nombrePerro || null})
-      ON CONFLICT (folio) DO NOTHING
-    `;
+    await db.insert(registros).values({
+      folio, nombre, apellido, email, telefono,
+      adultos: adultos || 1,
+      ninos: ninos || 0,
+      trae_perro: !!traePerro,
+      nombre_perro: nombrePerro || null,
+    }).onConflictDoNothing({ target: registros.folio });
+
     return res.status(201).json({ ok: true, folio });
   } catch (err) {
     console.error('Register error:', err);
