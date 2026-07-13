@@ -321,9 +321,14 @@ var dogNameField = document.getElementById('dogNameField');
 
 function getRegs() { try { return JSON.parse(localStorage.getItem('dogmingo_registros') || '[]'); } catch(e) { return []; } }
 function updateCounter() {
-  regCount.textContent = getRegs().length;
+  var localCount = getRegs().length;
+  regCount.textContent = localCount;
+  regCount.closest('.registro-counter').style.display = localCount > 0 ? '' : 'none';
   fetch('/api/registros').then(function(r) { return r.json(); }).then(function(d) {
-    if (d.count > 0) regCount.textContent = d.count;
+    if (d.count > 0) {
+      regCount.textContent = d.count;
+      regCount.closest('.registro-counter').style.display = '';
+    }
   }).catch(function() {});
 }
 
@@ -333,6 +338,46 @@ function syncRegistration(data) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   }).catch(function() {});
+}
+
+function sendPassportEmail(userData) {
+  var c = document.getElementById('passportCanvas');
+  var passportImage = c.toDataURL('image/png');
+  fetch('/api/send-passport', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: userData.email,
+      nombre: userData.nombre + ' ' + userData.apellido,
+      folio: userData.id,
+      passportImage: passportImage
+    })
+  }).catch(function() {});
+}
+
+function syncStampsFromDB() {
+  var userData = getUserData();
+  if (!userData) return;
+  fetch('/api/stamps?folio=' + encodeURIComponent(userData.id))
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.stamps && d.stamps.length > 0) {
+        var localStamps = getUserStamps();
+        var changed = false;
+        d.stamps.forEach(function(s) {
+          if (localStamps.indexOf(s.stand_num) < 0) {
+            localStamps.push(s.stand_num);
+            changed = true;
+          }
+        });
+        if (changed) {
+          localStorage.setItem('dogmingo_stamps', JSON.stringify(localStamps));
+          renderStampGrid();
+          generatePassport(userData);
+        }
+      }
+    })
+    .catch(function() {});
 }
 
 (function restoreSession() {
@@ -351,6 +396,7 @@ function syncRegistration(data) {
     qrArea.appendChild(p);
     renderStampGrid();
     generatePassport(userData);
+    syncStampsFromDB();
   }
 })();
 
@@ -417,6 +463,7 @@ form.addEventListener('submit', function(e) {
     form.style.display = 'none';
     formSuccess.classList.add('visible');
     updateCounter();
+    setTimeout(function() { sendPassportEmail(data); }, 500);
   }, 1000);
 });
 

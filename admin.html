@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dogmingo — Panel de Vendedores</title>
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="admin-app" id="app">
+
+  <!-- LOGIN -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <h1 class="login-logo">DOGMINGO</h1>
+      <p class="login-subtitle">Panel de Vendedores</p>
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="loginEmail">Correo o "admin"</label>
+          <input type="text" id="loginEmail" placeholder="tu@correo.com" required autocomplete="username">
+        </div>
+        <div class="field">
+          <label for="loginPassword">Contrase&ntilde;a</label>
+          <input type="password" id="loginPassword" placeholder="Tu contrase&ntilde;a" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-login" id="loginBtn">Iniciar sesi&oacute;n</button>
+        <p class="login-error" id="loginError"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard" style="display:none;">
+    <header class="dash-header">
+      <div class="dash-header-inner">
+        <div>
+          <h1 class="dash-logo">DOGMINGO</h1>
+          <p class="dash-role" id="dashRole"></p>
+        </div>
+        <button class="btn-logout" onclick="logout()">Salir</button>
+      </div>
+    </header>
+
+    <!-- TABS (admin only) -->
+    <div class="dash-tabs" id="dashTabs" style="display:none;">
+      <button class="tab active" data-tab="scanner" onclick="switchTab('scanner')">Esc&aacute;ner</button>
+      <button class="tab" data-tab="vendors" onclick="switchTab('vendors')">Vendedores</button>
+      <button class="tab" data-tab="stats" onclick="switchTab('stats')">Registros</button>
+    </div>
+
+    <!-- SCANNER TAB -->
+    <div class="tab-content active" id="tab-scanner">
+      <div class="scanner-section">
+        <div class="stand-indicator" id="standIndicator"></div>
+
+        <!-- Stand selector for admin -->
+        <div class="admin-stand-select" id="adminStandSelect" style="display:none;">
+          <label>Seleccionar stand:</label>
+          <div class="stand-buttons" id="adminStandBtns"></div>
+        </div>
+
+        <div class="scanner-box">
+          <h3>Escanear QR del usuario</h3>
+          <div id="qrReader"></div>
+          <button class="btn-scan" id="startScanBtn" onclick="toggleScanner()">Abrir c&aacute;mara</button>
+          <div class="manual-input">
+            <p>O ingresar folio manualmente:</p>
+            <div class="folio-input-row">
+              <input type="text" id="folioInput" placeholder="DGM-XXXXXX" maxlength="20">
+              <button onclick="lookupFolio()">Buscar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- User info after scan -->
+        <div class="user-card" id="userCard" style="display:none;">
+          <div class="user-card-header">
+            <h3 id="userName"></h3>
+            <span class="folio-badge" id="userFolio"></span>
+          </div>
+          <div class="user-details" id="userDetails"></div>
+          <div class="user-stamps" id="userStamps"></div>
+          <button class="btn-stamp" id="stampBtn" onclick="applyStamp()">Sellar Pasaporte</button>
+          <div class="stamp-result" id="stampResult"></div>
+        </div>
+
+        <!-- Recent stamps -->
+        <div class="recent-stamps" id="recentStamps">
+          <h4>Sellos recientes</h4>
+          <ul id="recentList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENDORS TAB (admin only) -->
+    <div class="tab-content" id="tab-vendors">
+      <div class="vendors-section">
+        <h3>Crear vendedor</h3>
+        <form id="createVendorForm" class="vendor-form" novalidate>
+          <div class="field">
+            <label for="vNombre">Nombre</label>
+            <input type="text" id="vNombre" placeholder="Nombre del vendedor" required>
+          </div>
+          <div class="field">
+            <label for="vEmail">Correo</label>
+            <input type="email" id="vEmail" placeholder="vendedor@correo.com" required>
+          </div>
+          <div class="field">
+            <label for="vPassword">Contrase&ntilde;a</label>
+            <input type="text" id="vPassword" placeholder="Contrase&ntilde;a" required>
+          </div>
+          <div class="field">
+            <label for="vStand">Stand asignado</label>
+            <select id="vStand" required>
+              <option value="1">1 — Bendici&oacute;n Canina</option>
+              <option value="2">2 — Huellas del Alma</option>
+              <option value="3">3 — Adiestramiento</option>
+              <option value="4">4 — Circuito Agilidad</option>
+              <option value="5">5 — Mercadito Pet-Friendly</option>
+              <option value="6">6 — Pasarela Adopci&oacute;n</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-create">Crear vendedor</button>
+          <p class="form-msg" id="vendorMsg"></p>
+        </form>
+
+        <h3 style="margin-top:2rem;">Vendedores registrados</h3>
+        <div class="vendor-list" id="vendorList">
+          <p class="empty-msg">Cargando...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS TAB (admin only) -->
+    <div class="tab-content" id="tab-stats">
+      <div class="stats-section">
+        <h3>Estad&iacute;sticas</h3>
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card">
+            <span class="stat-num" id="statRegistros">—</span>
+            <span class="stat-label">Registros</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="statSellos">—</span>
+            <span class="stat-label">Sellos dados</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="statVendedores">—</span>
+            <span class="stat-label">Vendedores</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
