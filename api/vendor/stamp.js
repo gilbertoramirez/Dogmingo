@@ -1,5 +1,6 @@
-const { neon } = require('@neondatabase/serverless');
+const { getDb, registros, sellos } = require('../../db');
 const { verifyToken } = require('../_auth');
+const { eq, and } = require('drizzle-orm');
 
 var STAMP_SECRET = 'dgm2025zitara';
 
@@ -37,31 +38,36 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Stand inválido (1-6)' });
   }
 
-  if (!process.env.DATABASE_URL) {
-    return res.status(500).json({ error: 'Database not configured' });
-  }
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
 
   try {
-    const sql = neon(process.env.DATABASE_URL);
+    const reg = await db.select({
+      folio: registros.folio,
+      nombre: registros.nombre,
+      apellido: registros.apellido,
+    }).from(registros).where(eq(registros.folio, folio));
 
-    const reg = await sql`SELECT folio, nombre, apellido FROM registros WHERE folio = ${folio}`;
     if (reg.length === 0) {
       return res.status(404).json({ error: 'Registro no encontrado' });
     }
 
-    const existing = await sql`SELECT id FROM sellos WHERE folio = ${folio} AND stand_num = ${standNum}`;
+    const existing = await db.select({ id: sellos.id })
+      .from(sellos)
+      .where(and(eq(sellos.folio, folio), eq(sellos.stand_num, standNum)));
+
     if (existing.length > 0) {
       return res.status(409).json({ error: 'Este folio ya fue sellado en este stand' });
     }
 
     const stampCode = makeStampCode(folio, standNum);
 
-    await sql`
-      INSERT INTO sellos (folio, stand_num, stamp_code)
-      VALUES (${folio}, ${standNum}, ${stampCode})
-    `;
+    await db.insert(sellos).values({
+      folio, stand_num: standNum, stamp_code: stampCode,
+    });
 
-    const allStamps = await sql`SELECT stand_num FROM sellos WHERE folio = ${folio}`;
+    const allStamps = await db.select({ stand_num: sellos.stand_num })
+      .from(sellos).where(eq(sellos.folio, folio));
 
     return res.status(201).json({
       ok: true,

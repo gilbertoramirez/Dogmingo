@@ -1,5 +1,6 @@
-const { neon } = require('@neondatabase/serverless');
+const { getDb, registros, sellos } = require('../../db');
 const { verifyToken } = require('../_auth');
+const { eq, asc } = require('drizzle-orm');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -16,24 +17,20 @@ module.exports = async function handler(req, res) {
   const folio = req.query.folio;
   if (!folio) return res.status(400).json({ error: 'Folio required' });
 
-  if (!process.env.DATABASE_URL) {
-    return res.status(500).json({ error: 'Database not configured' });
-  }
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
 
   try {
-    const sql = neon(process.env.DATABASE_URL);
-    const rows = await sql`
-      SELECT folio, nombre, apellido, email, telefono, adultos, ninos, trae_perro, nombre_perro, created_at
-      FROM registros WHERE folio = ${folio}
-    `;
+    const rows = await db.select().from(registros).where(eq(registros.folio, folio));
     if (rows.length === 0) {
       return res.status(404).json({ error: 'Registro no encontrado' });
     }
 
-    const stamps = await sql`
-      SELECT stand_num, stamp_code, created_at
-      FROM sellos WHERE folio = ${folio} ORDER BY stand_num
-    `;
+    const stamps = await db.select({
+      stand_num: sellos.stand_num,
+      stamp_code: sellos.stamp_code,
+      created_at: sellos.created_at,
+    }).from(sellos).where(eq(sellos.folio, folio)).orderBy(asc(sellos.stand_num));
 
     return res.status(200).json({ ok: true, registro: rows[0], sellos: stamps });
   } catch (err) {

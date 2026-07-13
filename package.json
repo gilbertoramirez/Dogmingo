@@ -5,10 +5,17 @@
   "description": "Dogmingo - El Domingo mas Perron del Ano",
   "scripts": {
     "dev": "npx serve .",
-    "db:migrate": "node api/_migrate.js"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "node api/_migrate.js",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
+    "drizzle-orm": "^0.45.2",
     "resend": "^4.0.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.10"
   }
 }

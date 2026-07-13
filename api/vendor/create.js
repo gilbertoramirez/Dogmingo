@@ -1,4 +1,4 @@
-const { neon } = require('@neondatabase/serverless');
+const { getDb, vendedores } = require('../../db');
 const { verifyToken, hashPassword } = require('../_auth');
 
 module.exports = async function handler(req, res) {
@@ -23,21 +23,24 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Stand debe ser 1-6' });
   }
 
-  if (!process.env.DATABASE_URL) {
-    return res.status(500).json({ error: 'Database not configured' });
-  }
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
 
   try {
-    const sql = neon(process.env.DATABASE_URL);
     const hash = hashPassword(password);
-    const rows = await sql`
-      INSERT INTO vendedores (nombre, email, password_hash, stand_num)
-      VALUES (${nombre}, ${email}, ${hash}, ${stand_num})
-      ON CONFLICT (email) DO UPDATE SET
-        nombre = ${nombre}, password_hash = ${hash},
-        stand_num = ${stand_num}, activo = true
-      RETURNING id, nombre, email, stand_num, activo
-    `;
+    const rows = await db.insert(vendedores).values({
+      nombre, email, password_hash: hash, stand_num,
+    }).onConflictDoUpdate({
+      target: vendedores.email,
+      set: { nombre, password_hash: hash, stand_num, activo: true },
+    }).returning({
+      id: vendedores.id,
+      nombre: vendedores.nombre,
+      email: vendedores.email,
+      stand_num: vendedores.stand_num,
+      activo: vendedores.activo,
+    });
+
     return res.status(201).json({ ok: true, vendor: rows[0] });
   } catch (err) {
     console.error('Create vendor error:', err);
