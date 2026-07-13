@@ -35,6 +35,19 @@ async function migrate() {
     )
   `;
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS vendedores (
+      id            SERIAL PRIMARY KEY,
+      nombre        TEXT NOT NULL,
+      email         TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      stand_num     INTEGER NOT NULL CHECK (stand_num BETWEEN 1 AND 6),
+      es_admin      BOOLEAN DEFAULT FALSE,
+      activo        BOOLEAN DEFAULT TRUE,
+      created_at    TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
   console.log('Migration complete');
 }
 
