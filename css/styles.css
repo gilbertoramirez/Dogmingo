@@ -194,14 +194,14 @@
   .donate-note { font-size: 0.95rem; opacity: 0.6; max-width: 500px; margin: 0 auto; line-height: 1.6; }
   .donate-note strong { color: var(--sol); font-weight: 700; }
 
-  .registro { background: var(--bg-alt); }
+  .registro { background: var(--bg-alt); overflow-x: hidden; }
   .registro-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
   .registro-info h3 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.35rem; color: var(--text-primary); margin-bottom: 1rem; }
   .registro-info p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.25rem; line-height: 1.6; }
   .registro-perks { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
   .registro-perks li { display: flex; align-items: center; gap: 0.6rem; font-family: system-ui, sans-serif; font-size: 0.85rem; color: var(--text-secondary); }
   .registro-perks li::before { content: ''; width: 6px; height: 6px; background: var(--campo); border-radius: 50%; flex-shrink: 0; }
-  .form-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 4px; padding: 2.5rem 2rem; }
+  .form-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 4px; padding: 2.5rem 2rem; overflow: hidden; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1.25rem; }
   .form-label { font-family: system-ui, sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); }
@@ -241,11 +241,12 @@
   .form-success h3 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.35rem; color: var(--text-primary); margin-bottom: 0.5rem; }
   .form-success p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 0.75rem; }
 
-  .passport-section { margin-top: 1.5rem; padding: 1.5rem; background: var(--bg); border: 1px solid var(--card-border); border-radius: 4px; }
+  .passport-section { margin-top: 1.5rem; padding: 1.5rem; background: var(--bg); border: 1px solid var(--card-border); border-radius: 4px; overflow: hidden; }
   .passport-section canvas { width: 100%; max-width: 400px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 1rem; }
-  .qr-area { display: flex; flex-direction: column; align-items: center; margin: 1.5rem 0; padding: 1rem; background: #fff; border-radius: 8px; }
+  .qr-area { display: flex; flex-direction: column; align-items: center; margin: 1.5rem 0; padding: 1rem; background: #fff; border-radius: 8px; overflow: hidden; }
+  .qr-area canvas { width: 100%; max-width: 256px; height: auto; }
   .qr-area p { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem; }
-  .folio-display { font-family: system-ui, sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--salsa); letter-spacing: 0.1em; margin: 0.5rem 0; }
+  .folio-display { font-family: system-ui, sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--salsa); letter-spacing: 0.1em; margin: 0.5rem 0; word-break: break-all; }
   .btn-download {
     display: inline-block; font-family: system-ui, sans-serif; font-weight: 800; font-size: 0.9rem;
     text-transform: uppercase; letter-spacing: 0.08em; background: var(--campo); color: #fff;
