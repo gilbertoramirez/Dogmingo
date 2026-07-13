@@ -375,13 +375,13 @@
 
     .dog-photo-strip {
       flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
-      gap: 0.6rem; justify-content: flex-start; padding: 0.5rem 1.25rem;
-      scrollbar-width: none; margin-left: -1.25rem; margin-right: -1.25rem;
+      gap: 0.6rem; justify-content: flex-start; padding: 0.5rem 0;
+      scrollbar-width: none;
     }
     .dog-photo-strip::-webkit-scrollbar { display: none; }
     .dog-photo-strip img { width: 64px; height: 64px; border-width: 2px; flex-shrink: 0; }
-    .hero .dog-photo-strip { justify-content: center; margin: 0; padding: 0.5rem 0; }
-    .dog-photo-strip.large { gap: 0.75rem; }
+    .hero .dog-photo-strip { justify-content: center; }
+    .dog-photo-strip.large { gap: 0.75rem; padding: 0.5rem 1.25rem; margin-left: -1.25rem; margin-right: -1.25rem; }
     .dog-photo-strip.large img { width: 100px; height: 100px; flex-shrink: 0; }
 
     .nav-toggle { display: block; }
