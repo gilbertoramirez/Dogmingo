@@ -321,9 +321,14 @@ var dogNameField = document.getElementById('dogNameField');
 
 function getRegs() { try { return JSON.parse(localStorage.getItem('dogmingo_registros') || '[]'); } catch(e) { return []; } }
 function updateCounter() {
-  regCount.textContent = getRegs().length;
+  var localCount = getRegs().length;
+  regCount.textContent = localCount;
+  regCount.closest('.registro-counter').style.display = localCount > 0 ? '' : 'none';
   fetch('/api/registros').then(function(r) { return r.json(); }).then(function(d) {
-    if (d.count > 0) regCount.textContent = d.count;
+    if (d.count > 0) {
+      regCount.textContent = d.count;
+      regCount.closest('.registro-counter').style.display = '';
+    }
   }).catch(function() {});
 }
 
