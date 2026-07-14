@@ -372,8 +372,8 @@
   .location-logo { display: block; max-width: 220px; height: auto; margin-bottom: 1.5rem; }
 
   .footer-sponsors { display: flex; justify-content: center; gap: 3rem; margin-bottom: 2rem; flex-wrap: wrap; }
-  .footer-sponsor { text-align: center; }
-  .footer-sponsor-logo { max-width: 160px; height: auto; }
+  .footer-sponsor { text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .footer-sponsor-logo { width: 160px; height: 160px; object-fit: contain; }
 
   .footer { padding: 3rem 1.5rem; text-align: center; background: var(--bg-alt); border-top: 1px solid var(--card-border); }
   .footer-logo { font-family: system-ui, sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--salsa); margin-bottom: 0.5rem; }
