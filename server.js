@@ -515,6 +515,43 @@ app.post('/api/vendor/create', async (req, res) => {
   }
 });
 
+// ── Vendor: Change password ──
+app.post('/api/vendor/change-password', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth) return res.status(403).json({ error: 'No autorizado' });
+
+  const { vendor_email, new_password } = req.body || {};
+
+  if (auth.admin && vendor_email) {
+    if (!new_password || new_password.length < 4) return res.status(400).json({ error: 'La contraseña debe tener al menos 4 caracteres' });
+    const db = getDb();
+    if (!db) return res.status(500).json({ error: 'Database not configured' });
+    try {
+      const hash = hashPassword(new_password);
+      const rows = await db.update(vendedores).set({ password_hash: hash }).where(eq(vendedores.email, vendor_email)).returning({ id: vendedores.id });
+      if (rows.length === 0) return res.status(404).json({ error: 'Vendedor no encontrado' });
+      return res.json({ ok: true });
+    } catch (err) {
+      console.error('Change password error:', err);
+      return res.status(500).json({ error: 'Error al cambiar contraseña' });
+    }
+  }
+
+  if (!new_password || new_password.length < 4) return res.status(400).json({ error: 'La contraseña debe tener al menos 4 caracteres' });
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+  try {
+    const hash = hashPassword(new_password);
+    const rows = await db.update(vendedores).set({ password_hash: hash }).where(eq(vendedores.id, auth.id)).returning({ id: vendedores.id });
+    if (rows.length === 0) return res.status(404).json({ error: 'Vendedor no encontrado' });
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error('Change password error:', err);
+    return res.status(500).json({ error: 'Error al cambiar contraseña' });
+  }
+});
+
 // ── Vendor: List vendors + stats ──
 app.get('/api/vendor/list', async (req, res) => {
   const token = (req.headers.authorization || '').replace('Bearer ', '');

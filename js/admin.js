@@ -285,7 +285,8 @@ function loadVendors() {
         item.className = 'vendor-item';
         item.innerHTML = '<div class="vendor-info"><div class="vendor-name">' + v.nombre + '</div>' +
           '<div class="vendor-email">' + v.email + '</div></div>' +
-          '<span class="vendor-stand">Stand ' + v.stand_num + '</span>';
+          '<span class="vendor-stand">Stand ' + v.stand_num + '</span>' +
+          '<button class="btn-change-pw" onclick="showChangePassword(\'' + v.email.replace(/'/g, "\\'") + '\', \'' + v.nombre.replace(/'/g, "\\'") + '\')">Cambiar contraseña</button>';
         container.appendChild(item);
       });
 
@@ -338,6 +339,49 @@ createForm.addEventListener('submit', function (e) {
     msg.textContent = err.message;
   });
 });
+
+// CHANGE PASSWORD
+function showChangePassword(email, nombre) {
+  var existing = document.getElementById('pwModal');
+  if (existing) existing.remove();
+
+  var modal = document.createElement('div');
+  modal.id = 'pwModal';
+  modal.className = 'pw-modal-overlay';
+  modal.innerHTML =
+    '<div class="pw-modal">' +
+      '<h3>Cambiar contrase&ntilde;a</h3>' +
+      '<p class="pw-modal-name">' + nombre + '</p>' +
+      '<div class="field"><label for="newPw">Nueva contrase&ntilde;a</label>' +
+      '<input type="text" id="newPw" placeholder="M&iacute;nimo 4 caracteres"></div>' +
+      '<div class="pw-modal-actions">' +
+        '<button class="btn-create" onclick="changePassword(\'' + email.replace(/'/g, "\\'") + '\')">Guardar</button>' +
+        '<button class="btn-logout" onclick="document.getElementById(\'pwModal\').remove()">Cancelar</button>' +
+      '</div>' +
+      '<p class="form-msg" id="pwMsg"></p>' +
+    '</div>';
+  document.body.appendChild(modal);
+  document.getElementById('newPw').focus();
+}
+
+function changePassword(email) {
+  var pw = document.getElementById('newPw').value;
+  var msg = document.getElementById('pwMsg');
+  if (!pw || pw.length < 4) { msg.className = 'form-msg error'; msg.textContent = 'La contraseña debe tener al menos 4 caracteres.'; return; }
+  msg.className = 'form-msg'; msg.textContent = '';
+
+  api('/api/vendor/change-password', {
+    method: 'POST',
+    body: { vendor_email: email, new_password: pw }
+  }).then(function () {
+    msg.className = 'form-msg success';
+    msg.textContent = 'Contraseña actualizada.';
+    setTimeout(function () { var m = document.getElementById('pwModal'); if (m) m.remove(); }, 1500);
+  }).catch(function (err) {
+    msg.className = 'form-msg error';
+    msg.textContent = err.message;
+  });
+}
 
 // INIT
 if (token && vendor) {
