@@ -1,4 +1,53 @@
-:root {
+@font-face {
+    font-family: 'Telka Extended';
+    src: url('../fonts/Telka/Telka-Extended-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Telka Extended';
+    src: url('../fonts/Telka/Telka-Extended-Black.otf') format('opentype');
+    font-weight: 900;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Telka Extended';
+    src: url('../fonts/Telka/Telka-Extended-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'At Gambit';
+    src: url('../fonts/AtGambit/AtGambit-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'At Gambit';
+    src: url('../fonts/AtGambit/AtGambit-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'At Gambit';
+    src: url('../fonts/AtGambit/AtGambit-Semibold.ttf') format('truetype');
+    font-weight: 600;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'At Gambit';
+    src: url('../fonts/AtGambit/AtGambit-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'At Gambit';
+    src: url('../fonts/AtGambit/AtGambit-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-display: swap;
+  }
+
+  :root {
     --salsa: #C4923A;
     --campo: #3A5A3E;
     --sol: #D4A84A;
@@ -61,16 +110,17 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; font-size: 16px; }
   body {
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: 'At Gambit', Georgia, serif;
+    font-weight: 300;
     color: var(--text-primary);
     background: var(--bg);
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
-  .display { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-weight: 900; line-height: 0.9; letter-spacing: -0.03em; }
-  .label { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.75rem; }
-  .sys { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+  .display { font-family: 'Telka Extended', system-ui, sans-serif; font-weight: 700; line-height: 0.9; letter-spacing: -0.03em; }
+  .label { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.75rem; }
+  .sys { font-family: 'At Gambit', system-ui, sans-serif; }
 
   .nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -81,9 +131,9 @@
   }
   .nav.visible { transform: translateY(0); }
   .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 56px; }
-  .nav-logo { font-family: system-ui, sans-serif; font-weight: 900; font-size: 1.25rem; color: var(--salsa); text-decoration: none; }
+  .nav-logo { font-family: 'Telka Extended', system-ui, sans-serif; font-weight: 700; font-size: 1.25rem; color: var(--salsa); text-decoration: none; }
   .nav-links { display: flex; gap: 1.5rem; list-style: none; }
-  .nav-links a { font-family: system-ui, sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+  .nav-links a { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
   .nav-links a:hover { color: var(--salsa); }
 
   .hero {
@@ -96,10 +146,10 @@
   .hero-eyebrow { display: inline-block; background: var(--salsa); color: #fff; padding: 0.35rem 1rem; border-radius: 2px; margin-bottom: 2rem; font-size: 0.7rem; }
   .hero-title { font-size: clamp(4rem, 15vw, 12rem); color: var(--hero-text); margin-bottom: 0.15em; }
   .hero-subtitle { font-size: clamp(1.1rem, 3vw, 1.75rem); font-weight: 400; font-style: italic; opacity: 0.7; margin-bottom: 2.5rem; }
-  .hero-date { font-family: system-ui, sans-serif; font-weight: 800; font-size: clamp(1.2rem, 3vw, 1.6rem); color: var(--sol); margin-bottom: 0.5rem; }
-  .hero-time { font-family: system-ui, sans-serif; font-weight: 600; font-size: 1rem; opacity: 0.6; margin-bottom: 3rem; }
+  .hero-date { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: clamp(1.2rem, 3vw, 1.6rem); color: var(--sol); margin-bottom: 0.5rem; }
+  .hero-time { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 600; font-size: 1rem; opacity: 0.6; margin-bottom: 3rem; }
   .btn-primary {
-    display: inline-block; font-family: system-ui, sans-serif; font-weight: 800; font-size: 1rem;
+    display: inline-block; font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1rem;
     text-transform: uppercase; letter-spacing: 0.08em; background: var(--salsa); color: #fff;
     padding: 1rem 2.5rem; border: none; border-radius: 3px; cursor: pointer;
     text-decoration: none; transition: background 0.2s, transform 0.15s;
@@ -107,7 +157,7 @@
   .btn-primary:hover { background: #A87830; transform: translateY(-1px); }
   .btn-primary:active { transform: translateY(0); }
   .btn-secondary {
-    display: inline-block; font-family: system-ui, sans-serif; font-weight: 800; font-size: 0.9rem;
+    display: inline-block; font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 0.9rem;
     text-transform: uppercase; letter-spacing: 0.08em; background: var(--campo); color: #fff;
     padding: 0.85rem 2rem; border: none; border-radius: 3px; cursor: pointer;
     text-decoration: none; transition: background 0.2s, transform 0.15s;
@@ -140,25 +190,25 @@
   .passport-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
   .passport-preview { background: #FBF7F0; border-radius: 12px; padding: 2rem; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3); transform: rotate(-2deg); }
   .passport-preview-inner { border: 2px dashed #D4C9B5; border-radius: 8px; padding: 1.5rem; text-align: center; }
-  .passport-preview h4 { font-family: system-ui, sans-serif; font-weight: 900; font-size: 1.1rem; color: #2C2A24; margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
-  .passport-preview .pp-sub { font-family: system-ui, sans-serif; font-size: 0.7rem; color: #8A7E6E; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+  .passport-preview h4 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 900; font-size: 1.1rem; color: #2C2A24; margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .passport-preview .pp-sub { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.7rem; color: #8A7E6E; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
   .stamp-grid-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
-  .stamp-slot-preview { aspect-ratio: 1; border: 1.5px dashed #C9BDA8; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: system-ui, sans-serif; font-size: 0.55rem; color: #B5A998; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stamp-slot-preview { aspect-ratio: 1; border: 1.5px dashed #C9BDA8; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.55rem; color: #B5A998; text-transform: uppercase; letter-spacing: 0.05em; }
   .stamp-slot-preview.filled { border-color: var(--campo); background: rgba(58,90,62,0.1); }
   .stamp-slot-preview.filled::after { content: '\2713'; color: var(--campo); font-size: 1rem; font-weight: 800; }
-  .passport-info-text h3 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--hero-text); margin-bottom: 1rem; }
+  .passport-info-text h3 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--hero-text); margin-bottom: 1rem; }
   .passport-info-text p { color: rgba(251,247,240,0.65); font-size: 0.95rem; margin-bottom: 1.25rem; line-height: 1.6; }
   .passport-steps { list-style: none; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
-  .passport-steps li { display: flex; align-items: flex-start; gap: 0.75rem; font-family: system-ui, sans-serif; font-size: 0.9rem; color: rgba(251,247,240,0.8); }
+  .passport-steps li { display: flex; align-items: flex-start; gap: 0.75rem; font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.9rem; color: rgba(251,247,240,0.8); }
   .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--salsa); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; flex-shrink: 0; }
 
   .causa { background: var(--bg-alt); }
   .causa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
   .causa-badge { width: 160px; height: 160px; border-radius: 50%; background: var(--campo); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
   .causa-badge svg { width: 80px; height: 80px; }
-  .causa-text h3 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--text-primary); margin-bottom: 1rem; }
+  .causa-text h3 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--text-primary); margin-bottom: 1rem; }
   .causa-text p { color: var(--text-secondary); font-size: 1rem; margin-bottom: 1rem; }
-  .causa-highlight { display: inline-block; background: var(--sol); color: var(--noche); font-family: system-ui, sans-serif; font-weight: 800; font-size: 0.85rem; padding: 0.4rem 1rem; border-radius: 2px; letter-spacing: 0.05em; }
+  .causa-highlight { display: inline-block; background: var(--sol); color: var(--noche); font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 0.85rem; padding: 0.4rem 1rem; border-radius: 2px; letter-spacing: 0.05em; }
   .causa-photo { width: 100%; max-width: 320px; border-radius: 8px; margin-top: 1.5rem; object-fit: cover; }
 
   .dogs-row { display: flex; justify-content: center; gap: 2rem; padding: 2rem 0; flex-wrap: wrap; }
@@ -170,16 +220,16 @@
   .activity-card:hover::before { transform: scaleY(1); }
   .activity-card:hover { border-color: var(--campo); transform: translateY(-2px); }
   .activity-icon { width: 48px; height: 48px; margin-bottom: 1.25rem; color: var(--campo); }
-  .activity-name { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.5rem; }
+  .activity-name { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.5rem; }
   .activity-desc { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.55; }
-  .activity-stamp { display: inline-block; margin-top: 0.75rem; font-family: system-ui, sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--campo); background: rgba(58,90,62,0.1); padding: 0.25rem 0.6rem; border-radius: 2px; }
+  .activity-stamp { display: inline-block; margin-top: 0.75rem; font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--campo); background: rgba(58,90,62,0.1); padding: 0.25rem 0.6rem; border-radius: 2px; }
 
   .info { background: var(--bg-alt); }
   .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; }
   .info-block { text-align: center; padding: 2.5rem 1.5rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 4px; }
   .info-icon { width: 40px; height: 40px; margin: 0 auto 1rem; color: var(--salsa); }
   .info-label { color: var(--salsa); margin-bottom: 0.5rem; }
-  .info-value { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.35rem; color: var(--text-primary); margin-bottom: 0.35rem; }
+  .info-value { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.35rem; color: var(--text-primary); margin-bottom: 0.35rem; }
   .info-detail { color: var(--text-secondary); font-size: 0.9rem; }
 
   .tickets { background: var(--hero-bg); color: var(--hero-text); text-align: center; }
@@ -190,27 +240,27 @@
   .ticket-card { border: 1px solid rgba(251,247,240,0.12); border-radius: 4px; padding: 2.5rem 2rem; transition: border-color 0.2s; }
   .ticket-card:hover { border-color: rgba(251,247,240,0.25); }
   .ticket-card.featured { border-color: var(--salsa); background: rgba(217,59,30,0.06); }
-  .ticket-type { font-family: system-ui, sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--sol); margin-bottom: 1rem; }
-  .ticket-price { font-family: system-ui, sans-serif; font-weight: 900; font-size: 3rem; line-height: 1; margin-bottom: 0.5rem; }
+  .ticket-type { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--sol); margin-bottom: 1rem; }
+  .ticket-price { font-family: 'Telka Extended', system-ui, sans-serif; font-weight: 700; font-size: 3rem; line-height: 1; margin-bottom: 0.5rem; }
   .ticket-price span { font-size: 1rem; font-weight: 600; opacity: 0.5; vertical-align: super; }
   .ticket-note { font-size: 0.9rem; opacity: 0.5; }
-  .ticket-passport { font-family: system-ui, sans-serif; font-size: 0.75rem; color: var(--sol); margin-top: 0.75rem; font-weight: 600; }
+  .ticket-passport { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.75rem; color: var(--sol); margin-top: 0.75rem; font-weight: 600; }
   .donate-note { font-size: 0.95rem; opacity: 0.6; max-width: 500px; margin: 0 auto; line-height: 1.6; }
   .donate-note strong { color: var(--sol); font-weight: 700; }
 
   .registro { background: var(--bg-alt); overflow-x: hidden; }
   .registro-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
-  .registro-info h3 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.35rem; color: var(--text-primary); margin-bottom: 1rem; }
+  .registro-info h3 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.35rem; color: var(--text-primary); margin-bottom: 1rem; }
   .registro-info p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.25rem; line-height: 1.6; }
   .registro-perks { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
-  .registro-perks li { display: flex; align-items: center; gap: 0.6rem; font-family: system-ui, sans-serif; font-size: 0.85rem; color: var(--text-secondary); }
+  .registro-perks li { display: flex; align-items: center; gap: 0.6rem; font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.85rem; color: var(--text-secondary); }
   .registro-perks li::before { content: ''; width: 6px; height: 6px; background: var(--campo); border-radius: 50%; flex-shrink: 0; }
   .form-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 4px; padding: 2.5rem 2rem; overflow: hidden; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1.25rem; }
-  .form-label { font-family: system-ui, sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); }
+  .form-label { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); }
   .form-input, .form-select {
-    font-family: system-ui, sans-serif; font-size: 0.95rem; padding: 0.7rem 0.85rem;
+    font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.95rem; padding: 0.7rem 0.85rem;
     border: 1px solid var(--card-border); border-radius: 3px; background: var(--bg);
     color: var(--text-primary); transition: border-color 0.2s; width: 100%;
   }
@@ -223,7 +273,7 @@
   }
   .form-checkbox-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.25rem; }
   .form-checkbox { width: 18px; height: 18px; accent-color: var(--campo); cursor: pointer; }
-  .form-checkbox-label { font-family: system-ui, sans-serif; font-size: 0.9rem; color: var(--text-primary); cursor: pointer; }
+  .form-checkbox-label { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.9rem; color: var(--text-primary); cursor: pointer; }
   .dog-name-field { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.3s ease; margin-bottom: 0; }
   .dog-name-field.visible { max-height: 100px; opacity: 1; margin-bottom: 1.25rem; }
 
@@ -231,15 +281,15 @@
   .terms-header { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1.25rem; }
   .terms-header .terms-icon { width: 28px; height: 28px; color: var(--salsa); flex-shrink: 0; margin-top: 0.1rem; }
   .terms-header div { flex: 1; }
-  .terms-header h4 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.35rem; }
-  .terms-header p { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--text-secondary); margin: 0; }
+  .terms-header h4 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.35rem; }
+  .terms-header p { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.8rem; color: var(--text-secondary); margin: 0; }
   .terms-rules { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--card-border); }
   .terms-rule { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 4px; transition: border-color 0.2s; }
   .terms-rule:hover { border-color: var(--campo); }
   .terms-rule-icon { font-size: 1.3rem; flex-shrink: 0; line-height: 1; margin-top: 0.1rem; }
   .terms-rule div { flex: 1; }
-  .terms-rule strong { font-family: system-ui, sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--text-primary); display: block; margin-bottom: 0.2rem; }
-  .terms-rule p { font-family: system-ui, sans-serif; font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45; margin: 0; }
+  .terms-rule strong { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--text-primary); display: block; margin-bottom: 0.2rem; }
+  .terms-rule p { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45; margin: 0; }
   .terms-checkboxes { display: flex; flex-direction: column; gap: 0.75rem; }
   .terms-check-item { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.6rem 0.75rem; border-radius: 4px; border: 1px solid var(--card-border); background: var(--card-bg); transition: border-color 0.2s, background 0.2s; }
   .terms-check-item:has(.form-checkbox:checked) { border-color: var(--campo); background: rgba(58,90,62,0.05); }
@@ -250,8 +300,8 @@
   .terms-progress { display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem; padding: 0.6rem 0; }
   .terms-progress-bar { flex: 1; height: 6px; background: var(--card-border); border-radius: 3px; overflow: hidden; position: relative; }
   .terms-progress-bar::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: var(--progress, 0%); background: var(--campo); border-radius: 3px; transition: width 0.3s ease; }
-  .terms-progress-text { font-family: system-ui, sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); white-space: nowrap; }
-  .terms-error { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--salsa); text-align: center; margin-top: 0.75rem; min-height: 1rem; }
+  .terms-progress-text { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); white-space: nowrap; }
+  .terms-error { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.8rem; color: var(--salsa); text-align: center; margin-top: 0.75rem; min-height: 1rem; }
   .form-submit-locked { background: var(--text-secondary); }
   .form-submit-locked:hover { background: var(--text-secondary); transform: none; }
   .form-submit:not(:disabled) { animation: btnPulse 0.4s ease; }
@@ -261,14 +311,14 @@
   .registro-venue-logo { max-width: 200px; height: auto; }
 
   .form-submit {
-    display: block; width: 100%; font-family: system-ui, sans-serif; font-weight: 800; font-size: 1rem;
+    display: block; width: 100%; font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1rem;
     text-transform: uppercase; letter-spacing: 0.08em; background: var(--salsa); color: #fff;
     padding: 1rem; border: none; border-radius: 3px; cursor: pointer; transition: background 0.2s, transform 0.15s;
   }
   .form-submit:hover { background: #A87830; transform: translateY(-1px); }
   .form-submit:active { transform: translateY(0); }
   .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-  .form-error { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--salsa); margin-top: 0.25rem; display: none; }
+  .form-error { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.8rem; color: var(--salsa); margin-top: 0.25rem; display: none; }
   .form-group.has-error .form-input, .form-group.has-error .form-select { border-color: var(--salsa); }
   .form-group.has-error .form-error { display: block; }
 
@@ -276,17 +326,17 @@
   .form-success.visible { display: block; max-width: 600px; margin-left: auto; margin-right: auto; }
   .form-success-icon { width: 64px; height: 64px; background: var(--campo); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
   .form-success-icon svg { width: 32px; height: 32px; }
-  .form-success h3 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.35rem; color: var(--text-primary); margin-bottom: 0.5rem; }
+  .form-success h3 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.35rem; color: var(--text-primary); margin-bottom: 0.5rem; }
   .form-success p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 0.75rem; }
 
   .passport-section { margin-top: 1.5rem; padding: 1.5rem; background: var(--bg); border: 1px solid var(--card-border); border-radius: 4px; overflow: hidden; overflow-x: auto; }
   .passport-section canvas { width: 100%; max-width: 400px; height: auto; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 1rem; }
   .qr-area { display: flex; flex-direction: column; align-items: center; margin: 1.5rem 0; padding: 1rem; background: #fff; border-radius: 8px; overflow: hidden; }
   .qr-area canvas { width: 100%; max-width: 256px; height: auto; }
-  .qr-area p { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem; }
-  .folio-display { font-family: system-ui, sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--salsa); letter-spacing: 0.1em; margin: 0.5rem 0; word-break: break-all; }
+  .qr-area p { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem; }
+  .folio-display { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--salsa); letter-spacing: 0.1em; margin: 0.5rem 0; word-break: break-all; }
   .btn-download {
-    display: inline-block; font-family: system-ui, sans-serif; font-weight: 800; font-size: 0.9rem;
+    display: inline-block; font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 0.9rem;
     text-transform: uppercase; letter-spacing: 0.08em; background: var(--campo); color: #fff;
     padding: 0.85rem 2rem; border: none; border-radius: 3px; cursor: pointer;
     transition: background 0.2s, transform 0.15s; text-decoration: none; margin: 0.5rem;
@@ -294,26 +344,26 @@
   .btn-download:hover { background: #2E4830; transform: translateY(-1px); }
 
   .stamp-tracker { margin: 1.5rem 0; }
-  .stamp-tracker h4 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1rem; color: var(--text-primary); margin-bottom: 1rem; text-align: center; }
+  .stamp-tracker h4 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1rem; color: var(--text-primary); margin-bottom: 1rem; text-align: center; }
   .stamp-tracker-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
   .stamp-tracker-slot {
     aspect-ratio: 1; border: 2px dashed var(--card-border); border-radius: 50%;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    font-family: system-ui, sans-serif; font-size: 0.65rem; color: var(--text-secondary);
+    font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.65rem; color: var(--text-secondary);
     text-transform: uppercase; letter-spacing: 0.03em; text-align: center; padding: 0.25rem;
     transition: all 0.3s ease;
   }
   .stamp-tracker-slot.stamped { border-color: var(--campo); background: rgba(58,90,62,0.08); border-style: solid; }
   .stamp-tracker-slot.stamped::before { content: '\2713'; font-size: 1.5rem; font-weight: 800; color: var(--campo); }
   .stamp-tracker-slot.stamped span { color: var(--campo); font-weight: 700; }
-  .stamp-complete { text-align: center; padding: 1rem; background: var(--campo); color: #fff; border-radius: 4px; font-family: system-ui, sans-serif; font-weight: 800; font-size: 1rem; display: none; }
+  .stamp-complete { text-align: center; padding: 1rem; background: var(--campo); color: #fff; border-radius: 4px; font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1rem; display: none; }
   .stamp-complete.visible { display: block; }
 
   .stamp-input-area { display: flex; gap: 0.5rem; margin-top: 1rem; }
-  .stamp-input-area input { flex: 1; font-family: system-ui, sans-serif; font-size: 1rem; padding: 0.7rem; border: 2px solid var(--card-border); border-radius: 3px; background: var(--bg); color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.1em; text-align: center; }
+  .stamp-input-area input { flex: 1; font-family: 'At Gambit', system-ui, sans-serif; font-size: 1rem; padding: 0.7rem; border: 2px solid var(--card-border); border-radius: 3px; background: var(--bg); color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.1em; text-align: center; }
   .stamp-input-area input:focus { outline: none; border-color: var(--campo); }
-  .stamp-input-area button { font-family: system-ui, sans-serif; font-weight: 800; font-size: 0.85rem; padding: 0.7rem 1.25rem; background: var(--campo); color: #fff; border: none; border-radius: 3px; cursor: pointer; white-space: nowrap; }
-  .stamp-msg { font-family: system-ui, sans-serif; font-size: 0.85rem; text-align: center; margin-top: 0.5rem; min-height: 1.25rem; }
+  .stamp-input-area button { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 0.85rem; padding: 0.7rem 1.25rem; background: var(--campo); color: #fff; border: none; border-radius: 3px; cursor: pointer; white-space: nowrap; }
+  .stamp-msg { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.85rem; text-align: center; margin-top: 0.5rem; min-height: 1.25rem; }
   .stamp-msg.success { color: var(--campo); }
   .stamp-msg.error { color: var(--salsa); }
 
@@ -325,29 +375,29 @@
   .sellos-lookup-form input { flex: 1; }
   .sellos-lookup-form button { white-space: nowrap; padding: 0.7rem 1.5rem; }
   .sellos-result { margin-top: 1.5rem; }
-  .sellos-user-info { font-family: system-ui, sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1rem; }
+  .sellos-user-info { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1rem; }
   .sellos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
-  .sello-item { font-family: system-ui, sans-serif; text-align: center; padding: 1rem 0.5rem; border-radius: 8px; border: 2px dashed var(--card-border); transition: all 0.3s; }
+  .sello-item { font-family: 'At Gambit', system-ui, sans-serif; text-align: center; padding: 1rem 0.5rem; border-radius: 8px; border: 2px dashed var(--card-border); transition: all 0.3s; }
   .sello-item.collected { border-style: solid; border-color: var(--campo); background: rgba(58, 90, 62, 0.08); }
   .sello-icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
   .sello-name { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
   .sello-item.collected .sello-name { color: var(--campo); }
   .sellos-progress-bar { height: 8px; background: var(--card-border); border-radius: 4px; overflow: hidden; margin-bottom: 0.5rem; }
   .sellos-progress-fill { height: 100%; background: linear-gradient(90deg, var(--campo), var(--gold)); border-radius: 4px; transition: width 0.5s ease; }
-  .sellos-progress-text { font-family: system-ui, sans-serif; font-size: 0.85rem; color: var(--text-secondary); text-align: center; }
-  .sellos-error { font-family: system-ui, sans-serif; font-size: 0.9rem; color: var(--salsa); text-align: center; margin-top: 1rem; }
-  .sellos-complete { font-family: system-ui, sans-serif; text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(58, 90, 62, 0.1); border-radius: 8px; color: var(--campo); font-weight: 700; }
+  .sellos-progress-text { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.85rem; color: var(--text-secondary); text-align: center; }
+  .sellos-error { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.9rem; color: var(--salsa); text-align: center; margin-top: 1rem; }
+  .sellos-complete { font-family: 'At Gambit', system-ui, sans-serif; text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(58, 90, 62, 0.1); border-radius: 8px; color: var(--campo); font-weight: 700; }
 
   /* STAND PORTAL */
   .stand-portal { display: none; min-height: 100vh; background: var(--bg); padding: 2rem 1.5rem; }
   .stand-portal.active { display: block; }
   .stand-inner { max-width: 600px; margin: 0 auto; }
   .stand-header { text-align: center; margin-bottom: 3rem; padding-top: 2rem; }
-  .stand-header h1 { font-family: system-ui, sans-serif; font-weight: 900; font-size: 2rem; color: var(--salsa); margin-bottom: 0.5rem; }
-  .stand-header p { font-family: system-ui, sans-serif; color: var(--text-secondary); }
+  .stand-header h1 { font-family: 'Telka Extended', system-ui, sans-serif; font-weight: 700; font-size: 2rem; color: var(--salsa); margin-bottom: 0.5rem; }
+  .stand-header p { font-family: 'At Gambit', system-ui, sans-serif; color: var(--text-secondary); }
   .stand-select { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 2rem; }
   .stand-btn {
-    font-family: system-ui, sans-serif; font-weight: 700; font-size: 0.85rem; padding: 1rem;
+    font-family: 'At Gambit', system-ui, sans-serif; font-weight: 700; font-size: 0.85rem; padding: 1rem;
     border: 2px solid var(--card-border); border-radius: 4px; background: var(--card-bg);
     color: var(--text-primary); cursor: pointer; text-align: center; transition: all 0.2s;
   }
@@ -355,38 +405,38 @@
   .stand-btn.selected { border-color: var(--campo); background: rgba(58,90,62,0.08); color: var(--campo); }
   .stand-btn small { display: block; font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem; font-weight: 400; }
   .stand-scan-area { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 4px; padding: 2rem; }
-  .stand-scan-area h3 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1rem; }
+  .stand-scan-area h3 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1rem; }
   .stand-folio-input { display: flex; gap: 0.5rem; }
-  .stand-folio-input input { flex: 1; font-family: system-ui, sans-serif; font-size: 1.1rem; padding: 0.85rem; border: 2px solid var(--card-border); border-radius: 3px; background: var(--bg); color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.08em; }
+  .stand-folio-input input { flex: 1; font-family: 'At Gambit', system-ui, sans-serif; font-size: 1.1rem; padding: 0.85rem; border: 2px solid var(--card-border); border-radius: 3px; background: var(--bg); color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.08em; }
   .stand-folio-input input:focus { outline: none; border-color: var(--campo); }
-  .stand-folio-input button { font-family: system-ui, sans-serif; font-weight: 800; font-size: 0.9rem; padding: 0.85rem 1.5rem; background: var(--campo); color: #fff; border: none; border-radius: 3px; cursor: pointer; }
+  .stand-folio-input button { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 0.9rem; padding: 0.85rem 1.5rem; background: var(--campo); color: #fff; border: none; border-radius: 3px; cursor: pointer; }
   .stand-result { margin-top: 1.5rem; padding: 1.5rem; border-radius: 4px; display: none; text-align: center; }
   .stand-result.visible { display: block; }
   .stand-result.success { background: rgba(58,90,62,0.08); border: 1px solid var(--campo); }
   .stand-result.error { background: rgba(217,59,30,0.06); border: 1px solid var(--salsa); }
-  .stand-result h4 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.2rem; margin-bottom: 0.5rem; }
+  .stand-result h4 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.2rem; margin-bottom: 0.5rem; }
   .stand-result.success h4 { color: var(--campo); }
   .stand-result.error h4 { color: var(--salsa); }
-  .stand-result p { font-family: system-ui, sans-serif; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
-  .stamp-code-display { font-family: system-ui, sans-serif; font-weight: 900; font-size: 2.5rem; color: var(--campo); letter-spacing: 0.15em; margin: 1rem 0; }
+  .stand-result p { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+  .stamp-code-display { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 900; font-size: 2.5rem; color: var(--campo); letter-spacing: 0.15em; margin: 1rem 0; }
   .stand-result .note { font-size: 0.8rem; color: var(--text-secondary); font-style: italic; }
   .stand-history { margin-top: 2rem; }
-  .stand-history h4 { font-family: system-ui, sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
+  .stand-history h4 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
   .stand-history-list { list-style: none; max-height: 200px; overflow-y: auto; }
-  .stand-history-list li { font-family: system-ui, sans-serif; font-size: 0.85rem; color: var(--text-primary); padding: 0.5rem 0; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; }
+  .stand-history-list li { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.85rem; color: var(--text-primary); padding: 0.5rem 0; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; }
   .stand-history-list li span { color: var(--text-secondary); font-size: 0.75rem; }
-  .stand-back { display: inline-block; font-family: system-ui, sans-serif; font-weight: 600; font-size: 0.85rem; color: var(--salsa); text-decoration: none; margin-bottom: 1.5rem; }
+  .stand-back { display: inline-block; font-family: 'At Gambit', system-ui, sans-serif; font-weight: 600; font-size: 0.85rem; color: var(--salsa); text-decoration: none; margin-bottom: 1.5rem; }
   .stand-back:hover { text-decoration: underline; }
 
   .location-flex { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
-  .location-name { font-family: system-ui, sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--text-primary); margin-bottom: 0.75rem; }
+  .location-name { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--text-primary); margin-bottom: 0.75rem; }
   .location-address { color: var(--text-secondary); font-size: 1rem; margin-bottom: 2rem; line-height: 1.7; }
   .location-contact { display: flex; flex-direction: column; gap: 0.75rem; }
-  .contact-row { display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary); font-family: system-ui, sans-serif; font-size: 0.9rem; }
+  .contact-row { display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary); font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.9rem; }
   .contact-row svg { width: 20px; height: 20px; color: var(--campo); flex-shrink: 0; }
   .location-map-container { position: relative; border: 1px solid var(--card-border); border-radius: 4px; overflow: hidden; aspect-ratio: 4/3; }
   .location-map-container iframe { display: block; }
-  .map-open-link { display: block; text-align: center; padding: 0.6rem; background: var(--card-bg); border-top: 1px solid var(--card-border); font-family: system-ui, sans-serif; font-weight: 700; font-size: 0.8rem; color: var(--campo); text-decoration: none; transition: background 0.2s; }
+  .map-open-link { display: block; text-align: center; padding: 0.6rem; background: var(--card-bg); border-top: 1px solid var(--card-border); font-family: 'At Gambit', system-ui, sans-serif; font-weight: 700; font-size: 0.8rem; color: var(--campo); text-decoration: none; transition: background 0.2s; }
   .map-open-link:hover { background: var(--bg-alt); }
 
   .location-logo { display: block; max-width: 220px; height: auto; margin-bottom: 1.5rem; }
@@ -396,10 +446,10 @@
   .footer-sponsor-logo { width: 160px; height: 160px; object-fit: contain; }
 
   .footer { padding: 3rem 1.5rem; text-align: center; background: var(--bg-alt); border-top: 1px solid var(--card-border); }
-  .footer-logo { font-family: system-ui, sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--salsa); margin-bottom: 0.5rem; }
+  .footer-logo { font-family: 'Telka Extended', system-ui, sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--salsa); margin-bottom: 0.5rem; }
   .footer-tagline { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem; }
   .footer-links { display: flex; justify-content: center; gap: 1.5rem; list-style: none; margin-bottom: 1.5rem; flex-wrap: wrap; }
-  .footer-links a { color: var(--text-secondary); text-decoration: none; font-family: system-ui, sans-serif; font-size: 0.8rem; transition: color 0.2s; }
+  .footer-links a { color: var(--text-secondary); text-decoration: none; font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.8rem; transition: color 0.2s; }
   .footer-links a:hover { color: var(--salsa); }
   .footer-copy { color: var(--text-secondary); font-size: 0.75rem; opacity: 0.6; }
 
