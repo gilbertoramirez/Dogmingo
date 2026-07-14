@@ -523,7 +523,7 @@ app.post('/api/vendor/change-password', async (req, res) => {
   const auth = verifyToken(token);
   if (!auth) return res.status(403).json({ error: 'No autorizado' });
 
-  const { vendor_email, new_password } = req.body || {};
+  const { vendor_email, new_password, current_password } = req.body || {};
 
   if (auth.admin && vendor_email) {
     if (!new_password || new_password.length < 4) return res.status(400).json({ error: 'La contraseña debe tener al menos 4 caracteres' });
@@ -540,10 +540,16 @@ app.post('/api/vendor/change-password', async (req, res) => {
     }
   }
 
-  if (!new_password || new_password.length < 4) return res.status(400).json({ error: 'La contraseña debe tener al menos 4 caracteres' });
+  if (!current_password) return res.status(400).json({ error: 'Contraseña actual requerida' });
+  if (!new_password || new_password.length < 4) return res.status(400).json({ error: 'La nueva contraseña debe tener al menos 4 caracteres' });
   const db = getDb();
   if (!db) return res.status(500).json({ error: 'Database not configured' });
   try {
+    const currentHash = hashPassword(current_password);
+    const existing = await db.select({ id: vendedores.id }).from(vendedores)
+      .where(and(eq(vendedores.id, auth.id), eq(vendedores.password_hash, currentHash)));
+    if (existing.length === 0) return res.status(403).json({ error: 'Contraseña actual incorrecta' });
+
     const hash = hashPassword(new_password);
     const rows = await db.update(vendedores).set({ password_hash: hash }).where(eq(vendedores.id, auth.id)).returning({ id: vendedores.id });
     if (rows.length === 0) return res.status(404).json({ error: 'Vendedor no encontrado' });

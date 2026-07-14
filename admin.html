@@ -54,12 +54,16 @@
         <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0;">
         <h4>Cambiar contrase&ntilde;a</h4>
         <div class="field">
+          <label for="selfCurrentPw">Contrase&ntilde;a actual</label>
+          <input type="password" id="selfCurrentPw" placeholder="Tu contrase&ntilde;a actual">
+        </div>
+        <div class="field">
           <label for="selfNewPw">Nueva contrase&ntilde;a</label>
           <input type="password" id="selfNewPw" placeholder="M&iacute;nimo 4 caracteres">
         </div>
         <div class="field">
-          <label for="selfConfirmPw">Confirmar contrase&ntilde;a</label>
-          <input type="password" id="selfConfirmPw" placeholder="Repite la contrase&ntilde;a">
+          <label for="selfConfirmPw">Confirmar nueva contrase&ntilde;a</label>
+          <input type="password" id="selfConfirmPw" placeholder="Repite la nueva contrase&ntilde;a">
         </div>
         <button class="btn-create" onclick="selfChangePassword()">Guardar contrase&ntilde;a</button>
         <p class="form-msg" id="selfPwMsg"></p>
@@ -87,13 +91,12 @@
 
     <!-- TABS (admin only) -->
     <div class="dash-tabs" id="dashTabs" style="display:none;">
-      <button class="tab active" data-tab="scanner" onclick="switchTab('scanner')">Esc&aacute;ner</button>
-      <button class="tab" data-tab="vendors" onclick="switchTab('vendors')">Vendedores</button>
+      <button class="tab active" data-tab="vendors" onclick="switchTab('vendors')">Vendedores</button>
       <button class="tab" data-tab="stats" onclick="switchTab('stats')">Registros</button>
     </div>
 
-    <!-- SCANNER TAB -->
-    <div class="tab-content active" id="tab-scanner">
+    <!-- SCANNER TAB (vendor only) -->
+    <div class="tab-content" id="tab-scanner" style="display:none;">
       <div class="scanner-section">
         <div class="stand-indicator" id="standIndicator"></div>
 
@@ -137,7 +140,7 @@
     </div>
 
     <!-- VENDORS TAB (admin only) -->
-    <div class="tab-content" id="tab-vendors">
+    <div class="tab-content active" id="tab-vendors">
       <div class="vendors-section">
         <h3>Crear vendedor</h3>
         <form id="createVendorForm" class="vendor-form" novalidate>
