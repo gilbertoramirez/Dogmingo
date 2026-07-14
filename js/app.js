@@ -347,22 +347,12 @@ var form = document.getElementById('registroForm');
 var submitBtn = document.getElementById('submitBtn');
 var formSuccess = document.getElementById('formSuccess');
 var verificationStep = document.getElementById('verificationStep');
-var regCount = document.getElementById('regCount');
 var traePerro = document.getElementById('traePerro');
 var dogNameField = document.getElementById('dogNameField');
 
 var pendingPayload = null;
 var verificationToken = null;
 
-function updateCounter() {
-  regCount.closest('.registro-counter').style.display = 'none';
-  fetch('/api/registros').then(function(r) { return r.json(); }).then(function(d) {
-    if (d.count > 0) {
-      regCount.textContent = d.count;
-      regCount.closest('.registro-counter').style.display = '';
-    }
-  }).catch(function() {});
-}
 
 function sendPassportEmail(registro) {
   var c = document.getElementById('passportCanvas');
@@ -379,24 +369,6 @@ function sendPassportEmail(registro) {
   }).catch(function() {});
 }
 
-// Session restore
-(function restoreSession() {
-  updateCounter();
-  var folio = localStorage.getItem('dogmingo_folio');
-  if (!folio) return;
-
-  fetch('/api/registro?folio=' + encodeURIComponent(folio))
-    .then(function(r) {
-      if (!r.ok) throw new Error('Not found');
-      return r.json();
-    })
-    .then(function(d) {
-      showSuccessScreen(d.registro, d.stamps);
-    })
-    .catch(function() {
-      localStorage.removeItem('dogmingo_folio');
-    });
-})();
 
 traePerro.addEventListener('change', function() {
   dogNameField.classList.toggle('visible', traePerro.checked);
@@ -532,10 +504,8 @@ function completeRegistration() {
     var registro = d.registro;
     var stamps = d.stamps || [];
 
-    localStorage.setItem('dogmingo_folio', registro.folio);
     verificationStep.style.display = 'none';
     showSuccessScreen(registro, stamps);
-    updateCounter();
     if (!d.existing) {
       setTimeout(function() { sendPassportEmail(registro); }, 500);
     }
@@ -582,13 +552,6 @@ document.getElementById('changeEmail').addEventListener('click', function(e) {
   }
 });
 
-document.getElementById('downloadPassport').addEventListener('click', function() {
-  var c = document.getElementById('passportCanvas');
-  var link = document.createElement('a');
-  link.download = 'pasaporte-perruno-dogmingo.png';
-  link.href = c.toDataURL('image/png');
-  link.click();
-});
 
 // ══════════════════════════════════════════════════════
 // Stand Portal
