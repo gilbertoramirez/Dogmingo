@@ -321,6 +321,11 @@ function showSuccessScreen(registro, stamps) {
 
   form.style.display = 'none';
   formSuccess.classList.add('visible');
+
+  var registroInfo = document.querySelector('.registro-info');
+  if (registroInfo) registroInfo.style.display = 'none';
+  var registroLayout = document.querySelector('.registro-layout');
+  if (registroLayout) registroLayout.style.gridTemplateColumns = '1fr';
   document.getElementById('folioDisplay').textContent = registro.folio;
 
   var qrCanvas = renderQRToCanvas(registro.folio, 256);
