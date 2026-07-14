@@ -23,6 +23,7 @@ function cors(req, res, next) {
   next();
 }
 app.use('/api', cors);
+app.use('/api', function (req, res, next) { autoMigrate().then(next).catch(next); });
 
 // ── Setup (create tables) ──
 app.get('/api/setup', async (req, res) => {
@@ -537,24 +538,13 @@ app.post('/api/vendor/create', async (req, res) => {
 
   try {
     const hash = hashPassword(password);
-    let rows;
-    try {
-      rows = await db.insert(vendedores).values({ nombre, email, password_hash: hash, stand_num: assignedStand, es_subadmin: isSubadmin })
-        .onConflictDoUpdate({ target: vendedores.email, set: { nombre, password_hash: hash, stand_num: assignedStand, es_subadmin: isSubadmin, activo: true } })
-        .returning({ id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email, stand_num: vendedores.stand_num, activo: vendedores.activo });
-    } catch (colErr) {
-      if (colErr.message && colErr.message.includes('es_subadmin')) {
-        rows = await db.insert(vendedores).values({ nombre, email, password_hash: hash, stand_num: assignedStand })
-          .onConflictDoUpdate({ target: vendedores.email, set: { nombre, password_hash: hash, stand_num: assignedStand, activo: true } })
-          .returning({ id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email, stand_num: vendedores.stand_num, activo: vendedores.activo });
-      } else {
-        throw colErr;
-      }
-    }
+    const rows = await db.insert(vendedores).values({ nombre, email, password_hash: hash, stand_num: assignedStand, es_subadmin: isSubadmin })
+      .onConflictDoUpdate({ target: vendedores.email, set: { nombre, password_hash: hash, stand_num: assignedStand, es_subadmin: isSubadmin, activo: true } })
+      .returning({ id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email, stand_num: vendedores.stand_num, activo: vendedores.activo });
     return res.status(201).json({ ok: true, vendor: rows[0] });
   } catch (err) {
     console.error('Create vendor error:', err);
-    return res.status(500).json({ error: 'Error al crear vendedor: ' + err.message });
+    return res.status(500).json({ error: 'Error al crear vendedor' });
   }
 });
 
@@ -689,9 +679,23 @@ app.get('/api/vendor/list', async (req, res) => {
   }
 });
 
+let migrated = false;
+async function autoMigrate() {
+  if (migrated || !process.env.DATABASE_URL) return;
+  migrated = true;
+  try {
+    const sql = neon(process.env.DATABASE_URL);
+    await sql`ALTER TABLE vendedores ADD COLUMN IF NOT EXISTS es_subadmin BOOLEAN DEFAULT FALSE`;
+  } catch (err) {
+    console.error('Auto-migrate error (non-fatal):', err.message);
+  }
+}
+
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log('Dogmingo server running on port ' + PORT);
+  autoMigrate().then(() => {
+    app.listen(PORT, () => {
+      console.log('Dogmingo server running on port ' + PORT);
+    });
   });
 }
 
