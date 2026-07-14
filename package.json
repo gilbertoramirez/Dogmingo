@@ -15,7 +15,7 @@
     "@neondatabase/serverless": "^0.10.4",
     "drizzle-orm": "^0.45.2",
     "express": "^4.22.2",
-    "resend": "^4.0.0"
+    "nodemailer": "^9.0.3"
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.10"
