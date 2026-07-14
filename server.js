@@ -266,6 +266,35 @@ app.get('/api/stamps', async (req, res) => {
   }
 });
 
+// ── Stamps lookup by email (public) ──
+app.get('/api/stamps/lookup', async (req, res) => {
+  const email = (req.query.email || '').toLowerCase().trim();
+  if (!email) return res.status(400).json({ error: 'Email requerido' });
+
+  const db = getDb();
+  if (!db) return res.json({ ok: false, error: 'Base de datos no disponible' });
+
+  try {
+    const reg = await db.select({
+      folio: registros.folio, nombre: registros.nombre, apellido: registros.apellido,
+    }).from(registros).where(eq(registros.email, email));
+    if (reg.length === 0) return res.json({ ok: false, error: 'No se encontró un registro con ese correo.' });
+
+    const stamps = await db.select({ stand_num: sellos.stand_num })
+      .from(sellos).where(eq(sellos.folio, reg[0].folio)).orderBy(asc(sellos.stand_num));
+
+    return res.json({
+      ok: true,
+      folio: reg[0].folio,
+      nombre: reg[0].nombre + ' ' + reg[0].apellido,
+      stamps: stamps.map(s => s.stand_num),
+    });
+  } catch (err) {
+    console.error('Stamps lookup error:', err);
+    return res.json({ ok: false, error: 'Error al consultar sellos.' });
+  }
+});
+
 // ── Send passport email ──
 app.post('/api/send-passport', async (req, res) => {
   const { email, nombre, folio, passportImage } = req.body || {};
@@ -413,9 +442,42 @@ app.post('/api/vendor/stamp', async (req, res) => {
     await db.insert(sellos).values({ folio, stand_num: standNum, stamp_code: stampCode });
 
     const allStamps = await db.select({ stand_num: sellos.stand_num }).from(sellos).where(eq(sellos.folio, folio));
+    const totalStamps = allStamps.length;
+
+    if (totalStamps === 6) {
+      try {
+        const fullReg = await db.select({ email: registros.email, nombre: registros.nombre, apellido: registros.apellido })
+          .from(registros).where(eq(registros.folio, folio));
+        if (fullReg.length > 0 && process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
+          const transporter = getMailTransport();
+          const nombre = fullReg[0].nombre + ' ' + fullReg[0].apellido;
+          await transporter.sendMail({
+            from: process.env.GMAIL_USER,
+            to: fullReg[0].email,
+            subject: '¡Completaste todos los sellos! 🐾 - Dogmingo',
+            html: [
+              '<div style="font-family:system-ui,sans-serif;max-width:480px;margin:0 auto;background:#FAF8F3;padding:2rem;border-radius:16px;text-align:center;">',
+              '<h1 style="color:#3A5A3E;font-size:1.8rem;margin:0 0 0.5rem;">¡FELICIDADES!</h1>',
+              '<p style="color:#C4923A;font-weight:700;font-size:1.2rem;margin:0 0 1rem;">🐾 🐾 🐾 🐾 🐾 🐾</p>',
+              '<p style="color:#191714;font-size:1.1rem;margin:0 0 1rem;"><strong>' + nombre + '</strong>, completaste los 6 sellos de tu Pasaporte Perruno.</p>',
+              '<div style="background:#3A5A3E;color:#FBF7F0;padding:1.25rem;border-radius:12px;margin:0 0 1.5rem;">',
+              '<p style="margin:0;font-size:1rem;font-weight:700;">Presenta tu pasaporte en el stand principal para reclamar tu premio.</p>',
+              '</div>',
+              '<p style="color:#6B6558;font-size:0.85rem;margin:0;">Folio: <strong>' + folio + '</strong></p>',
+              '<hr style="border:none;border-top:2px dashed #D4C9B5;margin:1.5rem 0;">',
+              '<p style="color:#8A8378;font-size:0.8rem;margin:0;">Dogmingo — El Domingo más Perrón del Año</p>',
+              '</div>',
+            ].join('\n'),
+          });
+        }
+      } catch (emailErr) {
+        console.error('Congratulations email error:', emailErr);
+      }
+    }
+
     return res.status(201).json({
       ok: true, stamp_code: stampCode, stand_num: standNum,
-      nombre: reg[0].nombre + ' ' + reg[0].apellido, total_stamps: allStamps.length,
+      nombre: reg[0].nombre + ' ' + reg[0].apellido, total_stamps: totalStamps,
     });
   } catch (err) {
     console.error('Stamp error:', err);

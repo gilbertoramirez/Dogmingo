@@ -45,6 +45,7 @@
       <li><a href="#actividades">Actividades</a></li>
       <li><a href="#boletos">Boletos</a></li>
       <li><a href="#registro">Registro</a></li>
+      <li><a href="#misSellos">Mis Sellos</a></li>
       <li><a href="#stand" onclick="openStand();return false;">Stands</a></li>
       <li><a href="admin.html">Admin</a></li>
     </ul>
@@ -384,6 +385,29 @@
           <canvas id="passportCanvas" width="800" height="1100" style="display:none;"></canvas>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="section mis-sellos-section" id="misSellos">
+  <div class="section-inner">
+    <span class="label section-eyebrow">Tu progreso</span>
+    <h2 class="display section-title">Mis Sellos</h2>
+    <p class="section-intro">Ingresa tu correo electr&oacute;nico para consultar cu&aacute;ntos sellos llevas.</p>
+    <div class="sellos-lookup-card">
+      <div class="sellos-lookup-form">
+        <input class="form-input" type="email" id="sellosEmail" placeholder="tu@correo.com">
+        <button class="form-submit" id="sellosBtn" onclick="lookupSellos()">Consultar</button>
+      </div>
+      <div class="sellos-result" id="sellosResult" style="display:none;">
+        <div class="sellos-user-info" id="sellosUserInfo"></div>
+        <div class="sellos-grid" id="sellosGrid"></div>
+        <div class="sellos-progress-bar">
+          <div class="sellos-progress-fill" id="sellosProgressFill"></div>
+        </div>
+        <p class="sellos-progress-text" id="sellosProgressText"></p>
+      </div>
+      <p class="sellos-error" id="sellosError" style="display:none;"></p>
     </div>
   </div>
 </section>

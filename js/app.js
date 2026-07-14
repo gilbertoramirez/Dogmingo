@@ -642,3 +642,51 @@ window.addEventListener('hashchange', function() {
   else if (document.getElementById('standPortal').classList.contains('active')) closeStand();
 });
 if (location.hash === '#stand') openStand();
+
+// ══════════════════════════════════════════════════════
+// Mis Sellos — stamp progress lookup
+// ══════════════════════════════════════════════════════
+function lookupSellos() {
+  var email = document.getElementById('sellosEmail').value.trim();
+  var result = document.getElementById('sellosResult');
+  var error = document.getElementById('sellosError');
+  var btn = document.getElementById('sellosBtn');
+  if (!email) { error.textContent = 'Ingresa tu correo electrónico.'; error.style.display = 'block'; result.style.display = 'none'; return; }
+  error.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Consultando...';
+
+  fetch('/api/stamps/lookup?email=' + encodeURIComponent(email))
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      btn.disabled = false; btn.textContent = 'Consultar';
+      if (!d.ok) { error.textContent = d.error || 'No se encontró un registro con ese correo.'; error.style.display = 'block'; result.style.display = 'none'; return; }
+      result.style.display = 'block';
+      document.getElementById('sellosUserInfo').textContent = d.nombre + ' — Folio: ' + d.folio;
+      var grid = document.getElementById('sellosGrid');
+      grid.innerHTML = '';
+      STATION_NAMES.forEach(function(name, i) {
+        var standNum = i + 1;
+        var has = d.stamps.indexOf(standNum) >= 0;
+        var item = document.createElement('div');
+        item.className = 'sello-item' + (has ? ' collected' : '');
+        item.innerHTML = '<div class="sello-icon">' + (has ? '🐾' : '○') + '</div><div class="sello-name">' + name + '</div>';
+        grid.appendChild(item);
+      });
+      var pct = Math.round((d.stamps.length / 6) * 100);
+      document.getElementById('sellosProgressFill').style.width = pct + '%';
+      document.getElementById('sellosProgressText').textContent = d.stamps.length + ' de 6 sellos';
+      var existing = document.getElementById('sellosComplete');
+      if (existing) existing.remove();
+      if (d.stamps.length === 6) {
+        var msg = document.createElement('div');
+        msg.className = 'sellos-complete';
+        msg.id = 'sellosComplete';
+        msg.textContent = '¡Felicidades! Tienes todos los sellos. Presenta tu pasaporte en el stand principal para reclamar tu premio.';
+        result.appendChild(msg);
+      }
+    })
+    .catch(function() {
+      btn.disabled = false; btn.textContent = 'Consultar';
+      error.textContent = 'Error de conexión. Intenta de nuevo.'; error.style.display = 'block'; result.style.display = 'none';
+    });
+}

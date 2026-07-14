@@ -318,6 +318,26 @@
   .stamp-msg.error { color: var(--salsa); }
 
 
+  /* MIS SELLOS LOOKUP */
+  .mis-sellos-section { background: var(--bg-alt); }
+  .sellos-lookup-card { max-width: 560px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 2rem; }
+  .sellos-lookup-form { display: flex; gap: 0.75rem; }
+  .sellos-lookup-form input { flex: 1; }
+  .sellos-lookup-form button { white-space: nowrap; padding: 0.7rem 1.5rem; }
+  .sellos-result { margin-top: 1.5rem; }
+  .sellos-user-info { font-family: system-ui, sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1rem; }
+  .sellos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
+  .sello-item { font-family: system-ui, sans-serif; text-align: center; padding: 1rem 0.5rem; border-radius: 8px; border: 2px dashed var(--card-border); transition: all 0.3s; }
+  .sello-item.collected { border-style: solid; border-color: var(--campo); background: rgba(58, 90, 62, 0.08); }
+  .sello-icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  .sello-name { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
+  .sello-item.collected .sello-name { color: var(--campo); }
+  .sellos-progress-bar { height: 8px; background: var(--card-border); border-radius: 4px; overflow: hidden; margin-bottom: 0.5rem; }
+  .sellos-progress-fill { height: 100%; background: linear-gradient(90deg, var(--campo), var(--gold)); border-radius: 4px; transition: width 0.5s ease; }
+  .sellos-progress-text { font-family: system-ui, sans-serif; font-size: 0.85rem; color: var(--text-secondary); text-align: center; }
+  .sellos-error { font-family: system-ui, sans-serif; font-size: 0.9rem; color: var(--salsa); text-align: center; margin-top: 1rem; }
+  .sellos-complete { font-family: system-ui, sans-serif; text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(58, 90, 62, 0.1); border-radius: 8px; color: var(--campo); font-weight: 700; }
+
   /* STAND PORTAL */
   .stand-portal { display: none; min-height: 100vh; background: var(--bg); padding: 2rem 1.5rem; }
   .stand-portal.active { display: block; }
