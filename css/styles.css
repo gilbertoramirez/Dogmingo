@@ -68,44 +68,6 @@
     --nav-bg: rgba(244, 230, 208, 0.92);
     --nav-border: rgba(49, 51, 35, 0.08);
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --text-primary: #F4E6D0;
-      --text-secondary: #A89E8E;
-      --bg: #1E1F18;
-      --bg-alt: #282920;
-      --card-bg: #282920;
-      --card-border: #3A3B2E;
-      --hero-bg: #313323;
-      --hero-text: #F4E6D0;
-      --nav-bg: rgba(30, 31, 24, 0.92);
-      --nav-border: rgba(244, 230, 208, 0.06);
-    }
-  }
-  :root[data-theme="dark"] {
-    --text-primary: #F4E6D0;
-    --text-secondary: #A89E8E;
-    --bg: #1E1F18;
-    --bg-alt: #282920;
-    --card-bg: #282920;
-    --card-border: #3A3B2E;
-    --hero-bg: #313323;
-    --hero-text: #F4E6D0;
-    --nav-bg: rgba(30, 31, 24, 0.92);
-    --nav-border: rgba(244, 230, 208, 0.06);
-  }
-  :root[data-theme="light"] {
-    --text-primary: #313323;
-    --text-secondary: #5C5A4A;
-    --bg: #F4E6D0;
-    --bg-alt: #EBD9BE;
-    --card-bg: #FDFAF5;
-    --card-border: #D9CCAE;
-    --hero-bg: #313323;
-    --hero-text: #F4E6D0;
-    --nav-bg: rgba(244, 230, 208, 0.92);
-    --nav-border: rgba(49, 51, 35, 0.08);
-  }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; font-size: 16px; }
