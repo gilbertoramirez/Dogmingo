@@ -324,14 +324,18 @@ function showSuccessScreen(registro, stamps) {
 }
 
 // ══════════════════════════════════════════════════════
-// Registration — DB first, duplicates checked by email
+// Registration — email verification + DB + session
 // ══════════════════════════════════════════════════════
 var form = document.getElementById('registroForm');
 var submitBtn = document.getElementById('submitBtn');
 var formSuccess = document.getElementById('formSuccess');
+var verificationStep = document.getElementById('verificationStep');
 var regCount = document.getElementById('regCount');
 var traePerro = document.getElementById('traePerro');
 var dogNameField = document.getElementById('dogNameField');
+
+var pendingPayload = null;
+var verificationToken = null;
 
 function updateCounter() {
   regCount.closest('.registro-counter').style.display = 'none';
@@ -358,7 +362,24 @@ function sendPassportEmail(registro) {
   }).catch(function() {});
 }
 
-updateCounter();
+// Session restore
+(function restoreSession() {
+  updateCounter();
+  var folio = localStorage.getItem('dogmingo_folio');
+  if (!folio) return;
+
+  fetch('/api/registro?folio=' + encodeURIComponent(folio))
+    .then(function(r) {
+      if (!r.ok) throw new Error('Not found');
+      return r.json();
+    })
+    .then(function(d) {
+      showSuccessScreen(d.registro, d.stamps);
+    })
+    .catch(function() {
+      localStorage.removeItem('dogmingo_folio');
+    });
+})();
 
 traePerro.addEventListener('change', function() {
   dogNameField.classList.toggle('visible', traePerro.checked);
@@ -381,6 +402,7 @@ form.querySelectorAll('.form-input').forEach(function(input) {
   input.addEventListener('input', function() { var g = input.closest('.form-group'); if (g && g.classList.contains('has-error')) validateField(input); });
 });
 
+// Step 1: Send verification code
 form.addEventListener('submit', function(e) {
   e.preventDefault();
   var allValid = true;
@@ -388,20 +410,60 @@ form.addEventListener('submit', function(e) {
   if (!allValid) return;
 
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Registrando...';
+  submitBtn.textContent = 'Enviando código...';
 
-  var folio = 'DGM-' + Date.now().toString(36).toUpperCase();
-  var payload = {
-    folio: folio,
+  var email = document.getElementById('email').value.trim();
+
+  pendingPayload = {
+    folio: 'DGM-' + Date.now().toString(36).toUpperCase(),
     nombre: document.getElementById('nombre').value.trim(),
     apellido: document.getElementById('apellido').value.trim(),
-    email: document.getElementById('email').value.trim(),
+    email: email,
     telefono: document.getElementById('telefono').value.trim(),
     adultos: parseInt(document.getElementById('adultos').value),
     ninos: parseInt(document.getElementById('ninos').value),
     traePerro: traePerro.checked,
     nombrePerro: document.getElementById('nombrePerro').value.trim()
   };
+
+  fetch('/api/send-code', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email })
+  }).then(function(r) {
+    return r.json().then(function(d) {
+      if (!r.ok) throw new Error(d.error || 'Error al enviar código');
+      return d;
+    });
+  }).then(function(d) {
+    verificationToken = d.token;
+    form.style.display = 'none';
+    verificationStep.style.display = 'block';
+    document.getElementById('verifyEmailDisplay').textContent = email;
+    document.getElementById('verificationCode').focus();
+  }).catch(function(err) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Verificar correo electrónico';
+    alert('Error: ' + err.message);
+  });
+});
+
+// Step 2: Confirm code and register
+function completeRegistration() {
+  var code = document.getElementById('verificationCode').value.trim();
+  if (!code || code.length !== 6) {
+    alert('Ingresa el código de 6 dígitos que recibiste por correo.');
+    return;
+  }
+
+  var verifyBtn = document.getElementById('verifyBtn');
+  verifyBtn.disabled = true;
+  verifyBtn.textContent = 'Verificando...';
+
+  var payload = Object.assign({}, pendingPayload, {
+    verificationToken: verificationToken,
+    verificationCode: code
+  });
 
   fetch('/api/register', {
     method: 'POST',
@@ -413,28 +475,50 @@ form.addEventListener('submit', function(e) {
       return d;
     });
   }).then(function(d) {
-    var registro = d.registro || {
-      folio: folio,
-      nombre: payload.nombre,
-      apellido: payload.apellido,
-      email: payload.email,
-      telefono: payload.telefono,
-      adultos: payload.adultos,
-      ninos: payload.ninos,
-      nombre_perro: payload.nombrePerro || null
-    };
+    var registro = d.registro;
     var stamps = d.stamps || [];
 
+    localStorage.setItem('dogmingo_folio', registro.folio);
+    verificationStep.style.display = 'none';
     showSuccessScreen(registro, stamps);
     updateCounter();
     if (!d.existing) {
       setTimeout(function() { sendPassportEmail(registro); }, 500);
     }
   }).catch(function(err) {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Registrarme y obtener pasaporte';
+    verifyBtn.disabled = false;
+    verifyBtn.textContent = 'Confirmar y registrarme';
     alert('Error: ' + err.message);
   });
+}
+
+// Resend code
+document.getElementById('resendCode').addEventListener('click', function(e) {
+  e.preventDefault();
+  var email = pendingPayload.email;
+  this.textContent = 'Enviando...';
+  var self = this;
+  fetch('/api/send-code', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.token) verificationToken = d.token;
+    self.textContent = '¡Código reenviado!';
+    setTimeout(function() { self.textContent = 'Reenviar código'; }, 3000);
+  }).catch(function() {
+    self.textContent = 'Error, intenta de nuevo';
+    setTimeout(function() { self.textContent = 'Reenviar código'; }, 3000);
+  });
+});
+
+// Change email — go back to form
+document.getElementById('changeEmail').addEventListener('click', function(e) {
+  e.preventDefault();
+  verificationStep.style.display = 'none';
+  form.style.display = 'block';
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Verificar correo electrónico';
 });
 
 document.getElementById('downloadPassport').addEventListener('click', function() {

@@ -300,8 +300,23 @@
                 <input class="form-input" type="text" id="nombrePerro" name="nombrePerro" placeholder="&iquest;C&oacute;mo se llama tu peludo?">
               </div>
             </div>
-            <button type="submit" class="form-submit" id="submitBtn">Registrarme y obtener pasaporte</button>
+            <button type="submit" class="form-submit" id="submitBtn">Verificar correo electr&oacute;nico</button>
           </form>
+          <div class="verification-step" id="verificationStep" style="display:none;">
+            <div style="text-align:center;margin-bottom:1.5rem;">
+              <div class="form-success-icon" style="background:#2D6A3F;">
+                <svg viewBox="0 0 32 32" fill="none" stroke="#FAF8F3" stroke-width="2.5" stroke-linecap="round"><path d="M6 16L10 6H22L26 16V24C26 25.1 25.1 26 24 26H8C6.9 26 6 25.1 6 24V16Z"/><path d="M6 16H26"/><circle cx="12" cy="21" r="1.5"/><circle cx="20" cy="21" r="1.5"/></svg>
+              </div>
+              <h3 style="margin:0.5rem 0;">Verifica tu correo</h3>
+              <p style="color:var(--text-secondary);font-size:0.9rem;">Enviamos un c&oacute;digo de 6 d&iacute;gitos a <strong id="verifyEmailDisplay"></strong></p>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="verificationCode">C&oacute;digo de verificaci&oacute;n</label>
+              <input class="form-input" type="text" id="verificationCode" placeholder="123456" maxlength="6" inputmode="numeric" pattern="[0-9]*" style="text-align:center;font-size:1.5rem;letter-spacing:0.3em;font-weight:700;">
+            </div>
+            <button class="form-submit" id="verifyBtn" onclick="completeRegistration()">Confirmar y registrarme</button>
+            <p style="text-align:center;margin-top:1rem;"><a href="#" id="resendCode" style="color:var(--accent);font-size:0.85rem;">Reenviar c&oacute;digo</a> &middot; <a href="#" id="changeEmail" style="color:var(--text-secondary);font-size:0.85rem;">Cambiar correo</a></p>
+          </div>
           <div class="form-success" id="formSuccess">
             <div class="form-success-icon">
               <svg viewBox="0 0 32 32" fill="none" stroke="#FAF8F3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16L14 22L24 10"/></svg>

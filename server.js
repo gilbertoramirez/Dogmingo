@@ -1,10 +1,13 @@
 const express = require('express');
 const path = require('path');
+const crypto = require('crypto');
 const { getDb, registros, sellos, vendedores } = require('./db');
 const { createToken, verifyToken, hashPassword } = require('./api/_auth');
 const { eq, and, asc, count } = require('drizzle-orm');
 const { Resend } = require('resend');
 const { neon } = require('@neondatabase/serverless');
+
+const CODE_SECRET = process.env.VENDOR_SECRET || 'dgm2025-vendor-key';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -76,18 +79,95 @@ app.get('/api/setup', async (req, res) => {
   }
 });
 
-// ── Register ──
+// ── Test DB ──
+app.get('/api/test-db', async (req, res) => {
+  if (!process.env.DATABASE_URL) return res.json({ ok: false, error: 'DATABASE_URL not set' });
+  try {
+    const sql = neon(process.env.DATABASE_URL);
+    const result = await sql`SELECT NOW() as now, current_database() as db`;
+    const tables = await sql`SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name`;
+    const counts = await sql`SELECT (SELECT count(*) FROM registros) as registros, (SELECT count(*) FROM sellos) as sellos, (SELECT count(*) FROM vendedores) as vendedores`;
+    return res.json({ ok: true, db: result[0].db, time: result[0].now, tables: tables.map(t => t.table_name), counts: counts[0] });
+  } catch (err) {
+    return res.json({ ok: false, error: err.message });
+  }
+});
+
+// ── Send verification code ──
+function signCode(email, code, expiresAt) {
+  return crypto.createHmac('sha256', CODE_SECRET).update(email + ':' + code + ':' + expiresAt).digest('hex').slice(0, 16);
+}
+
+app.post('/api/send-code', async (req, res) => {
+  const { email } = req.body || {};
+  if (!email) return res.status(400).json({ error: 'Email required' });
+  if (!process.env.RESEND_API_KEY) return res.status(500).json({ error: 'Email service not configured' });
+
+  try {
+    const code = crypto.randomInt(100000, 999999).toString();
+    const expiresAt = Date.now() + 10 * 60 * 1000;
+    const signature = signCode(email.toLowerCase().trim(), code, expiresAt);
+    const token = Buffer.from(JSON.stringify({ email: email.toLowerCase().trim(), code, exp: expiresAt, sig: signature })).toString('base64');
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || 'Dogmingo <onboarding@resend.dev>',
+      to: email,
+      subject: 'Tu código de verificación - Dogmingo',
+      html: [
+        '<div style="font-family:system-ui,sans-serif;max-width:400px;margin:0 auto;background:#FAF8F3;padding:2rem;border-radius:16px;text-align:center;">',
+        '<h1 style="color:#D93B1E;font-size:1.8rem;margin:0 0 0.5rem;">DOGMINGO</h1>',
+        '<p style="color:#5C584F;margin:0 0 1.5rem;">El Domingo más Perrón del Año</p>',
+        '<hr style="border:none;border-top:2px dashed #D4C9B5;margin:0 0 1.5rem;">',
+        '<p style="color:#191714;font-size:1rem;margin:0 0 1rem;">Tu código de verificación es:</p>',
+        '<div style="background:#FFFFFF;padding:1rem;border-radius:12px;margin:0 0 1rem;">',
+        '<span style="font-size:2.5rem;font-weight:800;letter-spacing:0.3em;color:#2D6A3F;">' + code + '</span>',
+        '</div>',
+        '<p style="color:#8A8378;font-size:0.85rem;margin:0;">Este código expira en 10 minutos.</p>',
+        '</div>',
+      ].join('\n'),
+    });
+    return res.json({ ok: true, token });
+  } catch (err) {
+    console.error('Send code error:', err);
+    return res.status(500).json({ error: 'Failed to send code' });
+  }
+});
+
+// ── Register (with email verification) ──
+function verifyCodeToken(token, inputCode) {
+  try {
+    const data = JSON.parse(Buffer.from(token, 'base64').toString());
+    if (data.exp < Date.now()) return { valid: false, error: 'Código expirado' };
+    if (data.code !== inputCode) return { valid: false, error: 'Código incorrecto' };
+    const expected = crypto.createHmac('sha256', CODE_SECRET).update(data.email + ':' + data.code + ':' + data.exp).digest('hex').slice(0, 16);
+    if (data.sig !== expected) return { valid: false, error: 'Token inválido' };
+    return { valid: true, email: data.email };
+  } catch (e) {
+    return { valid: false, error: 'Token inválido' };
+  }
+}
+
 app.post('/api/register', async (req, res) => {
-  const { folio, nombre, apellido, email, telefono, adultos, ninos, traePerro, nombrePerro } = req.body || {};
+  const { folio, nombre, apellido, email, telefono, adultos, ninos, traePerro, nombrePerro, verificationToken, verificationCode } = req.body || {};
   if (!folio || !nombre || !apellido || !email || !telefono) {
     return res.status(400).json({ error: 'Missing required fields' });
+  }
+  if (!verificationToken || !verificationCode) {
+    return res.status(400).json({ error: 'Código de verificación requerido' });
+  }
+
+  const verification = verifyCodeToken(verificationToken, verificationCode);
+  if (!verification.valid) return res.status(400).json({ error: verification.error });
+  if (verification.email !== email.toLowerCase().trim()) {
+    return res.status(400).json({ error: 'El código no corresponde a este email' });
   }
 
   const db = getDb();
   if (!db) return res.status(500).json({ error: 'Database not configured' });
 
   try {
-    const existing = await db.select().from(registros).where(eq(registros.email, email));
+    const existing = await db.select().from(registros).where(eq(registros.email, email.toLowerCase().trim()));
 
     if (existing.length > 0) {
       const stamps = await db.select({ stand_num: sellos.stand_num })
@@ -101,19 +181,19 @@ app.post('/api/register', async (req, res) => {
     }
 
     await db.insert(registros).values({
-      folio, nombre, apellido, email, telefono,
+      folio, nombre, apellido, email: email.toLowerCase().trim(), telefono,
       adultos: adultos || 1, ninos: ninos || 0,
       trae_perro: !!traePerro, nombre_perro: nombrePerro || null,
     });
 
     return res.status(201).json({
       ok: true, existing: false, folio,
-      registro: { folio, nombre, apellido, email, telefono, adultos: adultos || 1, ninos: ninos || 0, nombre_perro: nombrePerro || null },
+      registro: { folio, nombre, apellido, email: email.toLowerCase().trim(), telefono, adultos: adultos || 1, ninos: ninos || 0, nombre_perro: nombrePerro || null },
       stamps: [],
     });
   } catch (err) {
     console.error('Register error:', err);
-    return res.status(500).json({ error: 'Registration failed' });
+    return res.status(500).json({ error: 'Registration failed: ' + err.message });
   }
 });
 
