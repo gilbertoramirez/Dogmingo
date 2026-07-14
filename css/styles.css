@@ -416,7 +416,7 @@
   .section-sponsors { background: var(--bg-alt); }
   .sponsors-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 1.25rem;
     margin-top: 2rem;
   }
@@ -477,7 +477,7 @@
 
   @media (max-width: 768px) {
     .causa-grid, .info-grid, .ticket-cards, .location-flex, .registro-layout, .passport-grid { grid-template-columns: 1fr; }
-    .sponsors-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .sponsors-grid { grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
     .sponsor-logo { height: 70px; }
     .sponsor-name { font-size: 0.75rem; }
     .form-row { grid-template-columns: 1fr; }
@@ -576,6 +576,7 @@
 
   @media (max-width: 480px) {
     .hero .dog-photo-strip img:nth-child(n+5) { display: none; }
+    .sponsors-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (max-width: 380px) {
