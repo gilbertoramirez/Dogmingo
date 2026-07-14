@@ -351,9 +351,33 @@ app.post('/api/vendor/login', async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
 
-  if (email === 'admin' && password === (process.env.ADMIN_PASSWORD || 'admin')) {
-    const token = createToken({ id: 0, stand_num: 0, es_admin: true });
-    return res.json({ ok: true, token, vendor: { nombre: 'Administrador', stand_num: 0, es_admin: true } });
+  if (email === 'admin') {
+    const db = getDb();
+    if (db) {
+      try {
+        const existing = await db.select({ id: vendedores.id, password_hash: vendedores.password_hash })
+          .from(vendedores).where(and(eq(vendedores.email, 'admin'), eq(vendedores.es_admin, true)));
+        if (existing.length > 0) {
+          const inputHash = hashPassword(password);
+          if (existing[0].password_hash !== inputHash) return res.status(401).json({ error: 'Credenciales inválidas' });
+          const token = createToken({ id: existing[0].id, stand_num: 0, es_admin: true });
+          return res.json({ ok: true, token, vendor: { nombre: 'Administrador', stand_num: 0, es_admin: true } });
+        }
+        if (password !== (process.env.ADMIN_PASSWORD || 'admin')) return res.status(401).json({ error: 'Credenciales inválidas' });
+        const hash = hashPassword(password);
+        const rows = await db.insert(vendedores).values({ nombre: 'Administrador', email: 'admin', password_hash: hash, stand_num: 0, es_admin: true })
+          .returning({ id: vendedores.id });
+        const token = createToken({ id: rows[0].id, stand_num: 0, es_admin: true });
+        return res.json({ ok: true, token, vendor: { nombre: 'Administrador', stand_num: 0, es_admin: true } });
+      } catch (err) {
+        console.error('Admin login DB error:', err);
+      }
+    }
+    if (password === (process.env.ADMIN_PASSWORD || 'admin')) {
+      const token = createToken({ id: 0, stand_num: 0, es_admin: true });
+      return res.json({ ok: true, token, vendor: { nombre: 'Administrador', stand_num: 0, es_admin: true } });
+    }
+    return res.status(401).json({ error: 'Credenciales inválidas' });
   }
 
   const db = getDb();
