@@ -421,9 +421,12 @@ function toggleVendorSettings() {
     var info = document.getElementById('vendorSettingsInfo');
     if (vendor.es_admin) {
       info.innerHTML = '<p><strong>Administrador</strong></p>';
+      document.getElementById('helperSection').style.display = 'none';
     } else {
       info.innerHTML = '<p><strong>' + vendor.nombre + '</strong></p>' +
         '<p>Stand ' + vendor.stand_num + ' — ' + STATION_NAMES[vendor.stand_num - 1] + '</p>';
+      document.getElementById('helperSection').style.display = 'block';
+      document.getElementById('helpStandBadge').textContent = 'Stand ' + vendor.stand_num + ' — ' + STATION_NAMES[vendor.stand_num - 1];
     }
   }
 }

@@ -184,6 +184,16 @@ body {
 .vendor-settings-info p strong {
   color: var(--text-primary);
 }
+.stand-assign-badge {
+  display: inline-block;
+  background: var(--campo);
+  color: #FFF;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
 
 /* TABS */
 .dash-tabs {

@@ -69,9 +69,10 @@
         <p class="form-msg" id="selfPwMsg"></p>
       </div>
 
-      <div class="vendor-settings-card" style="margin-top:1rem;">
+      <div class="vendor-settings-card" id="helperSection" style="margin-top:1rem;display:none;">
         <h3>Agregar ayudante</h3>
-        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;">Crea una cuenta para un ayudante en tu mismo stand.</p>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">Se asignar&aacute; autom&aacute;ticamente a tu stand.</p>
+        <p class="stand-assign-badge" id="helpStandBadge"></p>
         <div class="field">
           <label for="helpNombre">Nombre</label>
           <input type="text" id="helpNombre" placeholder="Nombre del ayudante">
