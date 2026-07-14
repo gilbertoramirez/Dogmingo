@@ -510,14 +510,7 @@ function renderRegistros(list) {
   }
   container.innerHTML = '';
   list.forEach(function (r) {
-    var stamps = r.stamps || [];
-    var stampDots = '';
-    STAMP_MAP.forEach(function (item) {
-      var has = stamps.indexOf(item.id) >= 0;
-      stampDots += '<span class="reg-stamp-dot' + (has ? ' filled' : '') + '" title="' + item.name + '">' + item.name.substring(0, 2) + '</span>';
-    });
-    var date = r.created_at ? new Date(r.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' }) : '';
-    var perro = r.trae_perro && r.nombre_perro ? ' · Perro: ' + r.nombre_perro : '';
+    var date = r.created_at ? new Date(r.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
     var item = document.createElement('div');
     item.className = 'registro-item';
     item.innerHTML =
@@ -525,13 +518,14 @@ function renderRegistros(list) {
         '<strong>' + r.nombre + ' ' + r.apellido + '</strong>' +
         '<span class="folio-badge">' + r.folio + '</span>' +
       '</div>' +
-      '<div class="registro-item-details">' +
-        '<p>' + r.email + ' · ' + r.telefono + '</p>' +
-        '<p>' + r.adultos + ' adulto(s)' + (r.ninos > 0 ? ', ' + r.ninos + ' niño(s)' : '') + perro + ' · ' + date + '</p>' +
-      '</div>' +
-      '<div class="registro-item-stamps">' +
-        '<span class="reg-stamps-label">' + stamps.length + '/' + TOTAL_STAMPS + '</span>' +
-        stampDots +
+      '<div class="registro-detail-grid">' +
+        '<div class="registro-detail"><span class="detail-key">Email</span><span class="detail-val">' + r.email + '</span></div>' +
+        '<div class="registro-detail"><span class="detail-key">Teléfono</span><span class="detail-val">' + r.telefono + '</span></div>' +
+        '<div class="registro-detail"><span class="detail-key">Adultos</span><span class="detail-val">' + r.adultos + '</span></div>' +
+        '<div class="registro-detail"><span class="detail-key">Niños</span><span class="detail-val">' + (r.ninos || 0) + '</span></div>' +
+        '<div class="registro-detail"><span class="detail-key">Trae perro</span><span class="detail-val">' + (r.trae_perro ? 'Sí' : 'No') + '</span></div>' +
+        (r.trae_perro && r.nombre_perro ? '<div class="registro-detail"><span class="detail-key">Nombre perro</span><span class="detail-val">' + r.nombre_perro + '</span></div>' : '') +
+        '<div class="registro-detail"><span class="detail-key">Registro</span><span class="detail-val">' + date + '</span></div>' +
       '</div>';
     container.appendChild(item);
   });

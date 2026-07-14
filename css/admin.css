@@ -609,40 +609,28 @@ body {
   margin-bottom: 0.35rem;
 }
 .registro-item-header strong { font-size: 0.9rem; }
-.registro-item-details p {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-bottom: 0.15rem;
-}
-.registro-item-stamps {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
+.registro-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 1rem;
   margin-top: 0.5rem;
 }
-.reg-stamps-label {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  margin-right: 0.25rem;
+.registro-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
 }
-.reg-stamp-dot {
-  width: 18px;
-  height: 14px;
-  border-radius: 3px;
-  border: 1.5px dashed var(--border);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.4rem;
+.detail-key {
+  font-size: 0.6rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--text-muted);
 }
-.reg-stamp-dot.filled {
-  border-style: solid;
-  border-color: var(--campo);
-  background: rgba(49, 51, 35, 0.1);
-  color: var(--campo);
+.detail-val {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  word-break: break-word;
 }
 
 /* CHANGE PASSWORD */
