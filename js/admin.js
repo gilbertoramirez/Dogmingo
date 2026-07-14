@@ -33,16 +33,21 @@ loginForm.addEventListener('submit', function (e) {
   e.preventDefault();
   var btn = document.getElementById('loginBtn');
   var errEl = document.getElementById('loginError');
+  var emailVal = document.getElementById('loginEmail').value.trim();
+  var passVal = document.getElementById('loginPassword').value;
+
+  if (!emailVal || !passVal) {
+    errEl.textContent = !emailVal ? 'Ingresa tu correo.' : 'Ingresa tu contraseña.';
+    return;
+  }
+
   btn.disabled = true;
   btn.textContent = 'Entrando...';
   errEl.textContent = '';
 
   api('/api/vendor/login', {
     method: 'POST',
-    body: {
-      email: document.getElementById('loginEmail').value.trim(),
-      password: document.getElementById('loginPassword').value
-    }
+    body: { email: emailVal, password: passVal }
   }).then(function (d) {
     token = d.token;
     vendor = d.vendor;
