@@ -3,7 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { getDb, registros, sellos, vendedores } = require('./db');
 const { createToken, verifyToken, hashPassword } = require('./api/_auth');
-const { eq, and, asc, count } = require('drizzle-orm');
+const { eq, or, and, asc, count } = require('drizzle-orm');
 const nodemailer = require('nodemailer');
 const { neon } = require('@neondatabase/serverless');
 
@@ -268,17 +268,22 @@ app.get('/api/stamps', async (req, res) => {
 
 // ── Stamps lookup by email (public) ──
 app.get('/api/stamps/lookup', async (req, res) => {
-  const email = (req.query.email || '').toLowerCase().trim();
-  if (!email) return res.status(400).json({ error: 'Email requerido' });
+  const q = (req.query.q || req.query.email || '').trim();
+  if (!q) return res.status(400).json({ error: 'Correo o teléfono requerido' });
 
   const db = getDb();
   if (!db) return res.json({ ok: false, error: 'Base de datos no disponible' });
 
+  const isEmail = q.includes('@');
+  const searchVal = isEmail ? q.toLowerCase() : q.replace(/\D/g, '');
+
   try {
     const reg = await db.select({
       folio: registros.folio, nombre: registros.nombre, apellido: registros.apellido,
-    }).from(registros).where(eq(registros.email, email));
-    if (reg.length === 0) return res.json({ ok: false, error: 'No se encontró un registro con ese correo.' });
+    }).from(registros).where(
+      isEmail ? eq(registros.email, searchVal) : eq(registros.telefono, searchVal)
+    );
+    if (reg.length === 0) return res.json({ ok: false, error: 'No se encontró un registro con ese correo o teléfono.' });
 
     const stamps = await db.select({ stand_num: sellos.stand_num })
       .from(sellos).where(eq(sellos.folio, reg[0].folio)).orderBy(asc(sellos.stand_num));

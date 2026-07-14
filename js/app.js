@@ -647,19 +647,19 @@ if (location.hash === '#stand') openStand();
 // Mis Sellos — stamp progress lookup
 // ══════════════════════════════════════════════════════
 function lookupSellos() {
-  var email = document.getElementById('sellosEmail').value.trim();
+  var query = document.getElementById('sellosQuery').value.trim();
   var result = document.getElementById('sellosResult');
   var error = document.getElementById('sellosError');
   var btn = document.getElementById('sellosBtn');
-  if (!email) { error.textContent = 'Ingresa tu correo electrónico.'; error.style.display = 'block'; result.style.display = 'none'; return; }
+  if (!query) { error.textContent = 'Ingresa tu correo electrónico o número de teléfono.'; error.style.display = 'block'; result.style.display = 'none'; return; }
   error.style.display = 'none';
   btn.disabled = true; btn.textContent = 'Consultando...';
 
-  fetch('/api/stamps/lookup?email=' + encodeURIComponent(email))
+  fetch('/api/stamps/lookup?q=' + encodeURIComponent(query))
     .then(function(r) { return r.json(); })
     .then(function(d) {
       btn.disabled = false; btn.textContent = 'Consultar';
-      if (!d.ok) { error.textContent = d.error || 'No se encontró un registro con ese correo.'; error.style.display = 'block'; result.style.display = 'none'; return; }
+      if (!d.ok) { error.textContent = d.error || 'No se encontró un registro con ese correo o teléfono.'; error.style.display = 'block'; result.style.display = 'none'; return; }
       result.style.display = 'block';
       document.getElementById('sellosUserInfo').textContent = d.nombre + ' — Folio: ' + d.folio;
       var grid = document.getElementById('sellosGrid');

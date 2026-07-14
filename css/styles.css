@@ -371,9 +371,15 @@
   /* MIS SELLOS LOOKUP */
   .mis-sellos-section { background: var(--bg-alt); }
   .sellos-lookup-card { max-width: 560px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 2rem; }
-  .sellos-lookup-form { display: flex; gap: 0.75rem; }
-  .sellos-lookup-form input { flex: 1; }
-  .sellos-lookup-form button { white-space: nowrap; padding: 0.7rem 1.5rem; }
+  .sellos-lookup-form { display: flex; flex-direction: column; gap: 1rem; }
+  .sellos-lookup-form input { flex: 1; font-family: 'At Gambit', system-ui, sans-serif; font-size: 1.15rem; padding: 1.1rem 1.25rem; border: 2px solid var(--card-border); border-radius: 8px; background: var(--bg); color: var(--text-primary); transition: border-color 0.2s; }
+  .sellos-lookup-form input:focus { outline: none; border-color: var(--gold); }
+  .sellos-lookup-form input::placeholder { color: var(--text-secondary); opacity: 0.6; }
+  .sellos-lookup-form button { white-space: nowrap; padding: 1rem 1.5rem; font-size: 1rem; }
+  @media (min-width: 600px) {
+    .sellos-lookup-form { flex-direction: row; }
+    .sellos-lookup-form button { width: auto; }
+  }
   .sellos-result { margin-top: 1.5rem; }
   .sellos-user-info { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1rem; }
   .sellos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
