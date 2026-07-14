@@ -379,33 +379,9 @@
             </div>
             <h3>&iexcl;Registro exitoso!</h3>
             <p>Te esperamos el <strong>26 de julio</strong> en Zitara Club & Golf.</p>
-            <div class="passport-section">
-              <p class="sys" style="font-weight:700;font-size:0.9rem;margin-bottom:0.5rem;color:var(--text-primary);">Tu C&oacute;digo QR</p>
-              <p class="sys" style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:0.5rem;">Mu&eacute;stralo en cada stand para que te sellen</p>
-              <div class="qr-area" id="qrArea"></div>
-              <p class="folio-display" id="folioDisplay"></p>
-              <div class="stamp-tracker" id="stampTracker">
-                <h4>Mis Sellos</h4>
-                <div class="stamp-tracker-grid" id="stampGrid"></div>
-                <div class="stamp-input-area">
-                  <input type="text" id="stampCodeInput" placeholder="Ej: S1-A7F2" maxlength="10">
-                  <button onclick="addStampCode()">Agregar Sello</button>
-                </div>
-                <p class="stamp-msg" id="stampMsg"></p>
-                <div class="stamp-complete" id="stampComplete">&iexcl;Felicidades! Presenta tu pasaporte en el stand principal para reclamar tu premio.</div>
-              </div>
-              <div style="margin-top:1.5rem;">
-                <p class="sys" style="font-weight:700;font-size:0.9rem;margin-bottom:0.5rem;color:var(--text-primary);">Tu Pasaporte Perruno</p>
-                <canvas id="passportCanvas" width="800" height="1100"></canvas>
-                <br>
-                <button class="btn-download" id="downloadPassport">Descargar Pasaporte</button>
-              </div>
-            </div>
+            <p style="color:var(--text-secondary);font-size:0.9rem;margin-top:0.5rem;">Revisa tu correo electr&oacute;nico, te enviamos tu <strong>Pasaporte Perruno</strong> con tu c&oacute;digo QR.</p>
           </div>
-        </div>
-        <div class="registro-counter">
-          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="9" cy="9" r="7.5"/><path d="M9 5V9L12 11"/></svg>
-          <span><strong id="regCount">0</strong> registrados</span>
+          <canvas id="passportCanvas" width="800" height="1100" style="display:none;"></canvas>
         </div>
       </div>
     </div>

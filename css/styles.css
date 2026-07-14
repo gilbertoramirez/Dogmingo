@@ -14,7 +14,7 @@
     --bg-alt: #F0EBE0;
     --card-bg: #FFFFFF;
     --card-border: #E0D8C8;
-    --hero-bg: #2C2A24;
+    --hero-bg: #3E3B2B;
     --hero-text: #FBF7F0;
     --nav-bg: rgba(251, 247, 240, 0.92);
     --nav-border: rgba(44, 42, 36, 0.08);
@@ -27,7 +27,7 @@
       --bg-alt: #24221C;
       --card-bg: #24221C;
       --card-border: #3A3628;
-      --hero-bg: #121110;
+      --hero-bg: #2A2820;
       --hero-text: #FBF7F0;
       --nav-bg: rgba(26, 24, 20, 0.92);
       --nav-border: rgba(251, 247, 240, 0.06);
@@ -40,7 +40,7 @@
     --bg-alt: #24221C;
     --card-bg: #24221C;
     --card-border: #3A3628;
-    --hero-bg: #121110;
+    --hero-bg: #2A2820;
     --hero-text: #FBF7F0;
     --nav-bg: rgba(26, 24, 20, 0.92);
     --nav-border: rgba(251, 247, 240, 0.06);
@@ -52,7 +52,7 @@
     --bg-alt: #F0EBE0;
     --card-bg: #FFFFFF;
     --card-border: #E0D8C8;
-    --hero-bg: #2C2A24;
+    --hero-bg: #3E3B2B;
     --hero-text: #FBF7F0;
     --nav-bg: rgba(251, 247, 240, 0.92);
     --nav-border: rgba(44, 42, 36, 0.08);
@@ -317,10 +317,6 @@
   .stamp-msg.success { color: var(--campo); }
   .stamp-msg.error { color: var(--salsa); }
 
-  .registro-counter { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--card-border); }
-  .registro-counter svg { width: 18px; height: 18px; color: var(--campo); }
-  .registro-counter span { font-family: system-ui, sans-serif; font-size: 0.85rem; color: var(--text-secondary); }
-  .registro-counter strong { color: var(--text-primary); font-weight: 800; }
 
   /* STAND PORTAL */
   .stand-portal { display: none; min-height: 100vh; background: var(--bg); padding: 2rem 1.5rem; }
@@ -465,7 +461,6 @@
     .registro-info h3 { font-size: 1.15rem; }
     .registro-perks li { font-size: 0.8rem; }
     .form-card { padding: 1.5rem 1.25rem; }
-    .form-success.visible ~ .registro-counter { margin-top: 1rem; }
     .passport-section { padding: 1rem; margin-left: -0.25rem; margin-right: -0.25rem; }
     .passport-section canvas { max-width: 100%; }
     .qr-area { padding: 0.75rem; margin: 1rem 0; }
