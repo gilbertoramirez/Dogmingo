@@ -71,7 +71,14 @@ function logout() {
     scannerActive = false;
   }
   document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('vendorSettings').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
+  var btn = document.getElementById('loginBtn');
+  btn.disabled = false;
+  btn.textContent = 'Iniciar sesión';
+  document.getElementById('loginError').textContent = '';
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
 }
 
 function showDashboard() {
