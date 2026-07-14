@@ -451,15 +451,14 @@
     font-weight: 600;
     color: var(--text-secondary);
   }
-  .sponsor-link { text-decoration: none; }
-  .sponsor-link:hover .sponsor-name { color: var(--gold); }
   .sponsor-ig {
     font-family: system-ui, sans-serif;
     font-size: 0.65rem;
     color: var(--text-muted);
     margin-top: 0.25rem;
+    text-decoration: none;
   }
-  .sponsor-link:hover .sponsor-ig { color: var(--gold); }
+  .sponsor-ig:hover { color: var(--gold); }
 
   .footer { padding: 3rem 1.5rem; text-align: center; background: var(--bg-alt); border-top: 1px solid var(--card-border); }
   .footer-logo { font-family: 'Telka Extended', system-ui, sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--salsa); margin-bottom: 0.5rem; }
