@@ -5,7 +5,9 @@
     { "src": "index.html", "use": "@vercel/static" },
     { "src": "admin.html", "use": "@vercel/static" },
     { "src": "css/**", "use": "@vercel/static" },
-    { "src": "js/**", "use": "@vercel/static" }
+    { "src": "js/**", "use": "@vercel/static" },
+    { "src": "img/**", "use": "@vercel/static" },
+    { "src": "docs/**", "use": "@vercel/static" }
   ],
   "routes": [
     { "handle": "filesystem" },

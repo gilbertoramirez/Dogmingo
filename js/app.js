@@ -426,6 +426,16 @@ form.addEventListener('submit', function(e) {
   form.querySelectorAll('.form-input[required]').forEach(function(f) { if (!validateField(f)) allValid = false; });
   if (!allValid) return;
 
+  var termsError = document.getElementById('termsError');
+  var acceptTerms = document.getElementById('acceptTerms');
+  var acceptCarta = document.getElementById('acceptCarta');
+  var acceptPrivacy = document.getElementById('acceptPrivacy');
+  if (!acceptTerms.checked || !acceptCarta.checked || !acceptPrivacy.checked) {
+    termsError.textContent = 'Debes aceptar todos los términos y condiciones para continuar.';
+    return;
+  }
+  termsError.textContent = '';
+
   submitBtn.disabled = true;
   submitBtn.textContent = 'Enviando código...';
 
