@@ -416,19 +416,20 @@ body {
 .user-details p { margin-bottom: 0.25rem; }
 
 .user-stamps {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
   margin-bottom: 1rem;
 }
 .user-stamps .stamp-dot {
-  aspect-ratio: 1;
-  border-radius: 50%;
+  width: 2rem;
+  height: 1.5rem;
+  border-radius: 4px;
   border: 2px dashed var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.65rem;
+  font-size: 0.5rem;
   font-weight: 700;
   color: var(--text-muted);
 }
@@ -626,14 +627,14 @@ body {
   margin-right: 0.25rem;
 }
 .reg-stamp-dot {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
+  width: 18px;
+  height: 14px;
+  border-radius: 3px;
   border: 1.5px dashed var(--border);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.6rem;
+  font-size: 0.4rem;
   font-weight: 700;
   color: var(--text-muted);
 }
@@ -697,6 +698,78 @@ body {
 }
 .pw-modal-actions .btn-logout {
   margin-top: 0;
+}
+
+/* RIFA */
+.rifa-section {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.rifa-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+.rifa-count {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--campo);
+  margin-bottom: 1rem;
+}
+.btn-rifa {
+  width: 100%;
+  padding: 1rem;
+  background: var(--salsa);
+  color: #FFF;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.btn-rifa:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+.btn-rifa:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.rifa-winner {
+  text-align: center;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  background: var(--bg);
+  border: 2px solid var(--border);
+}
+.rifa-winner.shuffling {
+  animation: rifaShuffle 0.1s ease-in-out;
+}
+.rifa-winner.final {
+  background: rgba(45, 106, 63, 0.08);
+  border-color: var(--campo);
+}
+.rifa-winner h3 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem;
+  color: var(--campo);
+}
+.rifa-winner-name {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0.25rem 0;
+}
+.rifa-winner-details {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0.15rem 0;
+}
+@keyframes rifaShuffle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
 }
 
 @media (max-width: 480px) {

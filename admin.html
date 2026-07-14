@@ -155,14 +155,29 @@
             <input type="password" id="vPassword" placeholder="Contrase&ntilde;a" required>
           </div>
           <div class="field">
-            <label for="vStand">Stand asignado</label>
+            <label for="vStand">Stand / Patrocinador asignado</label>
             <select id="vStand" required>
-              <option value="1">1 — Bendici&oacute;n Canina</option>
-              <option value="2">2 — Huellas del Alma</option>
-              <option value="3">3 — Adiestramiento</option>
-              <option value="4">4 — Circuito Agilidad</option>
-              <option value="5">5 — Mercadito Pet-Friendly</option>
-              <option value="6">6 — Pasarela Adopci&oacute;n</option>
+              <optgroup label="Actividades">
+                <option value="1">1 — Bendici&oacute;n Canina</option>
+                <option value="2">2 — Huellas del Alma</option>
+                <option value="3">3 — Adiestramiento</option>
+                <option value="5">5 — Mercadito Pet-Friendly</option>
+                <option value="6">6 — Pasarela de Adopci&oacute;n</option>
+              </optgroup>
+              <optgroup label="Patrocinadores">
+                <option value="7">7 — Doggies Paradise</option>
+                <option value="8">8 — Freshly</option>
+                <option value="9">9 — Ba'Alche</option>
+                <option value="10">10 — Zoo Bodega</option>
+                <option value="11">11 — G&uuml;esos</option>
+                <option value="12">12 — Edu.Can</option>
+                <option value="13">13 — Esperanza Canina</option>
+                <option value="14">14 — Caro's Dog Club</option>
+                <option value="15">15 — Woof Munchies</option>
+                <option value="16">16 — VidaN&uacute;Pet</option>
+                <option value="17">17 — Zitara</option>
+                <option value="18">18 — Zitara Golf Club</option>
+              </optgroup>
             </select>
           </div>
           <button type="submit" class="btn-create">Crear vendedor</button>
@@ -201,6 +216,22 @@
           <input type="text" id="registroSearch" placeholder="Buscar por nombre, correo o folio..." oninput="filterRegistros()">
         </div>
         <div class="registro-list" id="registroList">
+          <p class="empty-msg">Cargando...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIFA (admin only) -->
+    <div class="panel-view" id="view-rifa">
+      <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
+      <div class="rifa-section">
+        <h3>Rifa Dogmingo</h3>
+        <p class="rifa-desc">Solo participan los usuarios que completaron los 17 sellos de su pasaporte.</p>
+        <p class="rifa-count" id="rifaCount">Cargando...</p>
+        <button class="btn-rifa" id="rifaBtn" onclick="realizarRifa()" disabled>Realizar Sorteo</button>
+        <div class="rifa-winner" id="rifaWinner" style="display:none;"></div>
+        <h4 style="margin-top:2rem;font-size:0.95rem;">Participantes elegibles</h4>
+        <div class="registro-list" id="rifaList">
           <p class="empty-msg">Cargando...</p>
         </div>
       </div>

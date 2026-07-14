@@ -9,6 +9,9 @@ const { neon } = require('@neondatabase/serverless');
 
 const CODE_SECRET = process.env.VENDOR_SECRET || 'dgm2025-vendor-key';
 
+const ALL_STAMP_IDS = [1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
+const TOTAL_STAMPS = ALL_STAMP_IDS.length;
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -457,7 +460,7 @@ app.post('/api/vendor/stamp', async (req, res) => {
   if (!folio) return res.status(400).json({ error: 'Folio required' });
 
   const standNum = auth.admin ? (stand_num || 0) : auth.stand;
-  if (standNum < 1 || standNum > 6) return res.status(400).json({ error: 'Stand inválido (1-6)' });
+  if (ALL_STAMP_IDS.indexOf(standNum) === -1) return res.status(400).json({ error: 'Stand inválido' });
 
   const db = getDb();
   if (!db) return res.status(500).json({ error: 'Database not configured' });
@@ -477,7 +480,7 @@ app.post('/api/vendor/stamp', async (req, res) => {
     const allStamps = await db.select({ stand_num: sellos.stand_num }).from(sellos).where(eq(sellos.folio, folio));
     const totalStamps = allStamps.length;
 
-    if (totalStamps === 6) {
+    if (totalStamps === TOTAL_STAMPS) {
       try {
         const fullReg = await db.select({ email: registros.email, nombre: registros.nombre, apellido: registros.apellido })
           .from(registros).where(eq(registros.folio, folio));
@@ -491,10 +494,10 @@ app.post('/api/vendor/stamp', async (req, res) => {
             html: [
               '<div style="font-family:system-ui,sans-serif;max-width:480px;margin:0 auto;background:#FAF8F3;padding:2rem;border-radius:16px;text-align:center;">',
               '<h1 style="color:#3A5A3E;font-size:1.8rem;margin:0 0 0.5rem;">¡FELICIDADES!</h1>',
-              '<p style="color:#C4923A;font-weight:700;font-size:1.2rem;margin:0 0 1rem;">🐾 🐾 🐾 🐾 🐾 🐾</p>',
-              '<p style="color:#191714;font-size:1.1rem;margin:0 0 1rem;"><strong>' + nombre + '</strong>, completaste los 6 sellos de tu Pasaporte Perruno.</p>',
+              '<p style="color:#C4923A;font-weight:700;font-size:1.2rem;margin:0 0 1rem;">🐾 🐾 🐾</p>',
+              '<p style="color:#191714;font-size:1.1rem;margin:0 0 1rem;"><strong>' + nombre + '</strong>, completaste los ' + TOTAL_STAMPS + ' sellos de tu Pasaporte Perruno.</p>',
               '<div style="background:#3A5A3E;color:#FBF7F0;padding:1.25rem;border-radius:12px;margin:0 0 1.5rem;">',
-              '<p style="margin:0;font-size:1rem;font-weight:700;">Presenta tu pasaporte en el stand principal para reclamar tu premio.</p>',
+              '<p style="margin:0;font-size:1rem;font-weight:700;">¡Ya participas en la rifa! El ganador se anunciará al final del evento.</p>',
               '</div>',
               '<p style="color:#6B6558;font-size:0.85rem;margin:0;">Folio: <strong>' + folio + '</strong></p>',
               '<hr style="border:none;border-top:2px dashed #D4C9B5;margin:1.5rem 0;">',
@@ -529,7 +532,7 @@ app.post('/api/vendor/create', async (req, res) => {
   if (!nombre || !email || !password) return res.status(400).json({ error: 'Todos los campos son requeridos' });
 
   const assignedStand = auth.admin ? (parseInt(stand_num) || 1) : auth.stand;
-  if (assignedStand < 1 || assignedStand > 6) return res.status(400).json({ error: 'Stand debe ser 1-6' });
+  if (ALL_STAMP_IDS.indexOf(assignedStand) === -1) return res.status(400).json({ error: 'Stand inválido' });
 
   const isSubadmin = auth.admin ? true : false;
 
@@ -676,6 +679,43 @@ app.get('/api/vendor/list', async (req, res) => {
   } catch (err) {
     console.error('List vendors error:', err);
     return res.status(500).json({ error: 'Failed to list vendors' });
+  }
+});
+
+// ── Admin: Raffle eligible ──
+app.get('/api/admin/raffle-eligible', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth || !auth.admin) return res.status(403).json({ error: 'Acceso de administrador requerido' });
+
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+
+  try {
+    const regs = await db.select({
+      folio: registros.folio, nombre: registros.nombre, apellido: registros.apellido,
+      email: registros.email, telefono: registros.telefono,
+    }).from(registros).orderBy(asc(registros.nombre));
+
+    const allStamps = await db.select({
+      folio: sellos.folio, stand_num: sellos.stand_num,
+    }).from(sellos);
+
+    const stampMap = {};
+    allStamps.forEach(s => {
+      if (!stampMap[s.folio]) stampMap[s.folio] = [];
+      stampMap[s.folio].push(s.stand_num);
+    });
+
+    const eligible = regs.filter(r => {
+      const userStamps = stampMap[r.folio] || [];
+      return ALL_STAMP_IDS.every(id => userStamps.indexOf(id) >= 0);
+    });
+
+    return res.json({ ok: true, eligible, total_required: TOTAL_STAMPS });
+  } catch (err) {
+    console.error('Raffle eligible error:', err);
+    return res.status(500).json({ error: 'Error al cargar participantes' });
   }
 });
 

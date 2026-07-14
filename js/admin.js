@@ -1,4 +1,26 @@
-var STATION_NAMES = ['Bendicion', 'Huellas', 'Adiestramiento', 'Agilidad', 'Mercadito', 'Adopcion'];
+var STAMP_MAP = [
+  { id: 1, name: 'Bendición Canina', type: 'actividad' },
+  { id: 2, name: 'Huellas del Alma', type: 'actividad' },
+  { id: 3, name: 'Adiestramiento', type: 'actividad' },
+  { id: 5, name: 'Mercadito Pet-Friendly', type: 'actividad' },
+  { id: 6, name: 'Pasarela de Adopción', type: 'actividad' },
+  { id: 7, name: 'Doggies Paradise', type: 'patrocinador' },
+  { id: 8, name: 'Freshly', type: 'patrocinador' },
+  { id: 9, name: "Ba'Alche", type: 'patrocinador' },
+  { id: 10, name: 'Zoo Bodega', type: 'patrocinador' },
+  { id: 11, name: 'Güesos', type: 'patrocinador' },
+  { id: 12, name: 'Edu.Can', type: 'patrocinador' },
+  { id: 13, name: 'Esperanza Canina', type: 'patrocinador' },
+  { id: 14, name: "Caro's Dog Club", type: 'patrocinador' },
+  { id: 15, name: 'Woof Munchies', type: 'patrocinador' },
+  { id: 16, name: 'VidaNúPet', type: 'patrocinador' },
+  { id: 17, name: 'Zitara', type: 'patrocinador' },
+  { id: 18, name: 'Zitara Golf Club', type: 'patrocinador' },
+];
+var ALL_STAMP_IDS = STAMP_MAP.map(function(s) { return s.id; });
+var TOTAL_STAMPS = STAMP_MAP.length;
+var STAMP_NAME_MAP = {};
+STAMP_MAP.forEach(function(s) { STAMP_NAME_MAP[s.id] = s.name; });
 var token = sessionStorage.getItem('dgm_vendor_token');
 var vendor = null;
 var scanner = null;
@@ -35,6 +57,7 @@ function showView(viewId) {
   if (viewId === 'registros') loadStats();
   if (viewId === 'account') populateAccount();
   if (viewId === 'helpers') populateHelpers();
+  if (viewId === 'rifa') loadRifa();
 }
 
 function goMenu() {
@@ -68,9 +91,9 @@ function buildMenu() {
   if (isAdmin) {
     roleLine = 'Administrador general';
   } else if (isSubadmin) {
-    roleLine = 'Sub-admin · Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
+    roleLine = 'Sub-admin · Stand ' + standNum + ' — ' + STAMP_NAME_MAP[standNum];
   } else {
-    roleLine = 'Vendedor · Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
+    roleLine = 'Vendedor · Stand ' + standNum + ' — ' + STAMP_NAME_MAP[standNum];
   }
   welcome.innerHTML =
     '<p class="menu-welcome-greeting">' + greeting + ', <strong>' + name + '</strong></p>' +
@@ -88,6 +111,7 @@ function buildMenu() {
   if (isAdmin) {
     items.push({ id: 'vendors', icon: '🏪', label: 'Vendedores', desc: 'Crear y gestionar vendedores por stand' });
     items.push({ id: 'registros', icon: '📊', label: 'Registros', desc: 'Métricas y usuarios registrados' });
+    items.push({ id: 'rifa', icon: '🎟️', label: 'Rifa', desc: 'Sorteo entre quienes completaron todos los sellos' });
   }
 
   items.push({ id: 'account', icon: '🔑', label: 'Mi cuenta', desc: 'Cambiar contraseña y datos' });
@@ -169,10 +193,10 @@ function showDashboard() {
   if (isAdmin) {
     document.getElementById('dashRole').textContent = 'Administrador general';
   } else if (vendor.es_subadmin) {
-    document.getElementById('dashRole').textContent = 'Sub-admin · Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
+    document.getElementById('dashRole').textContent = 'Sub-admin · Stand ' + standNum + ' — ' + STAMP_NAME_MAP[standNum];
   } else {
-    document.getElementById('dashRole').textContent = 'Vendedor · Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
-    document.getElementById('standIndicator').textContent = 'Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
+    document.getElementById('dashRole').textContent = 'Vendedor · Stand ' + standNum + ' — ' + STAMP_NAME_MAP[standNum];
+    document.getElementById('standIndicator').textContent = 'Stand ' + standNum + ' — ' + STAMP_NAME_MAP[standNum];
   }
 
   buildMenu();
@@ -186,13 +210,13 @@ function populateAccount() {
     info.innerHTML = '<p><strong>Administrador</strong></p>';
   } else {
     info.innerHTML = '<p><strong>' + vendor.nombre + '</strong></p>' +
-      '<p>Stand ' + vendor.stand_num + ' — ' + STATION_NAMES[vendor.stand_num - 1] + '</p>';
+      '<p>Stand ' + vendor.stand_num + ' — ' + STAMP_NAME_MAP[vendor.stand_num] + '</p>';
   }
 }
 
 function populateHelpers() {
   if (vendor && !vendor.es_admin) {
-    document.getElementById('helpStandBadge').textContent = 'Stand ' + vendor.stand_num + ' — ' + STATION_NAMES[vendor.stand_num - 1];
+    document.getElementById('helpStandBadge').textContent = 'Stand ' + vendor.stand_num + ' — ' + STAMP_NAME_MAP[vendor.stand_num];
     loadTeamVendors();
   }
 }
@@ -353,12 +377,13 @@ function showUserCard(reg, sellos) {
   var stampedStands = sellos.map(function (s) { return s.stand_num; });
   var stampsEl = document.getElementById('userStamps');
   stampsEl.innerHTML = '';
-  for (var i = 1; i <= 6; i++) {
+  STAMP_MAP.forEach(function (item) {
     var dot = document.createElement('div');
-    dot.className = 'stamp-dot' + (stampedStands.indexOf(i) >= 0 ? ' filled' : '');
-    dot.textContent = i;
+    dot.className = 'stamp-dot' + (stampedStands.indexOf(item.id) >= 0 ? ' filled' : '');
+    dot.title = item.name;
+    dot.textContent = item.name.substring(0, 3);
     stampsEl.appendChild(dot);
-  }
+  });
 
   var activeStand = getActiveStand();
   var stampBtn = document.getElementById('stampBtn');
@@ -371,7 +396,7 @@ function showUserCard(reg, sellos) {
     stampBtn.textContent = 'Ya sellado en Stand ' + activeStand;
   } else {
     stampBtn.disabled = false;
-    stampBtn.textContent = 'Sellar — Stand ' + activeStand + ' (' + STATION_NAMES[activeStand - 1] + ')';
+    stampBtn.textContent = 'Sellar — Stand ' + activeStand + ' (' + STAMP_NAME_MAP[activeStand] + ')';
   }
 }
 
@@ -390,7 +415,7 @@ function applyStamp() {
     var result = document.getElementById('stampResult');
     result.className = 'stamp-result success';
     result.innerHTML = '<strong>Sello registrado</strong><div class="stamp-code">' + d.stamp_code + '</div>' +
-      '<p>' + d.nombre + ' — ' + d.total_stamps + '/6 sellos</p>';
+      '<p>' + d.nombre + ' — ' + d.total_stamps + '/' + TOTAL_STAMPS + ' sellos</p>';
 
     recentStamps.unshift({ folio: currentFolio, nombre: d.nombre, code: d.stamp_code, stand: activeStand });
     renderRecent();
@@ -487,10 +512,10 @@ function renderRegistros(list) {
   list.forEach(function (r) {
     var stamps = r.stamps || [];
     var stampDots = '';
-    for (var i = 1; i <= 6; i++) {
-      var has = stamps.indexOf(i) >= 0;
-      stampDots += '<span class="reg-stamp-dot' + (has ? ' filled' : '') + '">' + i + '</span>';
-    }
+    STAMP_MAP.forEach(function (item) {
+      var has = stamps.indexOf(item.id) >= 0;
+      stampDots += '<span class="reg-stamp-dot' + (has ? ' filled' : '') + '" title="' + item.name + '">' + item.name.substring(0, 2) + '</span>';
+    });
     var date = r.created_at ? new Date(r.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' }) : '';
     var perro = r.trae_perro && r.nombre_perro ? ' · Perro: ' + r.nombre_perro : '';
     var item = document.createElement('div');
@@ -505,7 +530,7 @@ function renderRegistros(list) {
         '<p>' + r.adultos + ' adulto(s)' + (r.ninos > 0 ? ', ' + r.ninos + ' niño(s)' : '') + perro + ' · ' + date + '</p>' +
       '</div>' +
       '<div class="registro-item-stamps">' +
-        '<span class="reg-stamps-label">' + stamps.length + '/6</span>' +
+        '<span class="reg-stamps-label">' + stamps.length + '/' + TOTAL_STAMPS + '</span>' +
         stampDots +
       '</div>';
     container.appendChild(item);
@@ -580,6 +605,75 @@ function changePassword(email) {
     msg.className = 'form-msg error';
     msg.textContent = err.message;
   });
+}
+
+// ── RIFA (admin) ──
+var rifaEligible = [];
+
+function loadRifa() {
+  var list = document.getElementById('rifaList');
+  var countEl = document.getElementById('rifaCount');
+  var btn = document.getElementById('rifaBtn');
+  list.innerHTML = '<p class="empty-msg">Cargando...</p>';
+
+  api('/api/admin/raffle-eligible')
+    .then(function (d) {
+      rifaEligible = d.eligible || [];
+      countEl.textContent = rifaEligible.length + ' participante(s) con todos los sellos';
+      btn.disabled = rifaEligible.length === 0;
+      if (rifaEligible.length === 0) {
+        list.innerHTML = '<p class="empty-msg">Ningún usuario ha completado todos los sellos aún.</p>';
+        return;
+      }
+      list.innerHTML = '';
+      rifaEligible.forEach(function (r) {
+        var item = document.createElement('div');
+        item.className = 'registro-item';
+        item.innerHTML =
+          '<div class="registro-item-header">' +
+            '<strong>' + r.nombre + ' ' + r.apellido + '</strong>' +
+            '<span class="folio-badge">' + r.folio + '</span>' +
+          '</div>' +
+          '<div class="registro-item-details">' +
+            '<p>' + r.email + ' · ' + r.telefono + '</p>' +
+          '</div>';
+        list.innerHTML += item.outerHTML;
+      });
+    })
+    .catch(function () {
+      list.innerHTML = '<p class="empty-msg">Error al cargar participantes.</p>';
+    });
+}
+
+function realizarRifa() {
+  if (rifaEligible.length === 0) return;
+  var winnerEl = document.getElementById('rifaWinner');
+  var btn = document.getElementById('rifaBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sorteando...';
+  winnerEl.style.display = 'none';
+
+  var shuffleCount = 0;
+  var interval = setInterval(function () {
+    var rand = rifaEligible[Math.floor(Math.random() * rifaEligible.length)];
+    winnerEl.style.display = 'block';
+    winnerEl.className = 'rifa-winner shuffling';
+    winnerEl.innerHTML = '<p class="rifa-winner-name">' + rand.nombre + ' ' + rand.apellido + '</p>';
+    shuffleCount++;
+    if (shuffleCount >= 20) {
+      clearInterval(interval);
+      var winner = rifaEligible[Math.floor(Math.random() * rifaEligible.length)];
+      winnerEl.className = 'rifa-winner final';
+      winnerEl.innerHTML =
+        '<h3>🎉 ¡Ganador(a)!</h3>' +
+        '<p class="rifa-winner-name">' + winner.nombre + ' ' + winner.apellido + '</p>' +
+        '<p class="rifa-winner-details">' + winner.email + '</p>' +
+        '<p class="rifa-winner-details">Folio: ' + winner.folio + '</p>' +
+        '<p class="rifa-winner-details">' + winner.telefono + '</p>';
+      btn.disabled = false;
+      btn.textContent = 'Sortear de nuevo';
+    }
+  }, 100);
 }
 
 // ── INIT ──
