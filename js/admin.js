@@ -56,16 +56,16 @@ function buildMenu() {
   var items = [];
 
   if (!isAdmin) {
-    items.push({ id: 'scanner', icon: '&#9783;', label: 'Escáner', desc: 'Escanear QR y sellar' });
-    items.push({ id: 'helpers', icon: '&#43;', label: 'Ayudantes', desc: 'Agregar ayudantes a tu stand' });
+    items.push({ id: 'scanner', icon: '📷', label: 'Escáner', desc: 'Escanear QR y sellar pasaporte' });
+    items.push({ id: 'helpers', icon: '👥', label: 'Equipo', desc: 'Agregar vendedores a tu stand' });
   }
 
   if (isAdmin) {
-    items.push({ id: 'vendors', icon: '&#9881;', label: 'Vendedores', desc: 'Crear y gestionar vendedores' });
-    items.push({ id: 'registros', icon: '&#9776;', label: 'Registros', desc: 'Métricas y usuarios registrados' });
+    items.push({ id: 'vendors', icon: '🏪', label: 'Vendedores', desc: 'Crear y gestionar vendedores por stand' });
+    items.push({ id: 'registros', icon: '📊', label: 'Registros', desc: 'Métricas y usuarios registrados' });
   }
 
-  items.push({ id: 'account', icon: '&#128100;', label: 'Mi cuenta', desc: 'Cambiar contraseña' });
+  items.push({ id: 'account', icon: '🔑', label: 'Mi cuenta', desc: 'Cambiar contraseña y datos' });
 
   items.forEach(function (item) {
     var card = document.createElement('button');
@@ -73,8 +73,11 @@ function buildMenu() {
     card.onclick = function () { showView(item.id); };
     card.innerHTML =
       '<span class="menu-card-icon">' + item.icon + '</span>' +
-      '<span class="menu-card-label">' + item.label + '</span>' +
-      '<span class="menu-card-desc">' + item.desc + '</span>';
+      '<div class="menu-card-body">' +
+        '<span class="menu-card-label">' + item.label + '</span>' +
+        '<span class="menu-card-desc">' + item.desc + '</span>' +
+      '</div>' +
+      '<span class="menu-card-arrow">›</span>';
     grid.appendChild(card);
   });
 }
@@ -139,9 +142,9 @@ function showDashboard() {
   var standNum = vendor.stand_num;
 
   if (isAdmin) {
-    document.getElementById('dashRole').textContent = 'Administrador';
+    document.getElementById('dashRole').textContent = 'Administrador general';
   } else {
-    document.getElementById('dashRole').textContent = 'Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
+    document.getElementById('dashRole').textContent = 'Sub-admin · Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
     document.getElementById('standIndicator').textContent = 'Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
   }
 
@@ -163,7 +166,30 @@ function populateAccount() {
 function populateHelpers() {
   if (vendor && !vendor.es_admin) {
     document.getElementById('helpStandBadge').textContent = 'Stand ' + vendor.stand_num + ' — ' + STATION_NAMES[vendor.stand_num - 1];
+    loadTeamVendors();
   }
+}
+
+function loadTeamVendors() {
+  var container = document.getElementById('helpVendorList');
+  api('/api/vendor/team')
+    .then(function (d) {
+      if (!d.vendors || d.vendors.length === 0) {
+        container.innerHTML = '<p class="empty-msg">No hay vendedores en tu stand a&uacute;n.</p>';
+        return;
+      }
+      container.innerHTML = '';
+      d.vendors.forEach(function (v) {
+        var item = document.createElement('div');
+        item.className = 'vendor-item';
+        item.innerHTML = '<div class="vendor-info"><div class="vendor-name">' + v.nombre + '</div>' +
+          '<div class="vendor-email">' + v.email + '</div></div>';
+        container.appendChild(item);
+      });
+    })
+    .catch(function () {
+      container.innerHTML = '<p class="empty-msg">Error al cargar vendedores.</p>';
+    });
 }
 
 function selfChangePassword() {
@@ -210,7 +236,8 @@ function createHelper() {
     body: { nombre: nombre, email: email, password: password }
   }).then(function (d) {
     msg.className = 'form-msg success';
-    msg.textContent = 'Ayudante "' + d.vendor.nombre + '" creado para Stand ' + d.vendor.stand_num + '.';
+    msg.textContent = 'Vendedor "' + d.vendor.nombre + '" creado para Stand ' + d.vendor.stand_num + '.';
+    loadTeamVendors();
     document.getElementById('helpNombre').value = '';
     document.getElementById('helpEmail').value = '';
     document.getElementById('helpPassword').value = '';

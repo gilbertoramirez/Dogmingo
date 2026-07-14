@@ -105,27 +105,33 @@
       </div>
     </div>
 
-    <!-- ADD HELPER (vendor only) -->
+    <!-- TEAM (vendor sub-admin) -->
     <div class="panel-view" id="view-helpers">
       <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
       <div class="vendor-settings-card">
-        <h3>Agregar ayudante</h3>
+        <h3>Agregar vendedor</h3>
         <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">Se asignar&aacute; autom&aacute;ticamente a tu stand.</p>
         <p class="stand-assign-badge" id="helpStandBadge"></p>
         <div class="field">
           <label for="helpNombre">Nombre</label>
-          <input type="text" id="helpNombre" placeholder="Nombre del ayudante">
+          <input type="text" id="helpNombre" placeholder="Nombre del vendedor">
         </div>
         <div class="field">
           <label for="helpEmail">Correo</label>
-          <input type="email" id="helpEmail" placeholder="ayudante@correo.com">
+          <input type="email" id="helpEmail" placeholder="vendedor@correo.com">
         </div>
         <div class="field">
           <label for="helpPassword">Contrase&ntilde;a</label>
-          <input type="password" id="helpPassword" placeholder="Contrase&ntilde;a para el ayudante">
+          <input type="password" id="helpPassword" placeholder="Contrase&ntilde;a para el vendedor">
         </div>
-        <button class="btn-create" onclick="createHelper()">Crear ayudante</button>
+        <button class="btn-create" onclick="createHelper()">Crear vendedor</button>
         <p class="form-msg" id="helpMsg"></p>
+      </div>
+      <div class="vendor-list-section" style="margin-top:1.5rem;">
+        <h4 style="font-size:0.95rem;margin-bottom:0.75rem;">Vendedores de tu stand</h4>
+        <div class="vendor-list" id="helpVendorList">
+          <p class="empty-msg">Cargando...</p>
+        </div>
       </div>
     </div>
 

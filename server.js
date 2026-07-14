@@ -623,6 +623,28 @@ app.get('/api/admin/registros', async (req, res) => {
   }
 });
 
+// ── Vendor: Team (same stand) ──
+app.get('/api/vendor/team', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth) return res.status(401).json({ error: 'No autorizado' });
+
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+
+  try {
+    const vendors = await db.select({
+      id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email,
+    }).from(vendedores).where(
+      and(eq(vendedores.stand_num, auth.stand), eq(vendedores.activo, true))
+    ).orderBy(asc(vendedores.nombre));
+    return res.json({ ok: true, vendors });
+  } catch (err) {
+    console.error('Team list error:', err);
+    return res.status(500).json({ error: 'Error al cargar equipo' });
+  }
+});
+
 // ── Vendor: List vendors + stats ──
 app.get('/api/vendor/list', async (req, res) => {
   const token = (req.headers.authorization || '').replace('Bearer ', '');
