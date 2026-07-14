@@ -152,7 +152,7 @@ var heroBreeds = ['retriever/golden', 'husky', 'pug', 'dalmatian', 'samoyed'];
 var heroDogs = document.getElementById('heroDogs');
 heroBreeds.forEach(function(b) { heroDogs.appendChild(createDogImg(b)); });
 
-var midBreeds = ['corgi/cardigan', 'beagle', 'labrador', 'schnauzer/miniature', 'germanshepherd', 'shibainu'];
+var midBreeds = ['corgi/cardigan', 'beagle', 'labrador', 'schnauzer/miniature', 'boxer', 'shiba'];
 var midDogs = document.getElementById('midDogs');
 midBreeds.forEach(function(b) { midDogs.appendChild(createDogImg(b)); });
 
