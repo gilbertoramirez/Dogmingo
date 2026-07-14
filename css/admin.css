@@ -141,6 +141,24 @@ body {
 .panel-view { display: none; padding: 1.5rem 0 3rem; }
 .panel-view.active { display: block; }
 
+.menu-welcome {
+  margin-bottom: 1.25rem;
+  padding: 1.25rem;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  border-left: 4px solid var(--salsa);
+}
+.menu-welcome-greeting {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
+}
+.menu-welcome-role {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 .btn-back {
   display: inline-flex;
   align-items: center;

@@ -47,12 +47,34 @@ function goMenu() {
   showView('menu');
 }
 
+function getGreeting() {
+  var h = new Date().getHours();
+  if (h < 12) return 'Buenos días';
+  if (h < 19) return 'Buenas tardes';
+  return 'Buenas noches';
+}
+
 function buildMenu() {
   var grid = document.getElementById('menuGrid');
   grid.innerHTML = '';
   var isAdmin = vendor && vendor.es_admin;
   var isSubadmin = vendor && vendor.es_subadmin;
   var standNum = vendor ? vendor.stand_num : 0;
+
+  var welcome = document.getElementById('menuWelcome');
+  var greeting = getGreeting();
+  var name = vendor.nombre || 'Administrador';
+  var roleLine = '';
+  if (isAdmin) {
+    roleLine = 'Administrador general';
+  } else if (isSubadmin) {
+    roleLine = 'Sub-admin · Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
+  } else {
+    roleLine = 'Vendedor · Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
+  }
+  welcome.innerHTML =
+    '<p class="menu-welcome-greeting">' + greeting + ', <strong>' + name + '</strong></p>' +
+    '<p class="menu-welcome-role">' + roleLine + '</p>';
 
   var items = [];
 
