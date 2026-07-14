@@ -1,5 +1,5 @@
 var STATION_NAMES = ['Bendicion', 'Huellas', 'Adiestramiento', 'Agilidad', 'Mercadito', 'Adopcion'];
-var token = localStorage.getItem('dgm_vendor_token');
+var token = sessionStorage.getItem('dgm_vendor_token');
 var vendor = null;
 var scanner = null;
 var scannerActive = false;
@@ -8,7 +8,7 @@ var currentRegistro = null;
 var adminSelectedStand = 0;
 var recentStamps = [];
 
-try { vendor = JSON.parse(localStorage.getItem('dgm_vendor_data')); } catch (e) {}
+try { vendor = JSON.parse(sessionStorage.getItem('dgm_vendor_data')); } catch (e) {}
 
 function api(path, opts) {
   opts = opts || {};
@@ -51,8 +51,8 @@ loginForm.addEventListener('submit', function (e) {
   }).then(function (d) {
     token = d.token;
     vendor = d.vendor;
-    localStorage.setItem('dgm_vendor_token', token);
-    localStorage.setItem('dgm_vendor_data', JSON.stringify(vendor));
+    sessionStorage.setItem('dgm_vendor_token', token);
+    sessionStorage.setItem('dgm_vendor_data', JSON.stringify(vendor));
     showDashboard();
   }).catch(function (err) {
     errEl.textContent = err.message;
@@ -64,8 +64,8 @@ loginForm.addEventListener('submit', function (e) {
 function logout() {
   token = null;
   vendor = null;
-  localStorage.removeItem('dgm_vendor_token');
-  localStorage.removeItem('dgm_vendor_data');
+  sessionStorage.removeItem('dgm_vendor_token');
+  sessionStorage.removeItem('dgm_vendor_data');
   if (scanner && scannerActive) {
     scanner.stop().catch(function () {});
     scannerActive = false;
