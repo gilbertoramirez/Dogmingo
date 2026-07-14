@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light only">
-<title>Dogmingo — Panel de Vendedores</title>
+<title>Dogmingo — Panel</title>
 <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
@@ -15,7 +15,7 @@
   <div class="login-screen" id="loginScreen">
     <div class="login-card">
       <h1 class="login-logo">DOGMINGO</h1>
-      <p class="login-subtitle">Panel de Vendedores</p>
+      <p class="login-subtitle">Panel de Administraci&oacute;n</p>
       <form id="loginForm" novalidate>
         <div class="field">
           <label for="loginEmail">Correo o "admin"</label>
@@ -39,15 +39,50 @@
           <h1 class="dash-logo">DOGMINGO</h1>
           <p class="dash-role" id="dashRole"></p>
         </div>
-        <div class="dash-header-actions">
-          <button class="btn-settings" onclick="toggleVendorSettings()" id="settingsToggle" title="Configuraci&oacute;n">&#9881;</button>
-          <button class="btn-logout" onclick="logout()">Salir</button>
-        </div>
+        <button class="btn-logout" onclick="logout()">Salir</button>
       </div>
     </header>
 
-    <!-- VENDOR SETTINGS PANEL -->
-    <div class="vendor-settings" id="vendorSettings" style="display:none;">
+    <!-- MAIN MENU -->
+    <div class="panel-view active" id="view-menu">
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+
+    <!-- SCANNER -->
+    <div class="panel-view" id="view-scanner">
+      <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
+      <div class="stand-indicator" id="standIndicator"></div>
+      <div class="scanner-box">
+        <h3>Escanear QR del usuario</h3>
+        <div id="qrReader"></div>
+        <button class="btn-scan" id="startScanBtn" onclick="toggleScanner()">Abrir c&aacute;mara</button>
+        <div class="manual-input">
+          <p>O ingresar folio manualmente:</p>
+          <div class="folio-input-row">
+            <input type="text" id="folioInput" placeholder="DGM-XXXXXX" maxlength="20">
+            <button onclick="lookupFolio()">Buscar</button>
+          </div>
+        </div>
+      </div>
+      <div class="user-card" id="userCard" style="display:none;">
+        <div class="user-card-header">
+          <h3 id="userName"></h3>
+          <span class="folio-badge" id="userFolio"></span>
+        </div>
+        <div class="user-details" id="userDetails"></div>
+        <div class="user-stamps" id="userStamps"></div>
+        <button class="btn-stamp" id="stampBtn" onclick="applyStamp()">Sellar Pasaporte</button>
+        <div class="stamp-result" id="stampResult"></div>
+      </div>
+      <div class="recent-stamps" id="recentStamps">
+        <h4>Sellos recientes</h4>
+        <ul id="recentList"></ul>
+      </div>
+    </div>
+
+    <!-- MY ACCOUNT -->
+    <div class="panel-view" id="view-account">
+      <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
       <div class="vendor-settings-card">
         <h3>Mi cuenta</h3>
         <div class="vendor-settings-info" id="vendorSettingsInfo"></div>
@@ -68,8 +103,12 @@
         <button class="btn-create" onclick="selfChangePassword()">Guardar contrase&ntilde;a</button>
         <p class="form-msg" id="selfPwMsg"></p>
       </div>
+    </div>
 
-      <div class="vendor-settings-card" id="helperSection" style="margin-top:1rem;display:none;">
+    <!-- ADD HELPER (vendor only) -->
+    <div class="panel-view" id="view-helpers">
+      <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
+      <div class="vendor-settings-card">
         <h3>Agregar ayudante</h3>
         <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">Se asignar&aacute; autom&aacute;ticamente a tu stand.</p>
         <p class="stand-assign-badge" id="helpStandBadge"></p>
@@ -90,58 +129,9 @@
       </div>
     </div>
 
-    <!-- TABS (admin only) -->
-    <div class="dash-tabs" id="dashTabs" style="display:none;">
-      <button class="tab active" data-tab="vendors" onclick="switchTab('vendors')">Vendedores</button>
-      <button class="tab" data-tab="stats" onclick="switchTab('stats')">Registros</button>
-    </div>
-
-    <!-- SCANNER TAB (vendor only) -->
-    <div class="tab-content" id="tab-scanner" style="display:none;">
-      <div class="scanner-section">
-        <div class="stand-indicator" id="standIndicator"></div>
-
-        <!-- Stand selector for admin -->
-        <div class="admin-stand-select" id="adminStandSelect" style="display:none;">
-          <label>Seleccionar stand:</label>
-          <div class="stand-buttons" id="adminStandBtns"></div>
-        </div>
-
-        <div class="scanner-box">
-          <h3>Escanear QR del usuario</h3>
-          <div id="qrReader"></div>
-          <button class="btn-scan" id="startScanBtn" onclick="toggleScanner()">Abrir c&aacute;mara</button>
-          <div class="manual-input">
-            <p>O ingresar folio manualmente:</p>
-            <div class="folio-input-row">
-              <input type="text" id="folioInput" placeholder="DGM-XXXXXX" maxlength="20">
-              <button onclick="lookupFolio()">Buscar</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- User info after scan -->
-        <div class="user-card" id="userCard" style="display:none;">
-          <div class="user-card-header">
-            <h3 id="userName"></h3>
-            <span class="folio-badge" id="userFolio"></span>
-          </div>
-          <div class="user-details" id="userDetails"></div>
-          <div class="user-stamps" id="userStamps"></div>
-          <button class="btn-stamp" id="stampBtn" onclick="applyStamp()">Sellar Pasaporte</button>
-          <div class="stamp-result" id="stampResult"></div>
-        </div>
-
-        <!-- Recent stamps -->
-        <div class="recent-stamps" id="recentStamps">
-          <h4>Sellos recientes</h4>
-          <ul id="recentList"></ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- VENDORS TAB (admin only) -->
-    <div class="tab-content active" id="tab-vendors">
+    <!-- VENDORS (admin only) -->
+    <div class="panel-view" id="view-vendors">
+      <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
       <div class="vendors-section">
         <h3>Crear vendedor</h3>
         <form id="createVendorForm" class="vendor-form" novalidate>
@@ -179,8 +169,9 @@
       </div>
     </div>
 
-    <!-- STATS TAB (admin only) -->
-    <div class="tab-content" id="tab-stats">
+    <!-- REGISTROS (admin only) -->
+    <div class="panel-view" id="view-registros">
+      <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
       <div class="stats-section">
         <h3>Estad&iacute;sticas</h3>
         <div class="stats-grid" id="statsGrid">

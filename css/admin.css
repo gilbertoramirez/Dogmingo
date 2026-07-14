@@ -125,26 +125,6 @@ body {
   font-size: 0.75rem;
   color: var(--text-muted);
 }
-.dash-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.btn-settings {
-  width: 36px;
-  height: 36px;
-  background: transparent;
-  border: 1.5px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-secondary);
-  font-size: 1.1rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color 0.2s, color 0.2s;
-}
-.btn-settings:hover { border-color: var(--salsa); color: var(--salsa); }
 .btn-logout {
   padding: 0.4rem 1rem;
   background: transparent;
@@ -157,10 +137,63 @@ body {
 }
 .btn-logout:hover { border-color: var(--salsa); color: var(--salsa); }
 
-/* VENDOR SETTINGS */
-.vendor-settings {
-  padding: 1rem 0;
+/* PANEL VIEWS & MENU */
+.panel-view { display: none; padding: 1.5rem 0 3rem; }
+.panel-view.active { display: block; }
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.85rem;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+  transition: border-color 0.2s, color 0.2s;
 }
+.btn-back:hover { border-color: var(--salsa); color: var(--salsa); }
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+.menu-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.menu-card:hover {
+  border-color: var(--salsa);
+  box-shadow: 0 2px 8px rgba(191, 118, 52, 0.12);
+}
+.menu-card-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+.menu-card-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+.menu-card-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+/* VENDOR SETTINGS */
 .vendor-settings-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -194,31 +227,6 @@ body {
   font-weight: 700;
   margin-bottom: 1rem;
 }
-
-/* TABS */
-.dash-tabs {
-  display: flex;
-  gap: 0;
-  border-bottom: 1px solid var(--border);
-  margin-top: 0.5rem;
-}
-.tab {
-  flex: 1;
-  padding: 0.75rem;
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
-}
-.tab.active { color: var(--salsa); border-bottom-color: var(--salsa); }
-.tab:hover { color: var(--text-primary); }
-
-.tab-content { display: none; padding: 1.5rem 0 3rem; }
-.tab-content.active { display: block; }
 
 /* SCANNER */
 .stand-indicator {
@@ -653,6 +661,9 @@ body {
 @media (max-width: 480px) {
   .admin-app { padding: 0 0.75rem; }
   .login-card { padding: 2rem 1.5rem; }
+  .menu-grid { gap: 0.5rem; }
+  .menu-card { padding: 1.25rem 0.75rem; }
+  .menu-card-icon { font-size: 1.75rem; }
   .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
   .stat-card { padding: 1rem 0.5rem; }
   .stat-num { font-size: 1.5rem; }

@@ -5,7 +5,6 @@ var scanner = null;
 var scannerActive = false;
 var currentFolio = null;
 var currentRegistro = null;
-var adminSelectedStand = 0;
 var recentStamps = [];
 
 try { vendor = JSON.parse(sessionStorage.getItem('dgm_vendor_data')); } catch (e) {}
@@ -27,7 +26,60 @@ function api(path, opts) {
   });
 }
 
-// LOGIN
+// ── NAVIGATION ──
+function showView(viewId) {
+  document.querySelectorAll('.panel-view').forEach(function (v) { v.classList.remove('active'); });
+  document.getElementById('view-' + viewId).classList.add('active');
+
+  if (viewId === 'vendors') loadVendors();
+  if (viewId === 'registros') loadStats();
+  if (viewId === 'account') populateAccount();
+  if (viewId === 'helpers') populateHelpers();
+}
+
+function goMenu() {
+  if (scanner && scannerActive) {
+    scanner.stop().catch(function () {});
+    scannerActive = false;
+    document.getElementById('startScanBtn').textContent = 'Abrir cámara';
+    document.getElementById('startScanBtn').classList.remove('active');
+  }
+  showView('menu');
+}
+
+function buildMenu() {
+  var grid = document.getElementById('menuGrid');
+  grid.innerHTML = '';
+  var isAdmin = vendor && vendor.es_admin;
+  var standNum = vendor ? vendor.stand_num : 0;
+
+  var items = [];
+
+  if (!isAdmin) {
+    items.push({ id: 'scanner', icon: '&#9783;', label: 'Escáner', desc: 'Escanear QR y sellar' });
+    items.push({ id: 'helpers', icon: '&#43;', label: 'Ayudantes', desc: 'Agregar ayudantes a tu stand' });
+  }
+
+  if (isAdmin) {
+    items.push({ id: 'vendors', icon: '&#9881;', label: 'Vendedores', desc: 'Crear y gestionar vendedores' });
+    items.push({ id: 'registros', icon: '&#9776;', label: 'Registros', desc: 'Métricas y usuarios registrados' });
+  }
+
+  items.push({ id: 'account', icon: '&#128100;', label: 'Mi cuenta', desc: 'Cambiar contraseña' });
+
+  items.forEach(function (item) {
+    var card = document.createElement('button');
+    card.className = 'menu-card';
+    card.onclick = function () { showView(item.id); };
+    card.innerHTML =
+      '<span class="menu-card-icon">' + item.icon + '</span>' +
+      '<span class="menu-card-label">' + item.label + '</span>' +
+      '<span class="menu-card-desc">' + item.desc + '</span>';
+    grid.appendChild(card);
+  });
+}
+
+// ── LOGIN ──
 var loginForm = document.getElementById('loginForm');
 loginForm.addEventListener('submit', function (e) {
   e.preventDefault();
@@ -57,7 +109,7 @@ loginForm.addEventListener('submit', function (e) {
   }).catch(function (err) {
     errEl.textContent = err.message;
     btn.disabled = false;
-    btn.textContent = 'Iniciar sesion';
+    btn.textContent = 'Iniciar sesión';
   });
 });
 
@@ -71,11 +123,9 @@ function logout() {
     scannerActive = false;
   }
   document.getElementById('dashboard').style.display = 'none';
-  document.getElementById('vendorSettings').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
-  var btn = document.getElementById('loginBtn');
-  btn.disabled = false;
-  btn.textContent = 'Iniciar sesión';
+  document.getElementById('loginBtn').disabled = false;
+  document.getElementById('loginBtn').textContent = 'Iniciar sesión';
   document.getElementById('loginError').textContent = '';
   document.getElementById('loginEmail').value = '';
   document.getElementById('loginPassword').value = '';
@@ -85,62 +135,102 @@ function showDashboard() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
 
-  var standNum = vendor.stand_num;
   var isAdmin = vendor.es_admin;
+  var standNum = vendor.stand_num;
 
   if (isAdmin) {
     document.getElementById('dashRole').textContent = 'Administrador';
-    document.getElementById('dashTabs').style.display = 'flex';
-    document.getElementById('tab-scanner').style.display = 'none';
-    document.getElementById('tab-vendors').style.display = 'block';
-    document.getElementById('tab-vendors').classList.add('active');
-    loadVendors();
   } else {
     document.getElementById('dashRole').textContent = 'Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
-    document.getElementById('dashTabs').style.display = 'none';
-    document.getElementById('adminStandSelect').style.display = 'none';
-    document.getElementById('tab-scanner').style.display = 'block';
-    document.getElementById('tab-scanner').classList.add('active');
     document.getElementById('standIndicator').textContent = 'Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
+  }
+
+  buildMenu();
+  showView('menu');
+}
+
+// ── ACCOUNT ──
+function populateAccount() {
+  var info = document.getElementById('vendorSettingsInfo');
+  if (vendor.es_admin) {
+    info.innerHTML = '<p><strong>Administrador</strong></p>';
+  } else {
+    info.innerHTML = '<p><strong>' + vendor.nombre + '</strong></p>' +
+      '<p>Stand ' + vendor.stand_num + ' — ' + STATION_NAMES[vendor.stand_num - 1] + '</p>';
   }
 }
 
-function buildAdminStandBtns() {
-  var container = document.getElementById('adminStandBtns');
-  container.innerHTML = '';
-  STATION_NAMES.forEach(function (name, i) {
-    var btn = document.createElement('button');
-    btn.textContent = (i + 1) + '. ' + name;
-    btn.addEventListener('click', function () {
-      adminSelectedStand = i + 1;
-      container.querySelectorAll('button').forEach(function (b) { b.classList.remove('selected'); });
-      btn.classList.add('selected');
-      document.getElementById('standIndicator').textContent = 'Stand ' + (i + 1) + ' — ' + name;
-    });
-    container.appendChild(btn);
+function populateHelpers() {
+  if (vendor && !vendor.es_admin) {
+    document.getElementById('helpStandBadge').textContent = 'Stand ' + vendor.stand_num + ' — ' + STATION_NAMES[vendor.stand_num - 1];
+  }
+}
+
+function selfChangePassword() {
+  var currentPw = document.getElementById('selfCurrentPw').value;
+  var pw = document.getElementById('selfNewPw').value;
+  var confirmPw = document.getElementById('selfConfirmPw').value;
+  var msg = document.getElementById('selfPwMsg');
+
+  if (!currentPw) { msg.className = 'form-msg error'; msg.textContent = 'Ingresa tu contraseña actual.'; return; }
+  if (!pw || pw.length < 4) { msg.className = 'form-msg error'; msg.textContent = 'La nueva contraseña debe tener al menos 4 caracteres.'; return; }
+  if (pw !== confirmPw) { msg.className = 'form-msg error'; msg.textContent = 'Las contraseñas no coinciden.'; return; }
+
+  msg.className = 'form-msg'; msg.textContent = '';
+
+  api('/api/vendor/change-password', {
+    method: 'POST',
+    body: { current_password: currentPw, new_password: pw }
+  }).then(function () {
+    msg.className = 'form-msg success';
+    msg.textContent = 'Contraseña actualizada.';
+    document.getElementById('selfCurrentPw').value = '';
+    document.getElementById('selfNewPw').value = '';
+    document.getElementById('selfConfirmPw').value = '';
+  }).catch(function (err) {
+    msg.className = 'form-msg error';
+    msg.textContent = err.message;
   });
 }
 
+// ── HELPERS (vendor) ──
+function createHelper() {
+  var nombre = document.getElementById('helpNombre').value.trim();
+  var email = document.getElementById('helpEmail').value.trim();
+  var password = document.getElementById('helpPassword').value;
+  var msg = document.getElementById('helpMsg');
+
+  if (!nombre || !email || !password) { msg.className = 'form-msg error'; msg.textContent = 'Todos los campos son requeridos.'; return; }
+  if (password.length < 4) { msg.className = 'form-msg error'; msg.textContent = 'La contraseña debe tener al menos 4 caracteres.'; return; }
+
+  msg.className = 'form-msg'; msg.textContent = '';
+
+  api('/api/vendor/create', {
+    method: 'POST',
+    body: { nombre: nombre, email: email, password: password }
+  }).then(function (d) {
+    msg.className = 'form-msg success';
+    msg.textContent = 'Ayudante "' + d.vendor.nombre + '" creado para Stand ' + d.vendor.stand_num + '.';
+    document.getElementById('helpNombre').value = '';
+    document.getElementById('helpEmail').value = '';
+    document.getElementById('helpPassword').value = '';
+  }).catch(function (err) {
+    msg.className = 'form-msg error';
+    msg.textContent = err.message;
+  });
+}
+
+// ── SCANNER (vendor) ──
 function getActiveStand() {
-  if (vendor.es_admin) return adminSelectedStand;
   return vendor.stand_num;
 }
 
-// TABS
-function switchTab(tabName) {
-  document.querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.tab === tabName); });
-  document.querySelectorAll('.tab-content').forEach(function (c) { c.classList.toggle('active', c.id === 'tab-' + tabName); });
-  if (tabName === 'vendors') loadVendors();
-  if (tabName === 'stats') loadStats();
-}
-
-// QR SCANNER
 function toggleScanner() {
   var btn = document.getElementById('startScanBtn');
   if (scannerActive) {
     scanner.stop().then(function () {
       scannerActive = false;
-      btn.textContent = 'Abrir camara';
+      btn.textContent = 'Abrir cámara';
       btn.classList.remove('active');
     }).catch(function () {});
     return;
@@ -156,7 +246,7 @@ function toggleScanner() {
     function (text) {
       scanner.stop().then(function () {
         scannerActive = false;
-        btn.textContent = 'Abrir camara';
+        btn.textContent = 'Abrir cámara';
         btn.classList.remove('active');
       });
       document.getElementById('folioInput').value = text;
@@ -164,14 +254,13 @@ function toggleScanner() {
     }
   ).then(function () {
     scannerActive = true;
-    btn.textContent = 'Cerrar camara';
+    btn.textContent = 'Cerrar cámara';
     btn.classList.add('active');
   }).catch(function (err) {
-    alert('No se pudo acceder a la camara: ' + err);
+    alert('No se pudo acceder a la cámara: ' + err);
   });
 }
 
-// LOOKUP
 function lookupFolio() {
   var folio = document.getElementById('folioInput').value.trim().toUpperCase();
   if (!folio) return;
@@ -202,7 +291,7 @@ function showUserCard(reg, sellos) {
   var details = document.getElementById('userDetails');
   var infoHtml = '<p>' + reg.email + '</p><p>' + reg.telefono + '</p>';
   infoHtml += '<p>' + reg.adultos + ' adulto(s)';
-  if (reg.ninos > 0) infoHtml += ', ' + reg.ninos + ' nino(s)';
+  if (reg.ninos > 0) infoHtml += ', ' + reg.ninos + ' niño(s)';
   if (reg.trae_perro && reg.nombre_perro) infoHtml += ' — Perro: ' + reg.nombre_perro;
   infoHtml += '</p>';
   details.innerHTML = infoHtml;
@@ -223,10 +312,7 @@ function showUserCard(reg, sellos) {
   result.style.display = 'none';
   result.className = 'stamp-result';
 
-  if (activeStand === 0) {
-    stampBtn.disabled = true;
-    stampBtn.textContent = 'Selecciona un stand primero';
-  } else if (stampedStands.indexOf(activeStand) >= 0) {
+  if (stampedStands.indexOf(activeStand) >= 0) {
     stampBtn.disabled = true;
     stampBtn.textContent = 'Ya sellado en Stand ' + activeStand;
   } else {
@@ -235,7 +321,6 @@ function showUserCard(reg, sellos) {
   }
 }
 
-// STAMP
 function applyStamp() {
   var activeStand = getActiveStand();
   if (!currentFolio || activeStand === 0) return;
@@ -253,16 +338,9 @@ function applyStamp() {
     result.innerHTML = '<strong>Sello registrado</strong><div class="stamp-code">' + d.stamp_code + '</div>' +
       '<p>' + d.nombre + ' — ' + d.total_stamps + '/6 sellos</p>';
 
-    recentStamps.unshift({
-      folio: currentFolio,
-      nombre: d.nombre,
-      code: d.stamp_code,
-      stand: activeStand
-    });
+    recentStamps.unshift({ folio: currentFolio, nombre: d.nombre, code: d.stamp_code, stand: activeStand });
     renderRecent();
-
     btn.textContent = 'Sellado';
-
     lookupFolio();
   }).catch(function (err) {
     var result = document.getElementById('stampResult');
@@ -284,7 +362,7 @@ function renderRecent() {
   document.getElementById('recentStamps').style.display = recentStamps.length > 0 ? 'block' : 'none';
 }
 
-// VENDORS (admin)
+// ── VENDORS (admin) ──
 function loadVendors() {
   api('/api/vendor/list')
     .then(function (d) {
@@ -303,18 +381,13 @@ function loadVendors() {
           '<button class="btn-change-pw" onclick="showChangePassword(\'' + v.email.replace(/'/g, "\\'") + '\', \'' + v.nombre.replace(/'/g, "\\'") + '\')">Cambiar contraseña</button>';
         container.appendChild(item);
       });
-
-      if (d.stats) {
-        document.getElementById('statRegistros').textContent = d.stats.total_registros;
-        document.getElementById('statSellos').textContent = d.stats.total_sellos;
-        document.getElementById('statVendedores').textContent = d.vendors.length;
-      }
     })
     .catch(function () {
       document.getElementById('vendorList').innerHTML = '<p class="empty-msg">Error al cargar vendedores.</p>';
     });
 }
 
+// ── REGISTROS (admin) ──
 var allRegistros = [];
 
 function loadStats() {
@@ -385,7 +458,7 @@ function renderRegistros(list) {
   });
 }
 
-// CREATE VENDOR
+// ── CREATE VENDOR (admin) ──
 var createForm = document.getElementById('createVendorForm');
 createForm.addEventListener('submit', function (e) {
   e.preventDefault();
@@ -412,80 +485,7 @@ createForm.addEventListener('submit', function (e) {
   });
 });
 
-// VENDOR SETTINGS PANEL
-function toggleVendorSettings() {
-  var panel = document.getElementById('vendorSettings');
-  var isOpen = panel.style.display !== 'none';
-  panel.style.display = isOpen ? 'none' : 'block';
-  if (!isOpen && vendor) {
-    var info = document.getElementById('vendorSettingsInfo');
-    if (vendor.es_admin) {
-      info.innerHTML = '<p><strong>Administrador</strong></p>';
-      document.getElementById('helperSection').style.display = 'none';
-    } else {
-      info.innerHTML = '<p><strong>' + vendor.nombre + '</strong></p>' +
-        '<p>Stand ' + vendor.stand_num + ' — ' + STATION_NAMES[vendor.stand_num - 1] + '</p>';
-      document.getElementById('helperSection').style.display = 'block';
-      document.getElementById('helpStandBadge').textContent = 'Stand ' + vendor.stand_num + ' — ' + STATION_NAMES[vendor.stand_num - 1];
-    }
-  }
-}
-
-function selfChangePassword() {
-  var currentPw = document.getElementById('selfCurrentPw').value;
-  var pw = document.getElementById('selfNewPw').value;
-  var confirmPw = document.getElementById('selfConfirmPw').value;
-  var msg = document.getElementById('selfPwMsg');
-
-  if (!currentPw) { msg.className = 'form-msg error'; msg.textContent = 'Ingresa tu contraseña actual.'; return; }
-  if (!pw || pw.length < 4) { msg.className = 'form-msg error'; msg.textContent = 'La nueva contraseña debe tener al menos 4 caracteres.'; return; }
-  if (pw !== confirmPw) { msg.className = 'form-msg error'; msg.textContent = 'Las contraseñas no coinciden.'; return; }
-
-  msg.className = 'form-msg'; msg.textContent = '';
-
-  api('/api/vendor/change-password', {
-    method: 'POST',
-    body: { current_password: currentPw, new_password: pw }
-  }).then(function () {
-    msg.className = 'form-msg success';
-    msg.textContent = 'Contraseña actualizada.';
-    document.getElementById('selfCurrentPw').value = '';
-    document.getElementById('selfNewPw').value = '';
-    document.getElementById('selfConfirmPw').value = '';
-  }).catch(function (err) {
-    msg.className = 'form-msg error';
-    msg.textContent = err.message;
-  });
-}
-
-// CREATE HELPER
-function createHelper() {
-  var nombre = document.getElementById('helpNombre').value.trim();
-  var email = document.getElementById('helpEmail').value.trim();
-  var password = document.getElementById('helpPassword').value;
-  var msg = document.getElementById('helpMsg');
-
-  if (!nombre || !email || !password) { msg.className = 'form-msg error'; msg.textContent = 'Todos los campos son requeridos.'; return; }
-  if (password.length < 4) { msg.className = 'form-msg error'; msg.textContent = 'La contraseña debe tener al menos 4 caracteres.'; return; }
-
-  msg.className = 'form-msg'; msg.textContent = '';
-
-  api('/api/vendor/create', {
-    method: 'POST',
-    body: { nombre: nombre, email: email, password: password }
-  }).then(function (d) {
-    msg.className = 'form-msg success';
-    msg.textContent = 'Ayudante "' + d.vendor.nombre + '" creado para Stand ' + d.vendor.stand_num + '.';
-    document.getElementById('helpNombre').value = '';
-    document.getElementById('helpEmail').value = '';
-    document.getElementById('helpPassword').value = '';
-  }).catch(function (err) {
-    msg.className = 'form-msg error';
-    msg.textContent = err.message;
-  });
-}
-
-// CHANGE PASSWORD (admin modal)
+// ── CHANGE PASSWORD (admin modal) ──
 function showChangePassword(email, nombre) {
   var existing = document.getElementById('pwModal');
   if (existing) existing.remove();
@@ -498,7 +498,7 @@ function showChangePassword(email, nombre) {
       '<h3>Cambiar contrase&ntilde;a</h3>' +
       '<p class="pw-modal-name">' + nombre + '</p>' +
       '<div class="field"><label for="newPw">Nueva contrase&ntilde;a</label>' +
-      '<input type="text" id="newPw" placeholder="M&iacute;nimo 4 caracteres"></div>' +
+      '<input type="password" id="newPw" placeholder="M&iacute;nimo 4 caracteres"></div>' +
       '<div class="pw-modal-actions">' +
         '<button class="btn-create" onclick="changePassword(\'' + email.replace(/'/g, "\\'") + '\')">Guardar</button>' +
         '<button class="btn-logout" onclick="document.getElementById(\'pwModal\').remove()">Cancelar</button>' +
@@ -528,7 +528,7 @@ function changePassword(email) {
   });
 }
 
-// INIT
+// ── INIT ──
 if (token && vendor) {
   showDashboard();
 } else {
