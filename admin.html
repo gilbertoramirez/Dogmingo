@@ -39,9 +39,32 @@
           <h1 class="dash-logo">DOGMINGO</h1>
           <p class="dash-role" id="dashRole"></p>
         </div>
-        <button class="btn-logout" onclick="logout()">Salir</button>
+        <div class="dash-header-actions">
+          <button class="btn-settings" onclick="toggleVendorSettings()" id="settingsToggle" title="Configuraci&oacute;n">&#9881;</button>
+          <button class="btn-logout" onclick="logout()">Salir</button>
+        </div>
       </div>
     </header>
+
+    <!-- VENDOR SETTINGS PANEL -->
+    <div class="vendor-settings" id="vendorSettings" style="display:none;">
+      <div class="vendor-settings-card">
+        <h3>Mi cuenta</h3>
+        <div class="vendor-settings-info" id="vendorSettingsInfo"></div>
+        <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0;">
+        <h4>Cambiar contrase&ntilde;a</h4>
+        <div class="field">
+          <label for="selfNewPw">Nueva contrase&ntilde;a</label>
+          <input type="password" id="selfNewPw" placeholder="M&iacute;nimo 4 caracteres">
+        </div>
+        <div class="field">
+          <label for="selfConfirmPw">Confirmar contrase&ntilde;a</label>
+          <input type="password" id="selfConfirmPw" placeholder="Repite la contrase&ntilde;a">
+        </div>
+        <button class="btn-create" onclick="selfChangePassword()">Guardar contrase&ntilde;a</button>
+        <p class="form-msg" id="selfPwMsg"></p>
+      </div>
+    </div>
 
     <!-- TABS (admin only) -->
     <div class="dash-tabs" id="dashTabs" style="display:none;">

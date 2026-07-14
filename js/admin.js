@@ -345,7 +345,47 @@ createForm.addEventListener('submit', function (e) {
   });
 });
 
-// CHANGE PASSWORD
+// VENDOR SETTINGS PANEL
+function toggleVendorSettings() {
+  var panel = document.getElementById('vendorSettings');
+  var isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen && vendor) {
+    var info = document.getElementById('vendorSettingsInfo');
+    if (vendor.es_admin) {
+      info.innerHTML = '<p><strong>Administrador</strong></p>';
+    } else {
+      info.innerHTML = '<p><strong>' + vendor.nombre + '</strong></p>' +
+        '<p>Stand ' + vendor.stand_num + ' — ' + STATION_NAMES[vendor.stand_num - 1] + '</p>';
+    }
+  }
+}
+
+function selfChangePassword() {
+  var pw = document.getElementById('selfNewPw').value;
+  var confirm = document.getElementById('selfConfirmPw').value;
+  var msg = document.getElementById('selfPwMsg');
+
+  if (!pw || pw.length < 4) { msg.className = 'form-msg error'; msg.textContent = 'La contraseña debe tener al menos 4 caracteres.'; return; }
+  if (pw !== confirm) { msg.className = 'form-msg error'; msg.textContent = 'Las contraseñas no coinciden.'; return; }
+
+  msg.className = 'form-msg'; msg.textContent = '';
+
+  api('/api/vendor/change-password', {
+    method: 'POST',
+    body: { new_password: pw }
+  }).then(function () {
+    msg.className = 'form-msg success';
+    msg.textContent = 'Contraseña actualizada.';
+    document.getElementById('selfNewPw').value = '';
+    document.getElementById('selfConfirmPw').value = '';
+  }).catch(function (err) {
+    msg.className = 'form-msg error';
+    msg.textContent = err.message;
+  });
+}
+
+// CHANGE PASSWORD (admin modal)
 function showChangePassword(email, nombre) {
   var existing = document.getElementById('pwModal');
   if (existing) existing.remove();
