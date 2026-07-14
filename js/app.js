@@ -9,7 +9,7 @@ function renderQRToCanvas(text, size) {
   var cellSize = size / count;
   ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(0, 0, size, size);
-  ctx.fillStyle = '#2C2A24';
+  ctx.fillStyle = '#313323';
   for (var row = 0; row < count; row++) {
     for (var col = 0; col < count; col++) {
       if (qr.isDark(row, col)) {
@@ -193,7 +193,7 @@ var pawsList = [];
 function hResize() { hCanvas.width = hCanvas.offsetWidth * devicePixelRatio; hCanvas.height = hCanvas.offsetHeight * devicePixelRatio; hCtx.scale(devicePixelRatio, devicePixelRatio); }
 hResize(); window.addEventListener('resize', hResize);
 function drawPaw(x, y, sz, rot, a) {
-  hCtx.save(); hCtx.translate(x, y); hCtx.rotate(rot); hCtx.globalAlpha = a; hCtx.fillStyle = '#C4923A';
+  hCtx.save(); hCtx.translate(x, y); hCtx.rotate(rot); hCtx.globalAlpha = a; hCtx.fillStyle = '#BF7634';
   hCtx.beginPath(); hCtx.ellipse(0, sz*0.3, sz*0.45, sz*0.35, 0, 0, Math.PI*2); hCtx.fill();
   [[-sz*0.35,-sz*0.15,sz*0.18],[-sz*0.12,-sz*0.35,sz*0.16],[sz*0.12,-sz*0.35,sz*0.16],[sz*0.35,-sz*0.15,sz*0.18]].forEach(function(p){
     hCtx.beginPath(); hCtx.ellipse(p[0], p[1], p[2], p[2]*1.15, 0, 0, Math.PI*2); hCtx.fill();
@@ -233,22 +233,22 @@ function generatePassport(data, stamps) {
   var ctx = c.getContext('2d');
   var W = 800, H = 1300;
   c.width = W; c.height = H;
-  ctx.fillStyle = '#FBF7F0'; ctx.beginPath(); ctx.roundRect(0, 0, W, H, 20); ctx.fill();
+  ctx.fillStyle = '#F4E6D0'; ctx.beginPath(); ctx.roundRect(0, 0, W, H, 20); ctx.fill();
   ctx.strokeStyle = '#D4C9B5'; ctx.lineWidth = 3; ctx.setLineDash([8, 4]);
   ctx.beginPath(); ctx.roundRect(20, 20, W-40, H-40, 16); ctx.stroke(); ctx.setLineDash([]);
-  ctx.fillStyle = '#C4923A'; ctx.beginPath(); ctx.roundRect(40, 40, W-80, 100, [12, 12, 0, 0]); ctx.fill();
+  ctx.fillStyle = '#BF7634'; ctx.beginPath(); ctx.roundRect(40, 40, W-80, 100, [12, 12, 0, 0]); ctx.fill();
   ctx.fillStyle = '#FFFFFF'; ctx.font = '900 36px system-ui, sans-serif'; ctx.textAlign = 'center';
   ctx.fillText('PASAPORTE PERRUNO', W/2, 105);
   ctx.fillStyle = '#8A7E6E'; ctx.font = '700 16px system-ui, sans-serif';
   ctx.fillText('DOGMINGO · 26 JULIO 2025', W/2, 175);
   var dogCanvas = document.createElement('canvas'); dogCanvas.width = 200; dogCanvas.height = 200;
   drawDog(dogCanvas, 'golden'); ctx.drawImage(dogCanvas, W/2-60, 195, 120, 120);
-  ctx.fillStyle = '#2C2A24'; ctx.font = '800 28px system-ui, sans-serif';
+  ctx.fillStyle = '#313323'; ctx.font = '800 28px system-ui, sans-serif';
   ctx.fillText(data.nombre + ' ' + data.apellido, W/2, 355);
   if (data.nombre_perro) { ctx.fillStyle = '#6B6558'; ctx.font = '600 20px system-ui, sans-serif'; ctx.fillText('y su perro ' + data.nombre_perro, W/2, 385); }
-  ctx.fillStyle = '#3A5A3E'; ctx.font = '700 14px system-ui, sans-serif'; ctx.fillText('Folio: ' + data.folio, W/2, 420);
+  ctx.fillStyle = '#313323'; ctx.font = '700 14px system-ui, sans-serif'; ctx.fillText('Folio: ' + data.folio, W/2, 420);
   ctx.strokeStyle = '#D4C9B5'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(80, 445); ctx.lineTo(W-80, 445); ctx.stroke();
-  ctx.fillStyle = '#2C2A24'; ctx.font = '800 22px system-ui, sans-serif'; ctx.fillText('SELLOS DE ESTACIONES', W/2, 485);
+  ctx.fillStyle = '#313323'; ctx.font = '800 22px system-ui, sans-serif'; ctx.fillText('SELLOS DE ESTACIONES', W/2, 485);
   ctx.fillStyle = '#8A7E6E'; ctx.font = '400 14px system-ui, sans-serif'; ctx.fillText('Visita cada estación para obtener tu sello', W/2, 510);
   var stations = ['Bendición\nCanina', 'Huellas\ndel Alma', 'Exhibición\nAdiestramiento', 'Circuito\nAgilidad', 'Mercadito\nPet-Friendly', 'Pasarela\nAdopción'];
   var cols = 3, rows = 2, slotSize = 140, gapX = 40, gapY = 30;
@@ -261,18 +261,18 @@ function generatePassport(data, stamps) {
     var isStamped = stamps.indexOf(i + 1) >= 0;
     if (isStamped) {
       ctx.fillStyle = 'rgba(45,106,63,0.1)'; ctx.beginPath(); ctx.arc(x, y, slotSize/2 - 5, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = '#3A5A3E'; ctx.lineWidth = 3; ctx.setLineDash([]); ctx.beginPath(); ctx.arc(x, y, slotSize/2 - 5, 0, Math.PI * 2); ctx.stroke();
-      ctx.fillStyle = '#3A5A3E'; ctx.font = '800 36px system-ui, sans-serif'; ctx.fillText('✓', x, y + 12);
+      ctx.strokeStyle = '#313323'; ctx.lineWidth = 3; ctx.setLineDash([]); ctx.beginPath(); ctx.arc(x, y, slotSize/2 - 5, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = '#313323'; ctx.font = '800 36px system-ui, sans-serif'; ctx.fillText('✓', x, y + 12);
     } else {
       ctx.strokeStyle = '#C9BDA8'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.arc(x, y, slotSize/2 - 5, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
     }
-    ctx.fillStyle = isStamped ? '#3A5A3E' : '#B5A998'; ctx.font = '600 12px system-ui, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillStyle = isStamped ? '#313323' : '#B5A998'; ctx.font = '600 12px system-ui, sans-serif'; ctx.textAlign = 'center';
     var lines = name.split('\n');
     lines.forEach(function(line, li) { ctx.fillText(line, x, y + (isStamped ? 30 : 0) + (li - (lines.length-1)/2) * 16); });
     ctx.fillStyle = '#D4C9B5'; ctx.font = '800 11px system-ui, sans-serif'; ctx.fillText((i+1).toString(), x, y + slotSize/2 - 15);
   });
   var bottomY = startY + rows * (slotSize + gapY) + 20;
-  ctx.fillStyle = '#C4923A'; ctx.beginPath(); ctx.roundRect(40, bottomY, W-80, 80, [0, 0, 12, 12]); ctx.fill();
+  ctx.fillStyle = '#BF7634'; ctx.beginPath(); ctx.roundRect(40, bottomY, W-80, 80, [0, 0, 12, 12]); ctx.fill();
   ctx.fillStyle = '#FFFFFF'; ctx.font = '700 16px system-ui, sans-serif'; ctx.textAlign = 'center';
   ctx.fillText('¡Completa los 6 sellos y reclama tu premio!', W/2, bottomY + 35);
   ctx.font = '400 13px system-ui, sans-serif';
@@ -289,7 +289,7 @@ function generatePassport(data, stamps) {
   ctx.fillStyle = '#8A7E6E'; ctx.font = '600 12px system-ui, sans-serif'; ctx.textAlign = 'center';
   ctx.fillText('Escanea para verificar tu folio', W/2, qrY + qrSize + 20);
 
-  ctx.globalAlpha = 0.04; ctx.fillStyle = '#C4923A';
+  ctx.globalAlpha = 0.04; ctx.fillStyle = '#BF7634';
   for (var i = 0; i < 8; i++) { drawPawOnCtx(ctx, 80 + Math.random() * (W-160), 200 + Math.random() * (H-300), 20 + Math.random() * 15, Math.random() * Math.PI * 2); }
   ctx.globalAlpha = 1;
 }

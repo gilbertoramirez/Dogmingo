@@ -48,63 +48,63 @@
   }
 
   :root {
-    --salsa: #C4923A;
-    --campo: #3A5A3E;
-    --sol: #D4A84A;
-    --lino: #FBF7F0;
-    --noche: #2C2A24;
-    --gold: #C4923A;
-    --gold-light: #D4A84A;
-    --olive: #3A3C2E;
-    --cream: #F0E6D0;
-    --text-primary: #2C2A24;
-    --text-secondary: #6B6558;
-    --bg: #FBF7F0;
-    --bg-alt: #F0EBE0;
-    --card-bg: #FFFFFF;
-    --card-border: #E0D8C8;
-    --hero-bg: #3E3B2B;
-    --hero-text: #FBF7F0;
-    --nav-bg: rgba(251, 247, 240, 0.92);
-    --nav-border: rgba(44, 42, 36, 0.08);
+    --salsa: #BF7634;
+    --campo: #313323;
+    --sol: #BF7634;
+    --lino: #F4E6D0;
+    --noche: #313323;
+    --gold: #BF7634;
+    --gold-light: #D4944A;
+    --olive: #313323;
+    --cream: #F4E6D0;
+    --text-primary: #313323;
+    --text-secondary: #5C5A4A;
+    --bg: #F4E6D0;
+    --bg-alt: #EBD9BE;
+    --card-bg: #FDFAF5;
+    --card-border: #D9CCAE;
+    --hero-bg: #313323;
+    --hero-text: #F4E6D0;
+    --nav-bg: rgba(244, 230, 208, 0.92);
+    --nav-border: rgba(49, 51, 35, 0.08);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --text-primary: #F0EBE0;
+      --text-primary: #F4E6D0;
       --text-secondary: #A89E8E;
-      --bg: #1A1814;
-      --bg-alt: #24221C;
-      --card-bg: #24221C;
-      --card-border: #3A3628;
-      --hero-bg: #2A2820;
-      --hero-text: #FBF7F0;
-      --nav-bg: rgba(26, 24, 20, 0.92);
-      --nav-border: rgba(251, 247, 240, 0.06);
+      --bg: #1E1F18;
+      --bg-alt: #282920;
+      --card-bg: #282920;
+      --card-border: #3A3B2E;
+      --hero-bg: #313323;
+      --hero-text: #F4E6D0;
+      --nav-bg: rgba(30, 31, 24, 0.92);
+      --nav-border: rgba(244, 230, 208, 0.06);
     }
   }
   :root[data-theme="dark"] {
-    --text-primary: #F0EBE0;
+    --text-primary: #F4E6D0;
     --text-secondary: #A89E8E;
-    --bg: #1A1814;
-    --bg-alt: #24221C;
-    --card-bg: #24221C;
-    --card-border: #3A3628;
-    --hero-bg: #2A2820;
-    --hero-text: #FBF7F0;
-    --nav-bg: rgba(26, 24, 20, 0.92);
-    --nav-border: rgba(251, 247, 240, 0.06);
+    --bg: #1E1F18;
+    --bg-alt: #282920;
+    --card-bg: #282920;
+    --card-border: #3A3B2E;
+    --hero-bg: #313323;
+    --hero-text: #F4E6D0;
+    --nav-bg: rgba(30, 31, 24, 0.92);
+    --nav-border: rgba(244, 230, 208, 0.06);
   }
   :root[data-theme="light"] {
-    --text-primary: #2C2A24;
-    --text-secondary: #6B6558;
-    --bg: #FBF7F0;
-    --bg-alt: #F0EBE0;
-    --card-bg: #FFFFFF;
-    --card-border: #E0D8C8;
-    --hero-bg: #3E3B2B;
-    --hero-text: #FBF7F0;
-    --nav-bg: rgba(251, 247, 240, 0.92);
-    --nav-border: rgba(44, 42, 36, 0.08);
+    --text-primary: #313323;
+    --text-secondary: #5C5A4A;
+    --bg: #F4E6D0;
+    --bg-alt: #EBD9BE;
+    --card-bg: #FDFAF5;
+    --card-border: #D9CCAE;
+    --hero-bg: #313323;
+    --hero-text: #F4E6D0;
+    --nav-bg: rgba(244, 230, 208, 0.92);
+    --nav-border: rgba(49, 51, 35, 0.08);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -154,7 +154,7 @@
     padding: 1rem 2.5rem; border: none; border-radius: 3px; cursor: pointer;
     text-decoration: none; transition: background 0.2s, transform 0.15s;
   }
-  .btn-primary:hover { background: #A87830; transform: translateY(-1px); }
+  .btn-primary:hover { background: #A5632A; transform: translateY(-1px); }
   .btn-primary:active { transform: translateY(0); }
   .btn-secondary {
     display: inline-block; font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 0.9rem;
@@ -162,9 +162,9 @@
     padding: 0.85rem 2rem; border: none; border-radius: 3px; cursor: pointer;
     text-decoration: none; transition: background 0.2s, transform 0.15s;
   }
-  .btn-secondary:hover { background: #2E4830; transform: translateY(-1px); }
-  .hero-scroll { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 2; width: 24px; height: 40px; border: 2px solid rgba(251,247,240,0.3); border-radius: 12px; display: flex; justify-content: center; padding-top: 6px; }
-  .hero-scroll-dot { width: 4px; height: 8px; background: rgba(251,247,240,0.5); border-radius: 2px; animation: scrollBounce 2s ease-in-out infinite; }
+  .btn-secondary:hover { background: #272818; transform: translateY(-1px); }
+  .hero-scroll { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 2; width: 24px; height: 40px; border: 2px solid rgba(244,230,208,0.3); border-radius: 12px; display: flex; justify-content: center; padding-top: 6px; }
+  .hero-scroll-dot { width: 4px; height: 8px; background: rgba(244,230,208,0.5); border-radius: 2px; animation: scrollBounce 2s ease-in-out infinite; }
   @keyframes scrollBounce { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(12px); opacity: 1; } }
 
   .section, .dog-gallery { scroll-margin-top: 64px; }
@@ -173,7 +173,7 @@
   }
   .dog-photo-strip img {
     width: 120px; height: 120px; object-fit: cover; border-radius: 50%;
-    border: 3px solid rgba(251,247,240,0.2); transition: transform 0.3s;
+    border: 3px solid rgba(244,230,208,0.2); transition: transform 0.3s;
   }
   .dog-photo-strip img:hover { transform: scale(1.1); }
   .dog-photo-strip.large img { width: 180px; height: 180px; }
@@ -188,18 +188,18 @@
   .passport-promo .section-eyebrow { color: var(--sol); }
   .passport-promo .section-title { color: var(--hero-text); }
   .passport-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
-  .passport-preview { background: #FBF7F0; border-radius: 12px; padding: 2rem; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3); transform: rotate(-2deg); }
+  .passport-preview { background: #F4E6D0; border-radius: 12px; padding: 2rem; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3); transform: rotate(-2deg); }
   .passport-preview-inner { border: 2px dashed #D4C9B5; border-radius: 8px; padding: 1.5rem; text-align: center; }
-  .passport-preview h4 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 900; font-size: 1.1rem; color: #2C2A24; margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .passport-preview h4 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 900; font-size: 1.1rem; color: #313323; margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
   .passport-preview .pp-sub { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.7rem; color: #8A7E6E; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
   .stamp-grid-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
   .stamp-slot-preview { aspect-ratio: 1; border: 1.5px dashed #C9BDA8; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.55rem; color: #B5A998; text-transform: uppercase; letter-spacing: 0.05em; }
-  .stamp-slot-preview.filled { border-color: var(--campo); background: rgba(58,90,62,0.1); }
+  .stamp-slot-preview.filled { border-color: var(--campo); background: rgba(49,51,35,0.1); }
   .stamp-slot-preview.filled::after { content: '\2713'; color: var(--campo); font-size: 1rem; font-weight: 800; }
   .passport-info-text h3 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--hero-text); margin-bottom: 1rem; }
-  .passport-info-text p { color: rgba(251,247,240,0.65); font-size: 0.95rem; margin-bottom: 1.25rem; line-height: 1.6; }
+  .passport-info-text p { color: rgba(244,230,208,0.65); font-size: 0.95rem; margin-bottom: 1.25rem; line-height: 1.6; }
   .passport-steps { list-style: none; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
-  .passport-steps li { display: flex; align-items: flex-start; gap: 0.75rem; font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.9rem; color: rgba(251,247,240,0.8); }
+  .passport-steps li { display: flex; align-items: flex-start; gap: 0.75rem; font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.9rem; color: rgba(244,230,208,0.8); }
   .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--salsa); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; flex-shrink: 0; }
 
   .causa { background: var(--bg-alt); }
@@ -222,7 +222,7 @@
   .activity-icon { width: 48px; height: 48px; margin-bottom: 1.25rem; color: var(--campo); }
   .activity-name { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.5rem; }
   .activity-desc { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.55; }
-  .activity-stamp { display: inline-block; margin-top: 0.75rem; font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--campo); background: rgba(58,90,62,0.1); padding: 0.25rem 0.6rem; border-radius: 2px; }
+  .activity-stamp { display: inline-block; margin-top: 0.75rem; font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--campo); background: rgba(49,51,35,0.1); padding: 0.25rem 0.6rem; border-radius: 2px; }
 
   .info { background: var(--bg-alt); }
   .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; }
@@ -235,10 +235,10 @@
   .tickets { background: var(--hero-bg); color: var(--hero-text); text-align: center; }
   .tickets .section-eyebrow { color: var(--sol); }
   .tickets .section-title { color: var(--hero-text); }
-  .tickets .section-intro { margin-left: auto; margin-right: auto; color: rgba(251,247,240,0.6); }
+  .tickets .section-intro { margin-left: auto; margin-right: auto; color: rgba(244,230,208,0.6); }
   .ticket-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 700px; margin: 0 auto 3rem; }
-  .ticket-card { border: 1px solid rgba(251,247,240,0.12); border-radius: 4px; padding: 2.5rem 2rem; transition: border-color 0.2s; }
-  .ticket-card:hover { border-color: rgba(251,247,240,0.25); }
+  .ticket-card { border: 1px solid rgba(244,230,208,0.12); border-radius: 4px; padding: 2.5rem 2rem; transition: border-color 0.2s; }
+  .ticket-card:hover { border-color: rgba(244,230,208,0.25); }
   .ticket-card.featured { border-color: var(--salsa); background: rgba(217,59,30,0.06); }
   .ticket-type { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--sol); margin-bottom: 1rem; }
   .ticket-price { font-family: 'Telka Extended', system-ui, sans-serif; font-weight: 700; font-size: 3rem; line-height: 1; margin-bottom: 0.5rem; }
@@ -264,7 +264,7 @@
     border: 1px solid var(--card-border); border-radius: 3px; background: var(--bg);
     color: var(--text-primary); transition: border-color 0.2s; width: 100%;
   }
-  .form-input:focus, .form-select:focus { outline: none; border-color: var(--campo); box-shadow: 0 0 0 3px rgba(58,90,62,0.12); }
+  .form-input:focus, .form-select:focus { outline: none; border-color: var(--campo); box-shadow: 0 0 0 3px rgba(49,51,35,0.12); }
   .form-input::placeholder { color: var(--text-secondary); opacity: 0.5; }
   .form-select {
     cursor: pointer; appearance: none;
@@ -292,7 +292,7 @@
   .terms-rule p { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45; margin: 0; }
   .terms-checkboxes { display: flex; flex-direction: column; gap: 0.75rem; }
   .terms-check-item { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.6rem 0.75rem; border-radius: 4px; border: 1px solid var(--card-border); background: var(--card-bg); transition: border-color 0.2s, background 0.2s; }
-  .terms-check-item:has(.form-checkbox:checked) { border-color: var(--campo); background: rgba(58,90,62,0.05); }
+  .terms-check-item:has(.form-checkbox:checked) { border-color: var(--campo); background: rgba(49,51,35,0.05); }
   .terms-check-item .form-checkbox { margin-top: 0.15rem; flex-shrink: 0; }
   .terms-check-item .form-checkbox-label { font-size: 0.8rem; line-height: 1.4; cursor: pointer; }
   .terms-check-item .form-checkbox-label a { color: var(--campo); font-weight: 700; text-decoration: underline; }
@@ -315,7 +315,7 @@
     text-transform: uppercase; letter-spacing: 0.08em; background: var(--salsa); color: #fff;
     padding: 1rem; border: none; border-radius: 3px; cursor: pointer; transition: background 0.2s, transform 0.15s;
   }
-  .form-submit:hover { background: #A87830; transform: translateY(-1px); }
+  .form-submit:hover { background: #A5632A; transform: translateY(-1px); }
   .form-submit:active { transform: translateY(0); }
   .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
   .form-error { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.8rem; color: var(--salsa); margin-top: 0.25rem; display: none; }
@@ -341,7 +341,7 @@
     padding: 0.85rem 2rem; border: none; border-radius: 3px; cursor: pointer;
     transition: background 0.2s, transform 0.15s; text-decoration: none; margin: 0.5rem;
   }
-  .btn-download:hover { background: #2E4830; transform: translateY(-1px); }
+  .btn-download:hover { background: #272818; transform: translateY(-1px); }
 
   .stamp-tracker { margin: 1.5rem 0; }
   .stamp-tracker h4 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1rem; color: var(--text-primary); margin-bottom: 1rem; text-align: center; }
@@ -353,7 +353,7 @@
     text-transform: uppercase; letter-spacing: 0.03em; text-align: center; padding: 0.25rem;
     transition: all 0.3s ease;
   }
-  .stamp-tracker-slot.stamped { border-color: var(--campo); background: rgba(58,90,62,0.08); border-style: solid; }
+  .stamp-tracker-slot.stamped { border-color: var(--campo); background: rgba(49,51,35,0.08); border-style: solid; }
   .stamp-tracker-slot.stamped::before { content: '\2713'; font-size: 1.5rem; font-weight: 800; color: var(--campo); }
   .stamp-tracker-slot.stamped span { color: var(--campo); font-weight: 700; }
   .stamp-complete { text-align: center; padding: 1rem; background: var(--campo); color: #fff; border-radius: 4px; font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1rem; display: none; }
@@ -378,7 +378,7 @@
   .sellos-user-info { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1rem; }
   .sellos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
   .sello-item { font-family: 'At Gambit', system-ui, sans-serif; text-align: center; padding: 1rem 0.5rem; border-radius: 8px; border: 2px dashed var(--card-border); transition: all 0.3s; }
-  .sello-item.collected { border-style: solid; border-color: var(--campo); background: rgba(58, 90, 62, 0.08); }
+  .sello-item.collected { border-style: solid; border-color: var(--campo); background: rgba(49, 51, 35, 0.08); }
   .sello-icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
   .sello-name { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
   .sello-item.collected .sello-name { color: var(--campo); }
@@ -386,7 +386,7 @@
   .sellos-progress-fill { height: 100%; background: linear-gradient(90deg, var(--campo), var(--gold)); border-radius: 4px; transition: width 0.5s ease; }
   .sellos-progress-text { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.85rem; color: var(--text-secondary); text-align: center; }
   .sellos-error { font-family: 'At Gambit', system-ui, sans-serif; font-size: 0.9rem; color: var(--salsa); text-align: center; margin-top: 1rem; }
-  .sellos-complete { font-family: 'At Gambit', system-ui, sans-serif; text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(58, 90, 62, 0.1); border-radius: 8px; color: var(--campo); font-weight: 700; }
+  .sellos-complete { font-family: 'At Gambit', system-ui, sans-serif; text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(49, 51, 35, 0.1); border-radius: 8px; color: var(--campo); font-weight: 700; }
 
   /* STAND PORTAL */
   .stand-portal { display: none; min-height: 100vh; background: var(--bg); padding: 2rem 1.5rem; }
@@ -402,7 +402,7 @@
     color: var(--text-primary); cursor: pointer; text-align: center; transition: all 0.2s;
   }
   .stand-btn:hover { border-color: var(--campo); }
-  .stand-btn.selected { border-color: var(--campo); background: rgba(58,90,62,0.08); color: var(--campo); }
+  .stand-btn.selected { border-color: var(--campo); background: rgba(49,51,35,0.08); color: var(--campo); }
   .stand-btn small { display: block; font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem; font-weight: 400; }
   .stand-scan-area { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 4px; padding: 2rem; }
   .stand-scan-area h3 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1rem; }
@@ -412,7 +412,7 @@
   .stand-folio-input button { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 0.9rem; padding: 0.85rem 1.5rem; background: var(--campo); color: #fff; border: none; border-radius: 3px; cursor: pointer; }
   .stand-result { margin-top: 1.5rem; padding: 1.5rem; border-radius: 4px; display: none; text-align: center; }
   .stand-result.visible { display: block; }
-  .stand-result.success { background: rgba(58,90,62,0.08); border: 1px solid var(--campo); }
+  .stand-result.success { background: rgba(49,51,35,0.08); border: 1px solid var(--campo); }
   .stand-result.error { background: rgba(217,59,30,0.06); border: 1px solid var(--salsa); }
   .stand-result h4 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.2rem; margin-bottom: 0.5rem; }
   .stand-result.success h4 { color: var(--campo); }
