@@ -213,7 +213,7 @@ var currentStamps = [];
 function generatePassport(data, stamps) {
   var c = document.getElementById('passportCanvas');
   var ctx = c.getContext('2d');
-  var W = 800, H = 1100;
+  var W = 800, H = 1300;
   c.width = W; c.height = H;
   ctx.fillStyle = '#F7F3EB'; ctx.beginPath(); ctx.roundRect(0, 0, W, H, 20); ctx.fill();
   ctx.strokeStyle = '#D4C9B5'; ctx.lineWidth = 3; ctx.setLineDash([8, 4]);
@@ -259,6 +259,18 @@ function generatePassport(data, stamps) {
   ctx.fillText('¡Completa los 6 sellos y reclama tu premio!', W/2, bottomY + 35);
   ctx.font = '400 13px system-ui, sans-serif';
   ctx.fillText('Presenta tu pasaporte en el stand principal de Dogmingo', W/2, bottomY + 58);
+  var qrSize = 120;
+  var qrCanvas = renderQRToCanvas(data.folio, qrSize);
+  var qrX = W/2 - qrSize/2;
+  var qrY = bottomY + 100;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(qrX - 8, qrY - 8, qrSize + 16, qrSize + 16);
+  ctx.strokeStyle = '#D4C9B5'; ctx.lineWidth = 1;
+  ctx.strokeRect(qrX - 8, qrY - 8, qrSize + 16, qrSize + 16);
+  ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize);
+  ctx.fillStyle = '#8A8378'; ctx.font = '600 12px system-ui, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Escanea para verificar tu folio', W/2, qrY + qrSize + 20);
+
   ctx.globalAlpha = 0.04; ctx.fillStyle = '#D93B1E';
   for (var i = 0; i < 8; i++) { drawPawOnCtx(ctx, 80 + Math.random() * (W-160), 200 + Math.random() * (H-300), 20 + Math.random() * 15, Math.random() * Math.PI * 2); }
   ctx.globalAlpha = 1;
