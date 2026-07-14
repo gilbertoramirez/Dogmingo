@@ -222,6 +222,22 @@
   .form-checkbox-label { font-family: system-ui, sans-serif; font-size: 0.9rem; color: var(--text-primary); cursor: pointer; }
   .dog-name-field { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.3s ease; margin-bottom: 0; }
   .dog-name-field.visible { max-height: 100px; opacity: 1; margin-bottom: 1.25rem; }
+
+  .terms-section { margin-bottom: 1.5rem; background: var(--bg); border: 1px solid var(--card-border); border-radius: 4px; padding: 1.25rem; }
+  .terms-header h4 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.35rem; }
+  .terms-header p { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem; }
+  .terms-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--card-border); }
+  .terms-list li { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; padding-left: 1rem; position: relative; }
+  .terms-list li::before { content: ''; width: 5px; height: 5px; background: var(--salsa); border-radius: 50%; position: absolute; left: 0; top: 0.45em; }
+  .terms-list li strong { color: var(--text-primary); font-weight: 700; }
+  .terms-checkboxes { display: flex; flex-direction: column; gap: 0.75rem; }
+  .terms-checkboxes .form-checkbox-row { align-items: flex-start; }
+  .terms-checkboxes .form-checkbox-label { font-size: 0.8rem; line-height: 1.4; }
+  .terms-checkboxes .form-checkbox-label a { color: var(--campo); font-weight: 700; text-decoration: underline; }
+  .terms-checkboxes .form-checkbox-label a:hover { color: var(--salsa); }
+  .terms-checkboxes .form-checkbox { margin-top: 0.15rem; flex-shrink: 0; }
+  .terms-error { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--salsa); text-align: center; margin-top: 0.75rem; min-height: 1rem; }
+
   .form-submit {
     display: block; width: 100%; font-family: system-ui, sans-serif; font-weight: 800; font-size: 1rem;
     text-transform: uppercase; letter-spacing: 0.08em; background: var(--salsa); color: #fff;

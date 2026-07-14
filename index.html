@@ -300,6 +300,34 @@
                 <input class="form-input" type="text" id="nombrePerro" name="nombrePerro" placeholder="&iquest;C&oacute;mo se llama tu peludo?">
               </div>
             </div>
+            <div class="terms-section">
+              <div class="terms-header">
+                <h4>T&eacute;rminos, Condiciones y Reglamento: DOGmingo</h4>
+                <p>Al registrarte y asistir, aceptas cumplir con las siguientes normas de convivencia:</p>
+              </div>
+              <ul class="terms-list">
+                <li><strong>Uso de correa:</strong> Todas las mascotas deben portar collar/arn&eacute;s y correa en todo momento. Queda estrictamente prohibido dejarlas sueltas.</li>
+                <li><strong>L&iacute;mite de acceso:</strong> Se permite un m&aacute;ximo de un perro por adulto para garantizar una adecuada supervisi&oacute;n.</li>
+                <li><strong>Salud:</strong> La mascota debe contar con sus vacunas vigentes. Se proh&iacute;be el acceso a animales enfermos o hembras en celo.</li>
+                <li><strong>Higiene:</strong> Es obligaci&oacute;n del tutor portar bolsas biodegradables, recoger inmediatamente las heces de su mascota y, de ser posible, llevar agua para mitigar los orines.</li>
+                <li><strong>Control y Comportamiento:</strong> El tutor debe supervisar a su mascota en todo momento. El comit&eacute; organizador se reserva el derecho de admisi&oacute;n o permanencia de aquellos ejemplares que muestren agresividad, ladridos incontrolables o conductas que pongan en riesgo la seguridad familiar del evento.</li>
+              </ul>
+              <div class="terms-checkboxes">
+                <div class="form-checkbox-row">
+                  <input class="form-checkbox" type="checkbox" id="acceptTerms" name="acceptTerms" required>
+                  <label class="form-checkbox-label" for="acceptTerms">He le&iacute;do y acepto los <strong>T&eacute;rminos, Condiciones y Reglamento</strong> de convivencia descritos arriba.</label>
+                </div>
+                <div class="form-checkbox-row">
+                  <input class="form-checkbox" type="checkbox" id="acceptCarta" name="acceptCarta" required>
+                  <label class="form-checkbox-label" for="acceptCarta">He le&iacute;do y acepto los t&eacute;rminos de la <a href="docs/carta-responsiva.pdf" target="_blank" rel="noopener">Carta Responsiva y Deslinde Legal</a>.</label>
+                </div>
+                <div class="form-checkbox-row">
+                  <input class="form-checkbox" type="checkbox" id="acceptPrivacy" name="acceptPrivacy" required>
+                  <label class="form-checkbox-label" for="acceptPrivacy">Autorizo el tratamiento de mis datos conforme al <a href="docs/aviso-privacidad.pdf" target="_blank" rel="noopener">Aviso de Privacidad</a>.</label>
+                </div>
+              </div>
+              <p class="terms-error" id="termsError"></p>
+            </div>
             <button type="submit" class="form-submit" id="submitBtn">Verificar correo electr&oacute;nico</button>
           </form>
           <div class="verification-step" id="verificationStep" style="display:none;">
