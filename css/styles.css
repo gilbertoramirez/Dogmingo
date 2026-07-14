@@ -172,6 +172,7 @@
   .causa-text h3 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--text-primary); margin-bottom: 1rem; }
   .causa-text p { color: var(--text-secondary); font-size: 1rem; margin-bottom: 1rem; }
   .causa-highlight { display: inline-block; background: var(--sol); color: var(--noche); font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 0.85rem; padding: 0.4rem 1rem; border-radius: 2px; letter-spacing: 0.05em; }
+  .causa-logo { width: 100%; max-width: 220px; border-radius: 12px; margin-bottom: 1rem; object-fit: contain; }
   .causa-photo { width: 100%; max-width: 320px; border-radius: 8px; margin-top: 1.5rem; object-fit: cover; }
 
   .dogs-row { display: flex; justify-content: center; gap: 2rem; padding: 2rem 0; flex-wrap: wrap; }
@@ -450,6 +451,15 @@
     font-weight: 600;
     color: var(--text-secondary);
   }
+  .sponsor-link { text-decoration: none; }
+  .sponsor-link:hover .sponsor-name { color: var(--gold); }
+  .sponsor-ig {
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+  .sponsor-link:hover .sponsor-ig { color: var(--gold); }
 
   .footer { padding: 3rem 1.5rem; text-align: center; background: var(--bg-alt); border-top: 1px solid var(--card-border); }
   .footer-logo { font-family: 'Telka Extended', system-ui, sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--salsa); margin-bottom: 0.5rem; }
