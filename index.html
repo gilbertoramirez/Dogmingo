@@ -236,6 +236,10 @@
     <h2 class="display section-title">Aparta tu lugar</h2>
     <div class="registro-layout">
       <div class="registro-info">
+        <div class="registro-venue-badge">
+          <img src="img/zitara-golf-horizontal-light.png" alt="Zitara Golf Club" class="registro-venue-logo">
+          <span class="label" style="color:var(--text-secondary);margin-top:0.5rem;display:block;">Sede oficial del evento</span>
+        </div>
         <h3>Reg&iacute;strate y obt&eacute;n tu Pasaporte Perruno</h3>
         <p>Completa el formulario para confirmar tu asistencia. Al finalizar recibir&aacute;s tu c&oacute;digo QR y pasaporte con 6 espacios para sellos digitales.</p>
         <p>El donativo de acceso ($100 MXN) se paga el d&iacute;a del evento en la entrada.</p>
@@ -302,33 +306,57 @@
             </div>
             <div class="terms-section">
               <div class="terms-header">
-                <h4>T&eacute;rminos, Condiciones y Reglamento: DOGmingo</h4>
-                <p>Al registrarte y asistir, aceptas cumplir con las siguientes normas de convivencia:</p>
+                <svg class="terms-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4H22C23.1 4 24 4.9 24 6V26C24 27.1 23.1 28 22 28H10C8.9 28 8 27.1 8 26V6C8 4.9 8.9 4 10 4Z"/><path d="M12 10H20"/><path d="M12 14H20"/><path d="M12 18H17"/></svg>
+                <div>
+                  <h4>T&eacute;rminos, Condiciones y Reglamento</h4>
+                  <p>Al registrarte y asistir, aceptas cumplir con las siguientes normas de convivencia:</p>
+                </div>
               </div>
-              <ul class="terms-list">
-                <li><strong>Uso de correa:</strong> Todas las mascotas deben portar collar/arn&eacute;s y correa en todo momento. Queda estrictamente prohibido dejarlas sueltas.</li>
-                <li><strong>L&iacute;mite de acceso:</strong> Se permite un m&aacute;ximo de un perro por adulto para garantizar una adecuada supervisi&oacute;n.</li>
-                <li><strong>Salud:</strong> La mascota debe contar con sus vacunas vigentes. Se proh&iacute;be el acceso a animales enfermos o hembras en celo.</li>
-                <li><strong>Higiene:</strong> Es obligaci&oacute;n del tutor portar bolsas biodegradables, recoger inmediatamente las heces de su mascota y, de ser posible, llevar agua para mitigar los orines.</li>
-                <li><strong>Control y Comportamiento:</strong> El tutor debe supervisar a su mascota en todo momento. El comit&eacute; organizador se reserva el derecho de admisi&oacute;n o permanencia de aquellos ejemplares que muestren agresividad, ladridos incontrolables o conductas que pongan en riesgo la seguridad familiar del evento.</li>
-              </ul>
+              <div class="terms-rules">
+                <div class="terms-rule">
+                  <span class="terms-rule-icon">&#x1F9B4;</span>
+                  <div><strong>Uso de correa</strong><p>Todas las mascotas deben portar collar/arn&eacute;s y correa en todo momento. Queda estrictamente prohibido dejarlas sueltas.</p></div>
+                </div>
+                <div class="terms-rule">
+                  <span class="terms-rule-icon">&#x1F415;</span>
+                  <div><strong>L&iacute;mite de acceso</strong><p>Se permite un m&aacute;ximo de un perro por adulto para garantizar una adecuada supervisi&oacute;n.</p></div>
+                </div>
+                <div class="terms-rule">
+                  <span class="terms-rule-icon">&#x1F489;</span>
+                  <div><strong>Salud</strong><p>La mascota debe contar con sus vacunas vigentes. Se proh&iacute;be el acceso a animales enfermos o hembras en celo.</p></div>
+                </div>
+                <div class="terms-rule">
+                  <span class="terms-rule-icon">&#x1F9F9;</span>
+                  <div><strong>Higiene</strong><p>Es obligaci&oacute;n del tutor portar bolsas biodegradables, recoger inmediatamente las heces de su mascota y, de ser posible, llevar agua para mitigar los orines.</p></div>
+                </div>
+                <div class="terms-rule">
+                  <span class="terms-rule-icon">&#x1F6E1;</span>
+                  <div><strong>Control y Comportamiento</strong><p>El tutor debe supervisar a su mascota en todo momento. El comit&eacute; organizador se reserva el derecho de admisi&oacute;n o permanencia de aquellos ejemplares que muestren agresividad, ladridos incontrolables o conductas que pongan en riesgo la seguridad familiar del evento.</p></div>
+                </div>
+              </div>
               <div class="terms-checkboxes">
-                <div class="form-checkbox-row">
-                  <input class="form-checkbox" type="checkbox" id="acceptTerms" name="acceptTerms" required>
+                <div class="terms-check-item">
+                  <input class="form-checkbox terms-cb" type="checkbox" id="acceptTerms" name="acceptTerms" required>
                   <label class="form-checkbox-label" for="acceptTerms">He le&iacute;do y acepto los <strong>T&eacute;rminos, Condiciones y Reglamento</strong> de convivencia descritos arriba.</label>
                 </div>
-                <div class="form-checkbox-row">
-                  <input class="form-checkbox" type="checkbox" id="acceptCarta" name="acceptCarta" required>
+                <div class="terms-check-item">
+                  <input class="form-checkbox terms-cb" type="checkbox" id="acceptCarta" name="acceptCarta" required>
                   <label class="form-checkbox-label" for="acceptCarta">He le&iacute;do y acepto los t&eacute;rminos de la <a href="docs/carta-responsiva.pdf" target="_blank" rel="noopener">Carta Responsiva y Deslinde Legal</a>.</label>
                 </div>
-                <div class="form-checkbox-row">
-                  <input class="form-checkbox" type="checkbox" id="acceptPrivacy" name="acceptPrivacy" required>
+                <div class="terms-check-item">
+                  <input class="form-checkbox terms-cb" type="checkbox" id="acceptPrivacy" name="acceptPrivacy" required>
                   <label class="form-checkbox-label" for="acceptPrivacy">Autorizo el tratamiento de mis datos conforme al <a href="docs/aviso-privacidad.pdf" target="_blank" rel="noopener">Aviso de Privacidad</a>.</label>
                 </div>
               </div>
+              <div class="terms-progress" id="termsProgress">
+                <div class="terms-progress-bar" id="termsProgressBar"></div>
+                <span class="terms-progress-text" id="termsProgressText">0 de 3 aceptados</span>
+              </div>
               <p class="terms-error" id="termsError"></p>
             </div>
-            <button type="submit" class="form-submit" id="submitBtn">Verificar correo electr&oacute;nico</button>
+            <button type="submit" class="form-submit form-submit-locked" id="submitBtn" disabled>
+              <span class="submit-lock-icon">&#x1F512;</span> Acepta los t&eacute;rminos para continuar
+            </button>
           </form>
           <div class="verification-step" id="verificationStep" style="display:none;">
             <div style="text-align:center;margin-bottom:1.5rem;">

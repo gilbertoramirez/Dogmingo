@@ -419,6 +419,33 @@ form.querySelectorAll('.form-input').forEach(function(input) {
   input.addEventListener('input', function() { var g = input.closest('.form-group'); if (g && g.classList.contains('has-error')) validateField(input); });
 });
 
+// Terms checkbox → progress bar + button enable
+(function initTermsProgress() {
+  var cbs = document.querySelectorAll('.terms-cb');
+  var bar = document.getElementById('termsProgressBar');
+  var txt = document.getElementById('termsProgressText');
+  var btn = document.getElementById('submitBtn');
+  function update() {
+    var checked = 0;
+    cbs.forEach(function(cb) { if (cb.checked) checked++; });
+    var pct = Math.round((checked / cbs.length) * 100);
+    bar.style.setProperty('--progress', pct + '%');
+    txt.textContent = checked + ' de ' + cbs.length + ' aceptados';
+    if (checked === cbs.length) {
+      btn.disabled = false;
+      btn.classList.remove('form-submit-locked');
+      btn.innerHTML = 'Verificar correo electrónico';
+    } else {
+      btn.disabled = true;
+      btn.classList.add('form-submit-locked');
+      btn.innerHTML = '<span class="submit-lock-icon">🔒</span> Acepta los términos para continuar';
+    }
+    document.getElementById('termsError').textContent = '';
+  }
+  cbs.forEach(function(cb) { cb.addEventListener('change', update); });
+  update();
+})();
+
 // Step 1: Send verification code
 form.addEventListener('submit', function(e) {
   e.preventDefault();
@@ -544,8 +571,15 @@ document.getElementById('changeEmail').addEventListener('click', function(e) {
   e.preventDefault();
   verificationStep.style.display = 'none';
   form.style.display = 'block';
-  submitBtn.disabled = false;
-  submitBtn.textContent = 'Verificar correo electrónico';
+  var allChecked = document.querySelectorAll('.terms-cb:not(:checked)').length === 0;
+  submitBtn.disabled = !allChecked;
+  if (allChecked) {
+    submitBtn.classList.remove('form-submit-locked');
+    submitBtn.innerHTML = 'Verificar correo electrónico';
+  } else {
+    submitBtn.classList.add('form-submit-locked');
+    submitBtn.innerHTML = '<span class="submit-lock-icon">🔒</span> Acepta los términos para continuar';
+  }
 });
 
 document.getElementById('downloadPassport').addEventListener('click', function() {
