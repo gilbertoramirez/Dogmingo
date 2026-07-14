@@ -498,8 +498,9 @@
     .dog-photo-strip::-webkit-scrollbar { display: none; }
     .dog-photo-strip img { width: 64px; height: 64px; border-width: 2px; flex-shrink: 0; }
     .hero .dog-photo-strip { justify-content: center; }
-    .dog-photo-strip.large { gap: 0.75rem; padding: 0.5rem 1.25rem; margin-left: -1.25rem; margin-right: -1.25rem; }
+    .dog-photo-strip.large { gap: 0.75rem; padding: 0.5rem 0; margin: 0; overflow-x: auto; }
     .dog-photo-strip.large img { width: 100px; height: 100px; flex-shrink: 0; }
+    .dog-gallery { overflow: hidden; }
 
     .nav-toggle { display: block; }
     .nav-links {
