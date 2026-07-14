@@ -548,6 +548,15 @@
     .stamp-input-area button { width: 100%; }
     .form-submit { font-size: 0.9rem; padding: 0.9rem; }
 
+    .sellos-lookup-card { padding: 1.5rem 1.25rem; border-radius: 10px; }
+    .sellos-lookup-form input { font-size: 1.1rem; padding: 1rem 1rem; }
+    .sellos-lookup-form button { padding: 0.9rem 1.25rem; font-size: 0.95rem; }
+    .sellos-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+    .sello-item { padding: 0.85rem 0.4rem; }
+    .sello-icon { font-size: 1.3rem; }
+    .sello-name { font-size: 0.7rem; }
+    .sellos-user-info { font-size: 1rem; }
+
     .location-name { font-size: 1.25rem; }
 
     .dogs-row canvas { width: 70px; height: 70px; }
@@ -573,6 +582,9 @@
     .stand-select { grid-template-columns: 1fr 1fr; }
     .hero .dog-photo-strip img:nth-child(n+4) { display: none; }
     .form-card { padding: 1.25rem 1rem; }
+    .sellos-lookup-card { padding: 1.25rem 1rem; }
+    .sellos-lookup-form input { font-size: 1rem; padding: 0.9rem 0.85rem; }
+    .sellos-grid { gap: 0.5rem; }
     .passport-section { padding: 0.75rem; }
     .stamp-tracker-grid { gap: 0.4rem; }
     .stamp-tracker-slot { font-size: 0.5rem; }
