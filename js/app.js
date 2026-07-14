@@ -336,25 +336,8 @@ function addStampCode() {
 function showSuccessScreen(registro, stamps) {
   currentUserData = registro;
   currentStamps = stamps;
-
   form.style.display = 'none';
   formSuccess.classList.add('visible');
-
-  var registroInfo = document.querySelector('.registro-info');
-  if (registroInfo) registroInfo.style.display = 'none';
-  var registroLayout = document.querySelector('.registro-layout');
-  if (registroLayout) registroLayout.style.gridTemplateColumns = '1fr';
-  document.getElementById('folioDisplay').textContent = registro.folio;
-
-  var qrCanvas = renderQRToCanvas(registro.folio, 256);
-  var qrArea = document.getElementById('qrArea');
-  qrArea.innerHTML = '';
-  qrArea.appendChild(qrCanvas);
-  var p = document.createElement('p');
-  p.textContent = 'Muestra este QR en cada stand';
-  qrArea.appendChild(p);
-
-  renderStampGrid(stamps);
   generatePassport(registro, stamps);
 }
 
