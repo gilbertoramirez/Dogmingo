@@ -25,28 +25,29 @@ function renderQRToCanvas(text, size) {
 // ══════════════════════════════════════════════════════
 var STAMP_SECRET = 'dgm2025zitara';
 var STAMP_MAP = [
-  { id: 1, name: 'Bendición Canina', type: 'actividad' },
-  { id: 2, name: 'Huellas del Alma', type: 'actividad' },
-  { id: 3, name: 'Adiestramiento', type: 'actividad' },
-  { id: 5, name: 'Mercadito Pet-Friendly', type: 'actividad' },
-  { id: 6, name: 'Pasarela de Adopción', type: 'actividad' },
-  { id: 7, name: 'Doggies Paradise', type: 'patrocinador' },
-  { id: 8, name: 'Freshly', type: 'patrocinador' },
-  { id: 9, name: "Ba'Alche", type: 'patrocinador' },
-  { id: 10, name: 'Zoo Bodega', type: 'patrocinador' },
-  { id: 11, name: 'Güesos', type: 'patrocinador' },
-  { id: 12, name: 'Edu.Can', type: 'patrocinador' },
-  { id: 13, name: 'Esperanza Canina', type: 'patrocinador' },
-  { id: 14, name: "Caro's Dog Club", type: 'patrocinador' },
-  { id: 15, name: 'Woof Munchies', type: 'patrocinador' },
-  { id: 16, name: 'VidaNúPet', type: 'patrocinador' },
-  { id: 17, name: 'Zitara', type: 'patrocinador' },
-  { id: 18, name: 'Zitara Golf Club', type: 'patrocinador' },
+  { id: 1, name: 'Bendición Canina', type: 'actividad', img: null },
+  { id: 2, name: 'Huellas del Alma', type: 'actividad', img: null },
+  { id: 3, name: 'Adiestramiento', type: 'actividad', img: null },
+  { id: 5, name: 'Mercadito Pet-Friendly', type: 'actividad', img: null },
+  { id: 6, name: 'Pasarela de Adopción', type: 'actividad', img: null },
+  { id: 7, name: 'Doggies Paradise', type: 'patrocinador', img: 'img/patrocinadores/DOGGIES%20PARADISE%20.jpeg' },
+  { id: 8, name: 'Freshly', type: 'patrocinador', img: 'img/patrocinadores/FRESHLY.jpeg' },
+  { id: 9, name: "Ba'Alche", type: 'patrocinador', img: 'img/patrocinadores/Logotipos%20Ba%27Alche-02%20(1).png' },
+  { id: 10, name: 'Zoo Bodega', type: 'patrocinador', img: 'img/patrocinadores/ZOO%20BODEGA.jpeg' },
+  { id: 11, name: 'Güesos', type: 'patrocinador', img: 'img/patrocinadores/GU%CC%88ESOS%20LOGO%20con%20slogan%20PNG.png' },
+  { id: 12, name: 'Edu.Can', type: 'patrocinador', img: 'img/patrocinadores/WhatsApp%20Image%202026-07-14%20at%201.09.11%20PM.jpeg' },
+  { id: 13, name: 'Esperanza Canina', type: 'patrocinador', img: 'img/patrocinadores/CUENTA%20ESPERANZA%20CANINA.jpeg' },
+  { id: 14, name: "Caro's Dog Club", type: 'patrocinador', img: 'img/patrocinadores/CDC_CAROS_DOG_CLUB.png' },
+  { id: 15, name: 'Woof Munchies', type: 'patrocinador', img: 'img/patrocinadores/WOOF_MUNCHIES.png' },
+  { id: 16, name: 'VidaNúPet', type: 'patrocinador', img: 'img/patrocinadores/VIDANUPET.png' },
+  { id: 17, name: 'Zitara', type: 'patrocinador', img: 'img/patrocinadores/ZITARA.png' },
+  { id: 18, name: 'Zitara Golf Club', type: 'patrocinador', img: 'img/patrocinadores/ZITARA_GOLF_CLUB.png' },
 ];
 var ALL_STAMP_IDS = STAMP_MAP.map(function(s) { return s.id; });
 var TOTAL_STAMPS = STAMP_MAP.length;
 var STAMP_NAME_MAP = {};
-STAMP_MAP.forEach(function(s) { STAMP_NAME_MAP[s.id] = s.name; });
+var STAMP_IMG_MAP = {};
+STAMP_MAP.forEach(function(s) { STAMP_NAME_MAP[s.id] = s.name; STAMP_IMG_MAP[s.id] = s.img; });
 
 function stampHash(folio, stand) {
   var s = folio + '-' + stand + '-' + STAMP_SECRET;
@@ -350,8 +351,16 @@ function renderStampGrid(stamps) {
   if (!grid) return;
   grid.innerHTML = '';
   STAMP_MAP.forEach(function(item) {
+    var has = stamps.indexOf(item.id) >= 0;
     var slot = document.createElement('div');
-    slot.className = 'stamp-tracker-slot' + (stamps.indexOf(item.id) >= 0 ? ' stamped' : '');
+    slot.className = 'stamp-tracker-slot' + (has ? ' stamped' : '');
+    if (has && item.img) {
+      var img = document.createElement('img');
+      img.src = item.img;
+      img.alt = item.name;
+      img.className = 'stamp-tracker-img';
+      slot.appendChild(img);
+    }
     var span = document.createElement('span');
     span.textContent = item.name;
     slot.appendChild(span);
@@ -716,7 +725,13 @@ function lookupSellos() {
         var has = d.stamps.indexOf(stamp.id) >= 0;
         var item = document.createElement('div');
         item.className = 'sello-item' + (has ? ' collected' : '');
-        item.innerHTML = '<div class="sello-icon">' + (has ? '🐾' : '○') + '</div><div class="sello-name">' + stamp.name + '</div>';
+        var iconHtml;
+        if (has && stamp.img) {
+          iconHtml = '<img src="' + stamp.img + '" alt="' + stamp.name + '" class="sello-img">';
+        } else {
+          iconHtml = '<div class="sello-icon">' + (has ? '🐾' : '○') + '</div>';
+        }
+        item.innerHTML = iconHtml + '<div class="sello-name">' + stamp.name + '</div>';
         grid.appendChild(item);
       });
       var pct = Math.round((d.stamps.length / TOTAL_STAMPS) * 100);
