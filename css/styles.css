@@ -335,6 +335,12 @@
   .map-open-link { display: block; text-align: center; padding: 0.6rem; background: var(--card-bg); border-top: 1px solid var(--card-border); font-family: system-ui, sans-serif; font-weight: 700; font-size: 0.8rem; color: var(--campo); text-decoration: none; transition: background 0.2s; }
   .map-open-link:hover { background: var(--bg-alt); }
 
+  .location-logo { display: block; max-width: 220px; height: auto; margin-bottom: 1.5rem; }
+
+  .footer-sponsors { display: flex; justify-content: center; gap: 3rem; margin-bottom: 2rem; flex-wrap: wrap; }
+  .footer-sponsor { text-align: center; }
+  .footer-sponsor-logo { max-width: 160px; height: auto; }
+
   .footer { padding: 3rem 1.5rem; text-align: center; background: var(--bg-alt); border-top: 1px solid var(--card-border); }
   .footer-logo { font-family: system-ui, sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--salsa); margin-bottom: 0.5rem; }
   .footer-tagline { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem; }
