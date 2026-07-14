@@ -498,7 +498,7 @@ app.post('/api/vendor/create', async (req, res) => {
   const { nombre, email, password, stand_num } = req.body || {};
   if (!nombre || !email || !password) return res.status(400).json({ error: 'Todos los campos son requeridos' });
 
-  const assignedStand = auth.admin ? (stand_num || 1) : auth.stand_num;
+  const assignedStand = auth.admin ? (parseInt(stand_num) || 1) : auth.stand;
   if (assignedStand < 1 || assignedStand > 6) return res.status(400).json({ error: 'Stand debe ser 1-6' });
 
   const db = getDb();
@@ -512,7 +512,7 @@ app.post('/api/vendor/create', async (req, res) => {
     return res.status(201).json({ ok: true, vendor: rows[0] });
   } catch (err) {
     console.error('Create vendor error:', err);
-    return res.status(500).json({ error: 'Failed to create vendor' });
+    return res.status(500).json({ error: 'Error al crear vendedor' });
   }
 });
 
