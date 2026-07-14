@@ -223,20 +223,38 @@
   .dog-name-field { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.3s ease; margin-bottom: 0; }
   .dog-name-field.visible { max-height: 100px; opacity: 1; margin-bottom: 1.25rem; }
 
-  .terms-section { margin-bottom: 1.5rem; background: var(--bg); border: 1px solid var(--card-border); border-radius: 4px; padding: 1.25rem; }
+  .terms-section { margin-bottom: 1.5rem; background: var(--bg); border: 1px solid var(--card-border); border-radius: 6px; padding: 1.5rem; }
+  .terms-header { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .terms-header .terms-icon { width: 28px; height: 28px; color: var(--salsa); flex-shrink: 0; margin-top: 0.1rem; }
+  .terms-header div { flex: 1; }
   .terms-header h4 { font-family: system-ui, sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.35rem; }
-  .terms-header p { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem; }
-  .terms-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--card-border); }
-  .terms-list li { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; padding-left: 1rem; position: relative; }
-  .terms-list li::before { content: ''; width: 5px; height: 5px; background: var(--salsa); border-radius: 50%; position: absolute; left: 0; top: 0.45em; }
-  .terms-list li strong { color: var(--text-primary); font-weight: 700; }
+  .terms-header p { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--text-secondary); margin: 0; }
+  .terms-rules { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--card-border); }
+  .terms-rule { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 4px; transition: border-color 0.2s; }
+  .terms-rule:hover { border-color: var(--campo); }
+  .terms-rule-icon { font-size: 1.3rem; flex-shrink: 0; line-height: 1; margin-top: 0.1rem; }
+  .terms-rule div { flex: 1; }
+  .terms-rule strong { font-family: system-ui, sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--text-primary); display: block; margin-bottom: 0.2rem; }
+  .terms-rule p { font-family: system-ui, sans-serif; font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45; margin: 0; }
   .terms-checkboxes { display: flex; flex-direction: column; gap: 0.75rem; }
-  .terms-checkboxes .form-checkbox-row { align-items: flex-start; }
-  .terms-checkboxes .form-checkbox-label { font-size: 0.8rem; line-height: 1.4; }
-  .terms-checkboxes .form-checkbox-label a { color: var(--campo); font-weight: 700; text-decoration: underline; }
-  .terms-checkboxes .form-checkbox-label a:hover { color: var(--salsa); }
-  .terms-checkboxes .form-checkbox { margin-top: 0.15rem; flex-shrink: 0; }
+  .terms-check-item { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.6rem 0.75rem; border-radius: 4px; border: 1px solid var(--card-border); background: var(--card-bg); transition: border-color 0.2s, background 0.2s; }
+  .terms-check-item:has(.form-checkbox:checked) { border-color: var(--campo); background: rgba(45,106,63,0.05); }
+  .terms-check-item .form-checkbox { margin-top: 0.15rem; flex-shrink: 0; }
+  .terms-check-item .form-checkbox-label { font-size: 0.8rem; line-height: 1.4; cursor: pointer; }
+  .terms-check-item .form-checkbox-label a { color: var(--campo); font-weight: 700; text-decoration: underline; }
+  .terms-check-item .form-checkbox-label a:hover { color: var(--salsa); }
+  .terms-progress { display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem; padding: 0.6rem 0; }
+  .terms-progress-bar { flex: 1; height: 6px; background: var(--card-border); border-radius: 3px; overflow: hidden; position: relative; }
+  .terms-progress-bar::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: var(--progress, 0%); background: var(--campo); border-radius: 3px; transition: width 0.3s ease; }
+  .terms-progress-text { font-family: system-ui, sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); white-space: nowrap; }
   .terms-error { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--salsa); text-align: center; margin-top: 0.75rem; min-height: 1rem; }
+  .form-submit-locked { background: var(--text-secondary); }
+  .form-submit-locked:hover { background: var(--text-secondary); transform: none; }
+  .form-submit:not(:disabled) { animation: btnPulse 0.4s ease; }
+  @keyframes btnPulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+  .submit-lock-icon { margin-right: 0.35rem; }
+  .registro-venue-badge { margin-bottom: 1.5rem; }
+  .registro-venue-logo { max-width: 200px; height: auto; }
 
   .form-submit {
     display: block; width: 100%; font-family: system-ui, sans-serif; font-weight: 800; font-size: 1rem;
@@ -354,8 +372,8 @@
   .location-logo { display: block; max-width: 220px; height: auto; margin-bottom: 1.5rem; }
 
   .footer-sponsors { display: flex; justify-content: center; gap: 3rem; margin-bottom: 2rem; flex-wrap: wrap; }
-  .footer-sponsor { text-align: center; }
-  .footer-sponsor-logo { max-width: 160px; height: auto; }
+  .footer-sponsor { text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .footer-sponsor-logo { width: 160px; height: 160px; object-fit: contain; }
 
   .footer { padding: 3rem 1.5rem; text-align: center; background: var(--bg-alt); border-top: 1px solid var(--card-border); }
   .footer-logo { font-family: system-ui, sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--salsa); margin-bottom: 0.5rem; }
