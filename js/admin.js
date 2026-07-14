@@ -385,6 +385,33 @@ function selfChangePassword() {
   });
 }
 
+// CREATE HELPER
+function createHelper() {
+  var nombre = document.getElementById('helpNombre').value.trim();
+  var email = document.getElementById('helpEmail').value.trim();
+  var password = document.getElementById('helpPassword').value;
+  var msg = document.getElementById('helpMsg');
+
+  if (!nombre || !email || !password) { msg.className = 'form-msg error'; msg.textContent = 'Todos los campos son requeridos.'; return; }
+  if (password.length < 4) { msg.className = 'form-msg error'; msg.textContent = 'La contraseña debe tener al menos 4 caracteres.'; return; }
+
+  msg.className = 'form-msg'; msg.textContent = '';
+
+  api('/api/vendor/create', {
+    method: 'POST',
+    body: { nombre: nombre, email: email, password: password }
+  }).then(function (d) {
+    msg.className = 'form-msg success';
+    msg.textContent = 'Ayudante "' + d.vendor.nombre + '" creado para Stand ' + d.vendor.stand_num + '.';
+    document.getElementById('helpNombre').value = '';
+    document.getElementById('helpEmail').value = '';
+    document.getElementById('helpPassword').value = '';
+  }).catch(function (err) {
+    msg.className = 'form-msg error';
+    msg.textContent = err.message;
+  });
+}
+
 // CHANGE PASSWORD (admin modal)
 function showChangePassword(email, nombre) {
   var existing = document.getElementById('pwModal');
