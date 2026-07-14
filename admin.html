@@ -196,6 +196,14 @@
             <span class="stat-label">Vendedores</span>
           </div>
         </div>
+
+        <h3 style="margin-top:2rem;">Usuarios registrados</h3>
+        <div class="field" style="margin-top:0.75rem;">
+          <input type="text" id="registroSearch" placeholder="Buscar por nombre, correo o folio..." oninput="filterRegistros()">
+        </div>
+        <div class="registro-list" id="registroList">
+          <p class="empty-msg">Cargando...</p>
+        </div>
       </div>
     </div>
 

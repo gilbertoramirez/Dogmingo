@@ -3,7 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { getDb, registros, sellos, vendedores } = require('./db');
 const { createToken, verifyToken, hashPassword } = require('./api/_auth');
-const { eq, or, and, asc, count } = require('drizzle-orm');
+const { eq, or, and, asc, desc, count } = require('drizzle-orm');
 const nodemailer = require('nodemailer');
 const { neon } = require('@neondatabase/serverless');
 
@@ -556,6 +556,46 @@ app.post('/api/vendor/change-password', async (req, res) => {
   } catch (err) {
     console.error('Change password error:', err);
     return res.status(500).json({ error: 'Error al cambiar contraseña' });
+  }
+});
+
+// ── Admin: List registros ──
+app.get('/api/admin/registros', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth || !auth.admin) return res.status(403).json({ error: 'Acceso de administrador requerido' });
+
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+
+  try {
+    const regs = await db.select({
+      folio: registros.folio, nombre: registros.nombre, apellido: registros.apellido,
+      email: registros.email, telefono: registros.telefono,
+      adultos: registros.adultos, ninos: registros.ninos,
+      trae_perro: registros.trae_perro, nombre_perro: registros.nombre_perro,
+      created_at: registros.created_at,
+    }).from(registros).orderBy(desc(registros.created_at));
+
+    const allStamps = await db.select({
+      folio: sellos.folio, stand_num: sellos.stand_num,
+    }).from(sellos);
+
+    const stampMap = {};
+    allStamps.forEach(s => {
+      if (!stampMap[s.folio]) stampMap[s.folio] = [];
+      stampMap[s.folio].push(s.stand_num);
+    });
+
+    const result = regs.map(r => ({
+      ...r,
+      stamps: stampMap[r.folio] || [],
+    }));
+
+    return res.json({ ok: true, registros: result });
+  } catch (err) {
+    console.error('Admin registros error:', err);
+    return res.status(500).json({ error: 'Error al cargar registros' });
   }
 });
 

@@ -315,6 +315,8 @@ function loadVendors() {
     });
 }
 
+var allRegistros = [];
+
 function loadStats() {
   api('/api/vendor/list')
     .then(function (d) {
@@ -325,6 +327,62 @@ function loadStats() {
       }
     })
     .catch(function () {});
+
+  api('/api/admin/registros')
+    .then(function (d) {
+      allRegistros = d.registros || [];
+      renderRegistros(allRegistros);
+    })
+    .catch(function () {
+      document.getElementById('registroList').innerHTML = '<p class="empty-msg">Error al cargar registros.</p>';
+    });
+}
+
+function filterRegistros() {
+  var q = document.getElementById('registroSearch').value.toLowerCase().trim();
+  if (!q) { renderRegistros(allRegistros); return; }
+  var filtered = allRegistros.filter(function (r) {
+    return (r.nombre + ' ' + r.apellido).toLowerCase().indexOf(q) >= 0 ||
+      r.email.toLowerCase().indexOf(q) >= 0 ||
+      r.folio.toLowerCase().indexOf(q) >= 0 ||
+      r.telefono.indexOf(q) >= 0;
+  });
+  renderRegistros(filtered);
+}
+
+function renderRegistros(list) {
+  var container = document.getElementById('registroList');
+  if (list.length === 0) {
+    container.innerHTML = '<p class="empty-msg">No se encontraron registros.</p>';
+    return;
+  }
+  container.innerHTML = '';
+  list.forEach(function (r) {
+    var stamps = r.stamps || [];
+    var stampDots = '';
+    for (var i = 1; i <= 6; i++) {
+      var has = stamps.indexOf(i) >= 0;
+      stampDots += '<span class="reg-stamp-dot' + (has ? ' filled' : '') + '">' + i + '</span>';
+    }
+    var date = r.created_at ? new Date(r.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' }) : '';
+    var perro = r.trae_perro && r.nombre_perro ? ' · Perro: ' + r.nombre_perro : '';
+    var item = document.createElement('div');
+    item.className = 'registro-item';
+    item.innerHTML =
+      '<div class="registro-item-header">' +
+        '<strong>' + r.nombre + ' ' + r.apellido + '</strong>' +
+        '<span class="folio-badge">' + r.folio + '</span>' +
+      '</div>' +
+      '<div class="registro-item-details">' +
+        '<p>' + r.email + ' · ' + r.telefono + '</p>' +
+        '<p>' + r.adultos + ' adulto(s)' + (r.ninos > 0 ? ', ' + r.ninos + ' niño(s)' : '') + perro + ' · ' + date + '</p>' +
+      '</div>' +
+      '<div class="registro-item-stamps">' +
+        '<span class="reg-stamps-label">' + stamps.length + '/6</span>' +
+        stampDots +
+      '</div>';
+    container.appendChild(item);
+  });
 }
 
 // CREATE VENDOR
