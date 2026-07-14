@@ -32,6 +32,7 @@ const vendedores = pgTable('vendedores', {
   password_hash: text('password_hash').notNull(),
   stand_num: integer('stand_num').notNull(),
   es_admin: boolean('es_admin').default(false),
+  es_subadmin: boolean('es_subadmin').default(false),
   activo: boolean('activo').default(true),
   created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
 });

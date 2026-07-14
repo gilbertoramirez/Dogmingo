@@ -64,9 +64,13 @@ app.get('/api/setup', async (req, res) => {
         password_hash TEXT NOT NULL,
         stand_num     INTEGER NOT NULL,
         es_admin      BOOLEAN DEFAULT FALSE,
+        es_subadmin   BOOLEAN DEFAULT FALSE,
         activo        BOOLEAN DEFAULT TRUE,
         created_at    TIMESTAMPTZ DEFAULT NOW()
       )
+    `;
+    await sql`
+      ALTER TABLE vendedores ADD COLUMN IF NOT EXISTS es_subadmin BOOLEAN DEFAULT FALSE
     `;
     const tables = await sql`
       SELECT table_name FROM information_schema.tables
@@ -387,7 +391,7 @@ app.post('/api/vendor/login', async (req, res) => {
     const hash = hashPassword(password);
     const rows = await db.select({
       id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email,
-      stand_num: vendedores.stand_num, es_admin: vendedores.es_admin,
+      stand_num: vendedores.stand_num, es_admin: vendedores.es_admin, es_subadmin: vendedores.es_subadmin,
     }).from(vendedores).where(
       and(eq(vendedores.email, email), eq(vendedores.password_hash, hash), eq(vendedores.activo, true))
     );
@@ -395,7 +399,7 @@ app.post('/api/vendor/login', async (req, res) => {
 
     const vendor = rows[0];
     const token = createToken(vendor);
-    return res.json({ ok: true, token, vendor: { nombre: vendor.nombre, stand_num: vendor.stand_num, es_admin: vendor.es_admin } });
+    return res.json({ ok: true, token, vendor: { nombre: vendor.nombre, stand_num: vendor.stand_num, es_admin: vendor.es_admin, es_subadmin: vendor.es_subadmin } });
   } catch (err) {
     console.error('Login error:', err);
     return res.status(500).json({ error: 'Login failed' });
@@ -518,6 +522,7 @@ app.post('/api/vendor/create', async (req, res) => {
   const token = (req.headers.authorization || '').replace('Bearer ', '');
   const auth = verifyToken(token);
   if (!auth) return res.status(403).json({ error: 'No autorizado' });
+  if (!auth.admin && !auth.subadmin) return res.status(403).json({ error: 'No tienes permisos para crear vendedores' });
 
   const { nombre, email, password, stand_num } = req.body || {};
   if (!nombre || !email || !password) return res.status(400).json({ error: 'Todos los campos son requeridos' });
@@ -525,13 +530,15 @@ app.post('/api/vendor/create', async (req, res) => {
   const assignedStand = auth.admin ? (parseInt(stand_num) || 1) : auth.stand;
   if (assignedStand < 1 || assignedStand > 6) return res.status(400).json({ error: 'Stand debe ser 1-6' });
 
+  const isSubadmin = auth.admin ? true : false;
+
   const db = getDb();
   if (!db) return res.status(500).json({ error: 'Database not configured' });
 
   try {
     const hash = hashPassword(password);
-    const rows = await db.insert(vendedores).values({ nombre, email, password_hash: hash, stand_num: assignedStand })
-      .onConflictDoUpdate({ target: vendedores.email, set: { nombre, password_hash: hash, stand_num: assignedStand, activo: true } })
+    const rows = await db.insert(vendedores).values({ nombre, email, password_hash: hash, stand_num: assignedStand, es_subadmin: isSubadmin })
+      .onConflictDoUpdate({ target: vendedores.email, set: { nombre, password_hash: hash, stand_num: assignedStand, es_subadmin: isSubadmin, activo: true } })
       .returning({ id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email, stand_num: vendedores.stand_num, activo: vendedores.activo });
     return res.status(201).json({ ok: true, vendor: rows[0] });
   } catch (err) {

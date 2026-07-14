@@ -51,13 +51,16 @@ function buildMenu() {
   var grid = document.getElementById('menuGrid');
   grid.innerHTML = '';
   var isAdmin = vendor && vendor.es_admin;
+  var isSubadmin = vendor && vendor.es_subadmin;
   var standNum = vendor ? vendor.stand_num : 0;
 
   var items = [];
 
   if (!isAdmin) {
     items.push({ id: 'scanner', icon: '📷', label: 'Escáner', desc: 'Escanear QR y sellar pasaporte' });
-    items.push({ id: 'helpers', icon: '👥', label: 'Equipo', desc: 'Agregar vendedores a tu stand' });
+    if (isSubadmin) {
+      items.push({ id: 'helpers', icon: '👥', label: 'Equipo', desc: 'Agregar vendedores a tu stand' });
+    }
   }
 
   if (isAdmin) {
@@ -143,8 +146,10 @@ function showDashboard() {
 
   if (isAdmin) {
     document.getElementById('dashRole').textContent = 'Administrador general';
-  } else {
+  } else if (vendor.es_subadmin) {
     document.getElementById('dashRole').textContent = 'Sub-admin · Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
+  } else {
+    document.getElementById('dashRole').textContent = 'Vendedor · Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
     document.getElementById('standIndicator').textContent = 'Stand ' + standNum + ' — ' + STATION_NAMES[standNum - 1];
   }
 
