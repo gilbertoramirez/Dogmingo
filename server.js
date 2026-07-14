@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const { getDb, registros, sellos, vendedores } = require('./db');
 const { createToken, verifyToken, hashPassword } = require('./api/_auth');
 const { eq, and, asc, count } = require('drizzle-orm');
-const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 const { neon } = require('@neondatabase/serverless');
 
 const CODE_SECRET = process.env.VENDOR_SECRET || 'dgm2025-vendor-key';
@@ -98,10 +98,22 @@ function signCode(email, code, expiresAt) {
   return crypto.createHmac('sha256', CODE_SECRET).update(email + ':' + code + ':' + expiresAt).digest('hex').slice(0, 16);
 }
 
+function getMailTransport() {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
+    },
+  });
+}
+
 app.post('/api/send-code', async (req, res) => {
   const { email } = req.body || {};
   if (!email) return res.status(400).json({ error: 'Email required' });
-  if (!process.env.RESEND_API_KEY) return res.status(500).json({ error: 'Email service not configured' });
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+    return res.status(500).json({ error: 'Email service not configured' });
+  }
 
   try {
     const code = crypto.randomInt(100000, 999999).toString();
@@ -109,9 +121,9 @@ app.post('/api/send-code', async (req, res) => {
     const signature = signCode(email.toLowerCase().trim(), code, expiresAt);
     const token = Buffer.from(JSON.stringify({ email: email.toLowerCase().trim(), code, exp: expiresAt, sig: signature })).toString('base64');
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'Dogmingo <onboarding@resend.dev>',
+    const transporter = getMailTransport();
+    await transporter.sendMail({
+      from: process.env.GMAIL_USER,
       to: email,
       subject: 'Tu código de verificación - Dogmingo',
       html: [
@@ -130,7 +142,7 @@ app.post('/api/send-code', async (req, res) => {
     return res.json({ ok: true, token });
   } catch (err) {
     console.error('Send code error:', err);
-    return res.status(500).json({ error: 'Failed to send code' });
+    return res.status(500).json({ error: 'Failed to send code: ' + err.message });
   }
 });
 
@@ -260,16 +272,16 @@ app.post('/api/send-passport', async (req, res) => {
   if (!email || !nombre || !folio || !passportImage) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
-  if (!process.env.RESEND_API_KEY) {
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
     return res.status(500).json({ error: 'Email service not configured' });
   }
 
   try {
-    const resend = new Resend(process.env.RESEND_API_KEY);
     const base64Data = passportImage.replace(/^data:image\/png;base64,/, '');
+    const transporter = getMailTransport();
 
-    await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'Dogmingo <onboarding@resend.dev>',
+    await transporter.sendMail({
+      from: process.env.GMAIL_USER,
       to: email,
       subject: 'Tu Pasaporte Perruno - Dogmingo',
       html: [
@@ -291,7 +303,7 @@ app.post('/api/send-passport', async (req, res) => {
         'Evento en beneficio de <strong>Esperanza Canina</strong>',
         '</p></div>'
       ].join('\n'),
-      attachments: [{ filename: 'pasaporte-perruno-dogmingo.png', content: base64Data }]
+      attachments: [{ filename: 'pasaporte-perruno-dogmingo.png', content: Buffer.from(base64Data, 'base64') }]
     });
     return res.json({ ok: true });
   } catch (err) {
