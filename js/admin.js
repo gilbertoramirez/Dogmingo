@@ -670,10 +670,7 @@ function realizarRifa() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ folio: winner.folio })
       }).then(function () {
-        rifaEligible = rifaEligible.filter(function (r) { return r.folio !== winner.folio; });
-        document.getElementById('rifaCount').textContent = rifaEligible.length + ' participante(s) con 6+ sellos';
-        btn.disabled = rifaEligible.length === 0;
-        btn.textContent = rifaEligible.length > 0 ? 'Sortear de nuevo' : 'No hay más participantes';
+        loadRifa();
       });
     }
   }, 100);
