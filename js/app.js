@@ -36,7 +36,7 @@ var STAMP_MAP = [
   { id: 10, name: 'Zoo Bodega', type: 'patrocinador', img: 'img/patrocinadores/ZOO%20BODEGA.jpeg' },
   { id: 11, name: 'Güesos', type: 'patrocinador', img: 'img/patrocinadores/GU%CC%88ESOS%20LOGO%20con%20slogan%20PNG.png' },
   { id: 12, name: 'Edu.Can', type: 'patrocinador', img: 'img/patrocinadores/WhatsApp%20Image%202026-07-14%20at%201.09.11%20PM.jpeg' },
-  { id: 13, name: 'Esperanza Canina', type: 'patrocinador', img: 'img/patrocinadores/CUENTA%20ESPERANZA%20CANINA.jpeg' },
+  { id: 13, name: 'Esperanza Canina', type: 'patrocinador', img: 'img/patrocinadores/EsperanzaCaninca.jpeg' },
   { id: 14, name: "Caro's Dog Club", type: 'patrocinador', img: 'img/patrocinadores/CDC_CAROS_DOG_CLUB.png' },
   { id: 15, name: 'Woof Munchies', type: 'patrocinador', img: 'img/patrocinadores/WOOF_MUNCHIES.png' },
   { id: 16, name: 'VidaNúPet', type: 'patrocinador', img: 'img/patrocinadores/VIDANUPET.png' },
