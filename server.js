@@ -404,7 +404,11 @@ app.post('/api/vendor/login', async (req, res) => {
       id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email,
       stand_num: vendedores.stand_num, es_admin: vendedores.es_admin, es_subadmin: vendedores.es_subadmin,
     }).from(vendedores).where(
-      and(eq(vendedores.email, email), eq(vendedores.password_hash, hash), eq(vendedores.activo, true))
+      and(
+        or(eq(vendedores.email, email), eq(vendedores.telefono, email)),
+        eq(vendedores.password_hash, hash),
+        eq(vendedores.activo, true)
+      )
     );
     if (rows.length === 0) return res.status(401).json({ error: 'Credenciales inválidas' });
 
@@ -535,8 +539,12 @@ app.post('/api/vendor/create', async (req, res) => {
   if (!auth) return res.status(403).json({ error: 'No autorizado' });
   if (!auth.admin && !auth.subadmin) return res.status(403).json({ error: 'No tienes permisos para crear vendedores' });
 
-  const { nombre, email, password, stand_num } = req.body || {};
-  if (!nombre || !email || !password) return res.status(400).json({ error: 'Todos los campos son requeridos' });
+  const { nombre, email: identifier, password, stand_num } = req.body || {};
+  if (!nombre || !identifier || !password) return res.status(400).json({ error: 'Todos los campos son requeridos' });
+
+  const isPhone = /^\d{10}$/.test(identifier.replace(/\D/g, ''));
+  const vendorEmail = isPhone ? identifier.replace(/\D/g, '') : identifier;
+  const vendorTelefono = isPhone ? identifier.replace(/\D/g, '') : null;
 
   const assignedStand = auth.admin ? (parseInt(stand_num) || 1) : auth.stand;
   if (ALL_STAMP_IDS.indexOf(assignedStand) === -1) return res.status(400).json({ error: 'Stand inválido' });
@@ -548,8 +556,8 @@ app.post('/api/vendor/create', async (req, res) => {
 
   try {
     const hash = hashPassword(password);
-    const rows = await db.insert(vendedores).values({ nombre, email, password_hash: hash, stand_num: assignedStand, es_subadmin: isSubadmin })
-      .onConflictDoUpdate({ target: vendedores.email, set: { nombre, password_hash: hash, stand_num: assignedStand, es_subadmin: isSubadmin, activo: true } })
+    const rows = await db.insert(vendedores).values({ nombre, email: vendorEmail, telefono: vendorTelefono, password_hash: hash, stand_num: assignedStand, es_subadmin: isSubadmin })
+      .onConflictDoUpdate({ target: vendedores.email, set: { nombre, password_hash: hash, stand_num: assignedStand, es_subadmin: isSubadmin, telefono: vendorTelefono, activo: true } })
       .returning({ id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email, stand_num: vendedores.stand_num, activo: vendedores.activo });
     return res.status(201).json({ ok: true, vendor: rows[0] });
   } catch (err) {
@@ -755,6 +763,7 @@ async function autoMigrate() {
     const sql = neon(process.env.DATABASE_URL);
     await sql`ALTER TABLE vendedores ADD COLUMN IF NOT EXISTS es_subadmin BOOLEAN DEFAULT FALSE`;
     await sql`ALTER TABLE registros ADD COLUMN IF NOT EXISTS gano_rifa BOOLEAN DEFAULT FALSE`;
+    await sql`ALTER TABLE vendedores ADD COLUMN IF NOT EXISTS telefono TEXT`;
   } catch (err) {
     console.error('Auto-migrate error (non-fatal):', err.message);
   }

@@ -30,6 +30,7 @@ const vendedores = pgTable('vendedores', {
   id: serial('id').primaryKey(),
   nombre: text('nombre').notNull(),
   email: text('email').unique().notNull(),
+  telefono: text('telefono'),
   password_hash: text('password_hash').notNull(),
   stand_num: integer('stand_num').notNull(),
   es_admin: boolean('es_admin').default(false),
