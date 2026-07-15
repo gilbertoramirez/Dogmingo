@@ -606,37 +606,18 @@ function changePassword(email) {
 var rifaEligible = [];
 
 function loadRifa() {
-  var list = document.getElementById('rifaList');
   var countEl = document.getElementById('rifaCount');
   var btn = document.getElementById('rifaBtn');
-  list.innerHTML = '<p class="empty-msg">Cargando...</p>';
 
   api('/api/admin/raffle-eligible')
     .then(function (d) {
       rifaEligible = d.eligible || [];
-      countEl.textContent = rifaEligible.length + ' participante(s) con 6+ sellos';
+      countEl.textContent = rifaEligible.length + ' participante(s) elegible(s)';
       btn.disabled = rifaEligible.length === 0;
-      if (rifaEligible.length === 0) {
-        list.innerHTML = '<p class="empty-msg">Ningún usuario tiene 6 o más sellos aún.</p>';
-        return;
-      }
-      list.innerHTML = '';
-      rifaEligible.forEach(function (r) {
-        var item = document.createElement('div');
-        item.className = 'registro-item';
-        item.innerHTML =
-          '<div class="registro-item-header">' +
-            '<strong>' + r.nombre + ' ' + r.apellido + '</strong>' +
-            '<span class="folio-badge">' + r.folio + '</span>' +
-          '</div>' +
-          '<div class="registro-item-details">' +
-            '<p>' + r.email + ' · ' + r.telefono + '</p>' +
-          '</div>';
-        list.innerHTML += item.outerHTML;
-      });
+      btn.textContent = rifaEligible.length > 0 ? 'Realizar Sorteo' : 'No hay participantes';
     })
     .catch(function () {
-      list.innerHTML = '<p class="empty-msg">Error al cargar participantes.</p>';
+      countEl.textContent = 'Error al cargar participantes.';
     });
 }
 
@@ -646,34 +627,44 @@ function realizarRifa() {
   var btn = document.getElementById('rifaBtn');
   btn.disabled = true;
   btn.textContent = 'Sorteando...';
-  winnerEl.style.display = 'none';
+  winnerEl.style.display = 'block';
+  winnerEl.className = 'rifa-winner shuffling';
 
   var shuffleCount = 0;
+  var totalShuffles = 40;
+  var baseSpeed = 80;
   var interval = setInterval(function () {
     var rand = rifaEligible[Math.floor(Math.random() * rifaEligible.length)];
-    winnerEl.style.display = 'block';
-    winnerEl.className = 'rifa-winner shuffling';
     winnerEl.innerHTML = '<p class="rifa-winner-name">' + rand.nombre + ' ' + rand.apellido + '</p>';
     shuffleCount++;
-    if (shuffleCount >= 20) {
+    if (shuffleCount >= totalShuffles) {
       clearInterval(interval);
-      var winner = rifaEligible[Math.floor(Math.random() * rifaEligible.length)];
-      winnerEl.className = 'rifa-winner final';
-      winnerEl.innerHTML =
-        '<h3>🎉 ¡Ganador(a)!</h3>' +
-        '<p class="rifa-winner-name">' + winner.nombre + ' ' + winner.apellido + '</p>' +
-        '<p class="rifa-winner-details">' + winner.email + '</p>' +
-        '<p class="rifa-winner-details">Folio: ' + winner.folio + '</p>' +
-        '<p class="rifa-winner-details">' + winner.telefono + '</p>';
-      api('/api/admin/raffle-winner', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ folio: winner.folio })
-      }).then(function () {
-        loadRifa();
-      });
+      var slowDown = 0;
+      var slowInterval = setInterval(function () {
+        var rand2 = rifaEligible[Math.floor(Math.random() * rifaEligible.length)];
+        winnerEl.innerHTML = '<p class="rifa-winner-name">' + rand2.nombre + ' ' + rand2.apellido + '</p>';
+        slowDown++;
+        if (slowDown >= 10) {
+          clearInterval(slowInterval);
+          var winner = rifaEligible[Math.floor(Math.random() * rifaEligible.length)];
+          winnerEl.className = 'rifa-winner final';
+          winnerEl.innerHTML =
+            '<h3>🎉 ¡Ganador(a)!</h3>' +
+            '<p class="rifa-winner-name">' + winner.nombre + ' ' + winner.apellido + '</p>' +
+            '<p class="rifa-winner-details">' + winner.email + '</p>' +
+            '<p class="rifa-winner-details">Folio: ' + winner.folio + '</p>' +
+            '<p class="rifa-winner-details">' + winner.telefono + '</p>';
+          api('/api/admin/raffle-winner', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ folio: winner.folio })
+          }).then(function () {
+            loadRifa();
+          });
+        }
+      }, 300);
     }
-  }, 100);
+  }, baseSpeed);
 }
 
 function seedTestData() {
