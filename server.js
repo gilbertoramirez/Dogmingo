@@ -755,6 +755,51 @@ app.post('/api/admin/raffle-winner', async (req, res) => {
   }
 });
 
+// ── Seed test data (temporary, remove before production) ──
+app.post('/api/admin/seed-test', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth || !auth.admin) return res.status(403).json({ error: 'Admin requerido' });
+
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+
+  const testUsers = [
+    { nombre: 'María', apellido: 'López', email: 'maria.test@demo.com', telefono: '4491000001', adultos: 2, ninos: 1, trae_perro: true, nombre_perro: 'Firulais' },
+    { nombre: 'Carlos', apellido: 'Hernández', email: 'carlos.test@demo.com', telefono: '4491000002', adultos: 1, ninos: 0, trae_perro: true, nombre_perro: 'Luna' },
+    { nombre: 'Ana', apellido: 'García', email: 'ana.test@demo.com', telefono: '4491000003', adultos: 2, ninos: 2, trae_perro: false, nombre_perro: '' },
+    { nombre: 'Roberto', apellido: 'Martínez', email: 'roberto.test@demo.com', telefono: '4491000004', adultos: 1, ninos: 0, trae_perro: true, nombre_perro: 'Max' },
+    { nombre: 'Sofía', apellido: 'Ramírez', email: 'sofia.test@demo.com', telefono: '4491000005', adultos: 1, ninos: 1, trae_perro: true, nombre_perro: 'Coco' },
+    { nombre: 'Diego', apellido: 'Torres', email: 'diego.test@demo.com', telefono: '4491000006', adultos: 2, ninos: 0, trae_perro: true, nombre_perro: 'Rocky' },
+    { nombre: 'Laura', apellido: 'Sánchez', email: 'laura.test@demo.com', telefono: '4491000007', adultos: 1, ninos: 0, trae_perro: false, nombre_perro: '' },
+    { nombre: 'Pedro', apellido: 'Flores', email: 'pedro.test@demo.com', telefono: '4491000008', adultos: 1, ninos: 3, trae_perro: true, nombre_perro: 'Canela' },
+  ];
+
+  try {
+    let created = 0;
+    for (const user of testUsers) {
+      const folio = 'DGM-TEST' + (created + 1);
+      try {
+        await db.insert(registros).values({ folio, ...user }).onConflictDoNothing();
+        created++;
+
+        // Assign random stamps (6-10 per user so most qualify for raffle)
+        const numStamps = 6 + Math.floor(Math.random() * 5);
+        const shuffled = ALL_STAMP_IDS.slice().sort(() => Math.random() - 0.5);
+        const userStamps = shuffled.slice(0, numStamps);
+        for (const stampId of userStamps) {
+          const code = makeStampCode(folio, stampId);
+          await db.insert(sellos).values({ folio, stand_num: stampId, stamp_code: code }).onConflictDoNothing();
+        }
+      } catch (e) { /* skip duplicates */ }
+    }
+    return res.json({ ok: true, message: created + ' registros de prueba creados con sellos aleatorios (6-10 cada uno)' });
+  } catch (err) {
+    console.error('Seed error:', err);
+    return res.status(500).json({ error: 'Error al crear datos de prueba' });
+  }
+});
+
 let migrated = false;
 async function autoMigrate() {
   if (migrated || !process.env.DATABASE_URL) return;

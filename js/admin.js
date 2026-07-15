@@ -679,6 +679,21 @@ function realizarRifa() {
   }, 100);
 }
 
+function seedTestData() {
+  var btn = document.getElementById('seedBtn');
+  btn.disabled = true;
+  btn.textContent = 'Generando...';
+  api('/api/admin/seed-test', { method: 'POST' })
+    .then(function (d) {
+      btn.textContent = d.message;
+      loadRifa();
+    })
+    .catch(function (err) {
+      btn.textContent = 'Error: ' + err.message;
+      btn.disabled = false;
+    });
+}
+
 // ── INIT ──
 if (token && vendor) {
   showDashboard();
