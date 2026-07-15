@@ -19,6 +19,7 @@ var STAMP_MAP = [
 ];
 var ALL_STAMP_IDS = STAMP_MAP.map(function(s) { return s.id; });
 var TOTAL_STAMPS = STAMP_MAP.length;
+var RAFFLE_STAMPS = 6;
 var STAMP_NAME_MAP = {};
 STAMP_MAP.forEach(function(s) { STAMP_NAME_MAP[s.id] = s.name; });
 var token = sessionStorage.getItem('dgm_vendor_token');
@@ -111,7 +112,7 @@ function buildMenu() {
   if (isAdmin) {
     items.push({ id: 'vendors', icon: '🏪', label: 'Vendedores', desc: 'Crear y gestionar vendedores por stand' });
     items.push({ id: 'registros', icon: '📊', label: 'Registros', desc: 'Métricas y usuarios registrados' });
-    items.push({ id: 'rifa', icon: '🎟️', label: 'Rifa', desc: 'Sorteo entre quienes completaron todos los sellos' });
+    items.push({ id: 'rifa', icon: '🎟️', label: 'Rifa', desc: 'Sorteo entre quienes tienen 6+ sellos' });
   }
 
   items.push({ id: 'account', icon: '🔑', label: 'Mi cuenta', desc: 'Cambiar contraseña y datos' });
@@ -613,10 +614,10 @@ function loadRifa() {
   api('/api/admin/raffle-eligible')
     .then(function (d) {
       rifaEligible = d.eligible || [];
-      countEl.textContent = rifaEligible.length + ' participante(s) con todos los sellos';
+      countEl.textContent = rifaEligible.length + ' participante(s) con 6+ sellos';
       btn.disabled = rifaEligible.length === 0;
       if (rifaEligible.length === 0) {
-        list.innerHTML = '<p class="empty-msg">Ningún usuario ha completado todos los sellos aún.</p>';
+        list.innerHTML = '<p class="empty-msg">Ningún usuario tiene 6 o más sellos aún.</p>';
         return;
       }
       list.innerHTML = '';
@@ -664,8 +665,16 @@ function realizarRifa() {
         '<p class="rifa-winner-details">' + winner.email + '</p>' +
         '<p class="rifa-winner-details">Folio: ' + winner.folio + '</p>' +
         '<p class="rifa-winner-details">' + winner.telefono + '</p>';
-      btn.disabled = false;
-      btn.textContent = 'Sortear de nuevo';
+      api('/api/admin/raffle-winner', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ folio: winner.folio })
+      }).then(function () {
+        rifaEligible = rifaEligible.filter(function (r) { return r.folio !== winner.folio; });
+        document.getElementById('rifaCount').textContent = rifaEligible.length + ' participante(s) con 6+ sellos';
+        btn.disabled = rifaEligible.length === 0;
+        btn.textContent = rifaEligible.length > 0 ? 'Sortear de nuevo' : 'No hay más participantes';
+      });
     }
   }, 100);
 }

@@ -45,6 +45,7 @@ var STAMP_MAP = [
 ];
 var ALL_STAMP_IDS = STAMP_MAP.map(function(s) { return s.id; });
 var TOTAL_STAMPS = STAMP_MAP.length;
+var RAFFLE_STAMPS = 6;
 var STAMP_NAME_MAP = {};
 var STAMP_IMG_MAP = {};
 STAMP_MAP.forEach(function(s) { STAMP_NAME_MAP[s.id] = s.name; STAMP_IMG_MAP[s.id] = s.img; });
@@ -323,7 +324,7 @@ function generatePassport(data, stamps) {
   var bottomY = sStartY + sRows * (sSlotSize + sGapY) + 20;
   ctx.fillStyle = '#BF7634'; ctx.beginPath(); ctx.roundRect(40, bottomY, W-80, 80, [0, 0, 12, 12]); ctx.fill();
   ctx.fillStyle = '#FFFFFF'; ctx.font = '700 16px system-ui, sans-serif'; ctx.textAlign = 'center';
-  ctx.fillText('¡Completa los ' + TOTAL_STAMPS + ' sellos y participa en la rifa!', W/2, bottomY + 35);
+  ctx.fillText('¡Completa ' + RAFFLE_STAMPS + ' sellos y participa en la rifa!', W/2, bottomY + 35);
   ctx.font = '400 13px system-ui, sans-serif';
   ctx.fillText('Presenta tu pasaporte en el stand principal de Dogmingo', W/2, bottomY + 58);
   var qrSize = 120;
@@ -367,7 +368,7 @@ function renderStampGrid(stamps) {
     grid.appendChild(slot);
   });
   var complete = document.getElementById('stampComplete');
-  if (complete) complete.classList.toggle('visible', stamps.length >= TOTAL_STAMPS);
+  if (complete) complete.classList.toggle('visible', stamps.length >= RAFFLE_STAMPS);
 }
 
 function addStampCode() {
@@ -439,7 +440,7 @@ function validateField(field) {
   var valid = true;
   if (field.required && !field.value.trim()) valid = false;
   if (field.type === 'email' && field.value.trim()) valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim());
-  if (field.type === 'tel' && field.value.trim()) valid = field.value.replace(/\D/g, '').length >= 7;
+  if (field.type === 'tel' && field.value.trim()) valid = field.value.replace(/\D/g, '').length === 10;
   group.classList.toggle('has-error', !valid);
   return valid;
 }
@@ -739,11 +740,11 @@ function lookupSellos() {
       document.getElementById('sellosProgressText').textContent = d.stamps.length + ' de ' + TOTAL_STAMPS + ' sellos';
       var existing = document.getElementById('sellosComplete');
       if (existing) existing.remove();
-      if (d.stamps.length >= TOTAL_STAMPS) {
+      if (d.stamps.length >= RAFFLE_STAMPS) {
         var msg = document.createElement('div');
         msg.className = 'sellos-complete';
         msg.id = 'sellosComplete';
-        msg.textContent = '¡Felicidades! Tienes todos los sellos. Participas automáticamente en la rifa.';
+        msg.textContent = '¡Felicidades! Tienes ' + d.stamps.length + ' sellos. Participas automáticamente en la rifa.';
         result.appendChild(msg);
       }
     })

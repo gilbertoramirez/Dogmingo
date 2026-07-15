@@ -11,6 +11,7 @@ const CODE_SECRET = process.env.VENDOR_SECRET || 'dgm2025-vendor-key';
 
 const ALL_STAMP_IDS = [1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
 const TOTAL_STAMPS = ALL_STAMP_IDS.length;
+const RAFFLE_STAMPS = 6;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -172,6 +173,12 @@ app.post('/api/register', async (req, res) => {
   const { folio, nombre, apellido, email, telefono, adultos, ninos, traePerro, nombrePerro, verificationToken, verificationCode } = req.body || {};
   if (!folio || !nombre || !apellido || !email || !telefono) {
     return res.status(400).json({ error: 'Missing required fields' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    return res.status(400).json({ error: 'Correo electrónico no válido' });
+  }
+  if (telefono.replace(/\D/g, '').length !== 10) {
+    return res.status(400).json({ error: 'El teléfono debe ser de 10 dígitos' });
   }
   if (!verificationToken || !verificationCode) {
     return res.status(400).json({ error: 'Código de verificación requerido' });
@@ -480,7 +487,7 @@ app.post('/api/vendor/stamp', async (req, res) => {
     const allStamps = await db.select({ stand_num: sellos.stand_num }).from(sellos).where(eq(sellos.folio, folio));
     const totalStamps = allStamps.length;
 
-    if (totalStamps === TOTAL_STAMPS) {
+    if (totalStamps === RAFFLE_STAMPS) {
       try {
         const fullReg = await db.select({ email: registros.email, nombre: registros.nombre, apellido: registros.apellido })
           .from(registros).where(eq(registros.folio, folio));
@@ -490,12 +497,12 @@ app.post('/api/vendor/stamp', async (req, res) => {
           await transporter.sendMail({
             from: process.env.GMAIL_USER,
             to: fullReg[0].email,
-            subject: '¡Completaste todos los sellos! 🐾 - Dogmingo',
+            subject: '¡Ya participas en la rifa! 🐾 - Dogmingo',
             html: [
               '<div style="font-family:system-ui,sans-serif;max-width:480px;margin:0 auto;background:#FAF8F3;padding:2rem;border-radius:16px;text-align:center;">',
               '<h1 style="color:#3A5A3E;font-size:1.8rem;margin:0 0 0.5rem;">¡FELICIDADES!</h1>',
               '<p style="color:#C4923A;font-weight:700;font-size:1.2rem;margin:0 0 1rem;">🐾 🐾 🐾</p>',
-              '<p style="color:#191714;font-size:1.1rem;margin:0 0 1rem;"><strong>' + nombre + '</strong>, completaste los ' + TOTAL_STAMPS + ' sellos de tu Pasaporte Perruno.</p>',
+              '<p style="color:#191714;font-size:1.1rem;margin:0 0 1rem;"><strong>' + nombre + '</strong>, completaste ' + RAFFLE_STAMPS + ' sellos de tu Pasaporte Perruno.</p>',
               '<div style="background:#3A5A3E;color:#FBF7F0;padding:1.25rem;border-radius:12px;margin:0 0 1.5rem;">',
               '<p style="margin:0;font-size:1rem;font-weight:700;">¡Ya participas en la rifa! El ganador se anunciará al final del evento.</p>',
               '</div>',
@@ -695,6 +702,7 @@ app.get('/api/admin/raffle-eligible', async (req, res) => {
     const regs = await db.select({
       folio: registros.folio, nombre: registros.nombre, apellido: registros.apellido,
       email: registros.email, telefono: registros.telefono,
+      gano_rifa: registros.gano_rifa,
     }).from(registros).orderBy(asc(registros.nombre));
 
     const allStamps = await db.select({
@@ -709,13 +717,33 @@ app.get('/api/admin/raffle-eligible', async (req, res) => {
 
     const eligible = regs.filter(r => {
       const userStamps = stampMap[r.folio] || [];
-      return ALL_STAMP_IDS.every(id => userStamps.indexOf(id) >= 0);
+      return userStamps.length >= RAFFLE_STAMPS && !r.gano_rifa;
     });
 
-    return res.json({ ok: true, eligible, total_required: TOTAL_STAMPS });
+    return res.json({ ok: true, eligible, total_required: RAFFLE_STAMPS });
   } catch (err) {
     console.error('Raffle eligible error:', err);
     return res.status(500).json({ error: 'Error al cargar participantes' });
+  }
+});
+
+app.post('/api/admin/raffle-winner', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth || !auth.admin) return res.status(403).json({ error: 'Acceso de administrador requerido' });
+
+  const { folio } = req.body || {};
+  if (!folio) return res.status(400).json({ error: 'Folio requerido' });
+
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+
+  try {
+    await db.update(registros).set({ gano_rifa: true }).where(eq(registros.folio, folio));
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error('Raffle winner error:', err);
+    return res.status(500).json({ error: 'Error al marcar ganador' });
   }
 });
 
@@ -726,6 +754,7 @@ async function autoMigrate() {
   try {
     const sql = neon(process.env.DATABASE_URL);
     await sql`ALTER TABLE vendedores ADD COLUMN IF NOT EXISTS es_subadmin BOOLEAN DEFAULT FALSE`;
+    await sql`ALTER TABLE registros ADD COLUMN IF NOT EXISTS gano_rifa BOOLEAN DEFAULT FALSE`;
   } catch (err) {
     console.error('Auto-migrate error (non-fatal):', err.message);
   }
