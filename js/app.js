@@ -735,9 +735,10 @@ function lookupSellos() {
         item.innerHTML = iconHtml + '<div class="sello-name">' + stamp.name + '</div>';
         grid.appendChild(item);
       });
-      var pct = Math.round((d.stamps.length / TOTAL_STAMPS) * 100);
+      var count = Math.min(d.stamps.length, RAFFLE_STAMPS);
+      var pct = Math.round((count / RAFFLE_STAMPS) * 100);
       document.getElementById('sellosProgressFill').style.width = pct + '%';
-      document.getElementById('sellosProgressText').textContent = d.stamps.length + ' de ' + TOTAL_STAMPS + ' sellos';
+      document.getElementById('sellosProgressText').textContent = d.stamps.length + ' de ' + RAFFLE_STAMPS + ' sellos para la rifa';
       var existing = document.getElementById('sellosComplete');
       if (existing) existing.remove();
       if (d.stamps.length >= RAFFLE_STAMPS) {
