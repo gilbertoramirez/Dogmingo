@@ -265,7 +265,7 @@ function generatePassport(data, stamps) {
   ctx.fillStyle = '#FFFFFF'; ctx.font = '900 36px system-ui, sans-serif'; ctx.textAlign = 'center';
   ctx.fillText('PASAPORTE PERRUNO', W/2, 105);
   ctx.fillStyle = '#8A7E6E'; ctx.font = '700 16px system-ui, sans-serif';
-  ctx.fillText('DOGMINGO · 26 JULIO 2025', W/2, 175);
+  ctx.fillText('DOGMINGO · 26 JULIO 2026', W/2, 175);
   var dogCanvas = document.createElement('canvas'); dogCanvas.width = 200; dogCanvas.height = 200;
   drawDog(dogCanvas, 'golden'); ctx.drawImage(dogCanvas, W/2-60, 195, 120, 120);
   ctx.fillStyle = '#313323'; ctx.font = '800 28px system-ui, sans-serif';
