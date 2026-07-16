@@ -243,6 +243,7 @@
 
   .terms-section { margin-bottom: 1.5rem; background: var(--bg); border: 1px solid var(--card-border); border-radius: 6px; padding: 1.5rem; }
   .terms-header { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .terms-chevron { display: none; }
   .terms-header .terms-icon { width: 28px; height: 28px; color: var(--salsa); flex-shrink: 0; margin-top: 0.1rem; }
   .terms-header div { flex: 1; }
   .terms-header h4 { font-family: 'At Gambit', system-ui, sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.35rem; }
@@ -520,6 +521,13 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z'/%3E%3C/svg%3E");
     }
     .dog-gallery { display: none; }
+
+    .terms-chevron { display: block; width: 20px; height: 20px; flex-shrink: 0; color: var(--text-muted); transition: transform 0.3s ease; }
+    .terms-header { cursor: pointer; user-select: none; }
+    .terms-rules { max-height: 0; overflow: hidden; margin-bottom: 0; padding-bottom: 0; border-bottom: none; transition: max-height 0.4s ease, margin-bottom 0.3s ease, padding-bottom 0.3s ease; }
+    .terms-section.terms-open .terms-rules { max-height: 600px; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--card-border); }
+    .terms-section.terms-open .terms-chevron { transform: rotate(180deg); }
+
     .form-row { grid-template-columns: 1fr; }
     .section { padding: 4rem 1.25rem; }
     .activities-grid { grid-template-columns: 1fr; }
