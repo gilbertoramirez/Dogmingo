@@ -609,6 +609,29 @@ app.post('/api/vendor/change-password', async (req, res) => {
   }
 });
 
+// ── Admin: Change vendor stand ──
+app.post('/api/vendor/change-stand', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth || !auth.admin) return res.status(403).json({ error: 'Acceso de administrador requerido' });
+
+  const { vendor_email, new_stand } = req.body || {};
+  if (!vendor_email || !new_stand) return res.status(400).json({ error: 'Datos incompletos' });
+  const standNum = parseInt(new_stand, 10);
+  if (isNaN(standNum)) return res.status(400).json({ error: 'Stand inválido' });
+
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+  try {
+    const rows = await db.update(vendedores).set({ stand_num: standNum }).where(eq(vendedores.email, vendor_email)).returning({ id: vendedores.id });
+    if (rows.length === 0) return res.status(404).json({ error: 'Vendedor no encontrado' });
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error('Change stand error:', err);
+    return res.status(500).json({ error: 'Error al cambiar stand' });
+  }
+});
+
 // ── Admin: List registros ──
 app.get('/api/admin/registros', async (req, res) => {
   const token = (req.headers.authorization || '').replace('Bearer ', '');

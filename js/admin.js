@@ -453,6 +453,29 @@ function renderRecent() {
 }
 
 // ── VENDORS (admin) ──
+function buildStandOptions(selectedId) {
+  var html = '';
+  var acts = STAMP_MAP.filter(function(s) { return s.type === 'actividad'; });
+  var pats = STAMP_MAP.filter(function(s) { return s.type === 'patrocinador'; });
+  html += '<optgroup label="Actividades">';
+  acts.forEach(function(s) { html += '<option value="' + s.id + '"' + (s.id === selectedId ? ' selected' : '') + '>' + s.name + '</option>'; });
+  html += '</optgroup><optgroup label="Patrocinadores">';
+  pats.forEach(function(s) { html += '<option value="' + s.id + '"' + (s.id === selectedId ? ' selected' : '') + '>' + s.name + '</option>'; });
+  html += '</optgroup>';
+  return html;
+}
+
+function changeVendorStand(email, selectEl) {
+  var newStand = selectEl.value;
+  api('/api/vendor/change-stand', {
+    method: 'POST',
+    body: { vendor_email: email, new_stand: newStand }
+  }).then(function(d) {
+    if (d.ok) loadVendors();
+    else alert(d.error || 'Error al cambiar stand');
+  }).catch(function() { alert('Error de conexión'); });
+}
+
 function loadVendors() {
   api('/api/vendor/list')
     .then(function (d) {
@@ -465,11 +488,14 @@ function loadVendors() {
       d.vendors.forEach(function (v) {
         var item = document.createElement('div');
         item.className = 'vendor-item';
-        var standName = STAMP_NAME_MAP[v.stand_num] || ('Stand ' + v.stand_num);
+        var safeEmail = v.email.replace(/'/g, "\\'");
+        var safeName = v.nombre.replace(/'/g, "\\'");
         item.innerHTML = '<div class="vendor-info"><div class="vendor-name">' + v.nombre + '</div>' +
           '<div class="vendor-email">' + v.email + '</div></div>' +
-          '<span class="vendor-stand">' + standName + '</span>' +
-          '<button class="btn-change-pw" onclick="showChangePassword(\'' + v.email.replace(/'/g, "\\'") + '\', \'' + v.nombre.replace(/'/g, "\\'") + '\')">Cambiar contraseña</button>';
+          '<div class="vendor-stand-row">' +
+            '<select class="vendor-stand-select" onchange="changeVendorStand(\'' + safeEmail + '\', this)">' + buildStandOptions(v.stand_num) + '</select>' +
+          '</div>' +
+          '<button class="btn-change-pw" onclick="showChangePassword(\'' + safeEmail + '\', \'' + safeName + '\')">Cambiar contrase&ntilde;a</button>';
         container.appendChild(item);
       });
     })
