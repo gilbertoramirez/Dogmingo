@@ -442,6 +442,26 @@ traePerro.addEventListener('change', function() {
   if (!traePerro.checked) document.getElementById('nombrePerro').value = '';
 });
 
+function switchRegTab(type) {
+  var tabs = document.querySelectorAll('.reg-tab');
+  tabs.forEach(function(t) { t.classList.remove('active'); });
+  if (type === 'familia') {
+    tabs[1].classList.add('active');
+    document.getElementById('regType').value = 'familia';
+    document.getElementById('familyNote').style.display = '';
+    document.getElementById('familyFields').style.display = '';
+    document.getElementById('lblNombre').textContent = 'Nombre del representante';
+  } else {
+    tabs[0].classList.add('active');
+    document.getElementById('regType').value = 'individual';
+    document.getElementById('familyNote').style.display = 'none';
+    document.getElementById('familyFields').style.display = 'none';
+    document.getElementById('lblNombre').textContent = 'Nombre';
+    document.getElementById('adultos').value = '1';
+    document.getElementById('ninos').value = '0';
+  }
+}
+
 function validateField(field) {
   var group = field.closest('.form-group');
   if (!group) return true;
@@ -507,14 +527,15 @@ form.addEventListener('submit', function(e) {
 
   var email = document.getElementById('email').value.trim();
 
+  var isFamily = document.getElementById('regType').value === 'familia';
   pendingPayload = {
     folio: 'DGM-' + Date.now().toString(36).toUpperCase(),
     nombre: document.getElementById('nombre').value.trim(),
     apellido: document.getElementById('apellido').value.trim(),
     email: email,
     telefono: document.getElementById('telefono').value.trim(),
-    adultos: parseInt(document.getElementById('adultos').value),
-    ninos: parseInt(document.getElementById('ninos').value),
+    adultos: isFamily ? parseInt(document.getElementById('adultos').value) : 1,
+    ninos: isFamily ? parseInt(document.getElementById('ninos').value) : 0,
     traePerro: traePerro.checked,
     nombrePerro: document.getElementById('nombrePerro').value.trim()
   };

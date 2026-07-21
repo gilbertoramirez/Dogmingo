@@ -227,10 +227,15 @@
       </div>
       <div>
         <div class="form-card">
+          <div class="reg-tabs">
+            <button type="button" class="reg-tab active" onclick="switchRegTab('individual')">Individual</button>
+            <button type="button" class="reg-tab" onclick="switchRegTab('familia')">Familia</button>
+          </div>
           <form id="registroForm" novalidate>
+            <input type="hidden" id="regType" name="regType" value="individual">
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label" for="nombre">Nombre</label>
+                <label class="form-label" for="nombre" id="lblNombre">Nombre</label>
                 <input class="form-input" type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
                 <span class="form-error">Ingresa tu nombre</span>
               </div>
@@ -240,6 +245,7 @@
                 <span class="form-error">Ingresa tu apellido</span>
               </div>
             </div>
+            <p class="reg-family-note" id="familyNote" style="display:none;">El representante debe ser mayor de 18 a&ntilde;os. Este registro cubre a toda la familia.</p>
             <div class="form-group">
               <label class="form-label" for="email">Correo electr&oacute;nico</label>
               <input class="form-input" type="email" id="email" name="email" placeholder="tu@correo.com" required>
@@ -250,20 +256,22 @@
               <input class="form-input" type="tel" id="telefono" name="telefono" placeholder="4491234567" maxlength="10" required>
               <span class="form-error">Ingresa un tel&eacute;fono v&aacute;lido a 10 d&iacute;gitos</span>
             </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="adultos">Adultos</label>
-                <select class="form-select" id="adultos" name="adultos">
-                  <option value="1">1 persona</option><option value="2">2 personas</option>
-                  <option value="3">3 personas</option><option value="4">4 personas</option><option value="5">5 personas</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="ninos">Ni&ntilde;os (&lt; 10 a&ntilde;os)</label>
-                <select class="form-select" id="ninos" name="ninos">
-                  <option value="0">Sin ni&ntilde;os</option><option value="1">1 ni&ntilde;o</option>
-                  <option value="2">2 ni&ntilde;os</option><option value="3">3 ni&ntilde;os</option><option value="4">4 ni&ntilde;os</option>
-                </select>
+            <div class="family-fields" id="familyFields" style="display:none;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="adultos">Adultos (incluy&eacute;ndote)</label>
+                  <select class="form-select" id="adultos" name="adultos">
+                    <option value="2">2 personas</option>
+                    <option value="3">3 personas</option><option value="4">4 personas</option><option value="5">5 personas</option><option value="6">6 personas</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="ninos">Ni&ntilde;os (&lt; 10 a&ntilde;os)</label>
+                  <select class="form-select" id="ninos" name="ninos">
+                    <option value="0">Sin ni&ntilde;os</option><option value="1">1 ni&ntilde;o</option>
+                    <option value="2">2 ni&ntilde;os</option><option value="3">3 ni&ntilde;os</option><option value="4">4 ni&ntilde;os</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="form-checkbox-row">
