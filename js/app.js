@@ -42,6 +42,15 @@ var STAMP_MAP = [
   { id: 16, name: 'VidaNúPet', type: 'patrocinador', img: 'img/patrocinadores/VIDANUPET.png' },
   { id: 17, name: 'Zitara', type: 'patrocinador', img: 'img/patrocinadores/ZITARA.png' },
   { id: 18, name: 'Zitara Golf Club', type: 'patrocinador', img: 'img/patrocinadores/ZITARA_GOLF_CLUB.png' },
+  { id: 19, name: 'Barking Town', type: 'patrocinador', img: 'img/patrocinadores/barking_town.jpg' },
+  { id: 20, name: 'Barber Dog', type: 'patrocinador', img: 'img/patrocinadores/BARBERDOG.png' },
+  { id: 21, name: 'Hospetalia', type: 'patrocinador', img: 'img/patrocinadores/HOSPET.png' },
+  { id: 22, name: 'Patas de Gallo', type: 'patrocinador', img: 'img/patrocinadores/patasDeGallo.jpeg' },
+  { id: 23, name: 'Peternos', type: 'patrocinador', img: 'img/patrocinadores/peternos.jpeg' },
+  { id: 24, name: 'Iliana Event Planner', type: 'patrocinador', img: 'img/patrocinadores/IMG-20260718-WA0102.jpg' },
+  { id: 25, name: 'Avanda Lavandería', type: 'patrocinador', img: 'img/patrocinadores/lavanderias.jpeg' },
+  { id: 26, name: 'Nucan', type: 'patrocinador', img: 'img/patrocinadores/nucan.jpeg' },
+  { id: 27, name: 'Croquetas Balú', type: 'patrocinador', img: 'img/patrocinadores/balu.jpeg' },
 ];
 var ALL_STAMP_IDS = STAMP_MAP.map(function(s) { return s.id; });
 var TOTAL_STAMPS = STAMP_MAP.length;

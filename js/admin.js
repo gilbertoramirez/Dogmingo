@@ -16,6 +16,15 @@ var STAMP_MAP = [
   { id: 16, name: 'VidaNúPet', type: 'patrocinador' },
   { id: 17, name: 'Zitara', type: 'patrocinador' },
   { id: 18, name: 'Zitara Golf Club', type: 'patrocinador' },
+  { id: 19, name: 'Barking Town', type: 'patrocinador' },
+  { id: 20, name: 'Barber Dog', type: 'patrocinador' },
+  { id: 21, name: 'Hospetalia', type: 'patrocinador' },
+  { id: 22, name: 'Patas de Gallo', type: 'patrocinador' },
+  { id: 23, name: 'Peternos', type: 'patrocinador' },
+  { id: 24, name: 'Iliana Event Planner', type: 'patrocinador' },
+  { id: 25, name: 'Avanda Lavandería', type: 'patrocinador' },
+  { id: 26, name: 'Nucan', type: 'patrocinador' },
+  { id: 27, name: 'Croquetas Balú', type: 'patrocinador' },
 ];
 var ALL_STAMP_IDS = STAMP_MAP.map(function(s) { return s.id; });
 var TOTAL_STAMPS = STAMP_MAP.length;
