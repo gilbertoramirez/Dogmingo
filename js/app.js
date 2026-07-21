@@ -445,21 +445,32 @@ traePerro.addEventListener('change', function() {
 function switchRegTab(type) {
   var tabs = document.querySelectorAll('.reg-tab');
   tabs.forEach(function(t) { t.classList.remove('active'); });
+  var familyEls = document.querySelectorAll('.family-fields');
   if (type === 'familia') {
     tabs[1].classList.add('active');
     document.getElementById('regType').value = 'familia';
     document.getElementById('familyNote').style.display = '';
-    document.getElementById('familyFields').style.display = '';
+    familyEls.forEach(function(el) { el.style.display = ''; });
     document.getElementById('lblNombre').textContent = 'Nombre del representante';
   } else {
     tabs[0].classList.add('active');
     document.getElementById('regType').value = 'individual';
     document.getElementById('familyNote').style.display = 'none';
-    document.getElementById('familyFields').style.display = 'none';
+    familyEls.forEach(function(el) { el.style.display = 'none'; });
     document.getElementById('lblNombre').textContent = 'Nombre';
     document.getElementById('adultos').value = '1';
     document.getElementById('ninos').value = '0';
+    document.getElementById('fechaNac').value = '';
+    var fnGroup = document.getElementById('fechaNacField');
+    if (fnGroup) fnGroup.classList.remove('has-error');
   }
+}
+
+function calcAge(birthDate, eventDate) {
+  var age = eventDate.getFullYear() - birthDate.getFullYear();
+  var m = eventDate.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && eventDate.getDate() < birthDate.getDate())) age--;
+  return age;
 }
 
 function validateField(field) {
@@ -528,6 +539,23 @@ form.addEventListener('submit', function(e) {
   var email = document.getElementById('email').value.trim();
 
   var isFamily = document.getElementById('regType').value === 'familia';
+
+  if (isFamily) {
+    var fechaNacVal = document.getElementById('fechaNac').value;
+    var fnGroup = document.getElementById('fechaNacField');
+    if (!fechaNacVal) {
+      fnGroup.classList.add('has-error');
+      return;
+    }
+    var birthDate = new Date(fechaNacVal + 'T00:00:00');
+    var eventDate = new Date('2026-07-26T00:00:00');
+    if (calcAge(birthDate, eventDate) < 18) {
+      fnGroup.classList.add('has-error');
+      return;
+    }
+    fnGroup.classList.remove('has-error');
+  }
+
   pendingPayload = {
     folio: 'DGM-' + Date.now().toString(36).toUpperCase(),
     nombre: document.getElementById('nombre').value.trim(),

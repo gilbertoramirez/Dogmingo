@@ -192,7 +192,7 @@
       <div class="info-block">
         <svg class="info-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 4C14 4 6 8 6 20C6 26 10 32 20 38C30 32 34 26 34 20C34 8 26 4 20 4Z"/><path d="M14 18L18 22L26 14"/></svg>
         <p class="label info-label">Acceso</p>
-        <p class="info-value">$100 MXN por persona</p>
+        <p class="info-value">$100 MXN individual / $150 MXN familiar</p>
         <p class="info-detail">100% destinado a Esperanza Canina. Se paga el d&iacute;a del evento en efectivo o transferencia.</p>
         <p class="info-detail">Menores de 10 a&ntilde;os: gratis</p>
         <p class="info-detail">Incluye Pasaporte Perruno + QR</p>
@@ -214,7 +214,7 @@
         </div>
         <h3>Reg&iacute;strate y obt&eacute;n tu Pasaporte Perruno</h3>
         <p>Completa el formulario para confirmar tu asistencia. Al finalizar recibir&aacute;s tu c&oacute;digo QR y pasaporte digital con espacios para sellos.</p>
-        <p>El donativo de acceso ($100 MXN) se paga el d&iacute;a del evento en la entrada, en <strong>efectivo o transferencia</strong>.</p>
+        <p>Acceso: <strong>$100 MXN individual</strong> o <strong>$150 MXN familiar</strong>. Se paga el d&iacute;a del evento en la entrada, en <strong>efectivo o transferencia</strong>.</p>
         <ul class="registro-perks">
           <li>Confirma tu lugar sin pagar por adelantado</li>
           <li>Obt&eacute;n tu c&oacute;digo QR al registrarte</li>
@@ -245,7 +245,12 @@
                 <span class="form-error">Ingresa tu apellido</span>
               </div>
             </div>
-            <p class="reg-family-note" id="familyNote" style="display:none;">El representante debe ser mayor de 18 a&ntilde;os. Este registro cubre a toda la familia.</p>
+            <p class="reg-family-note" id="familyNote" style="display:none;">Registro familiar: <strong>$150 MXN</strong>. El representante debe ser mayor de 18 a&ntilde;os.</p>
+            <div class="form-group family-fields" id="fechaNacField" style="display:none;">
+              <label class="form-label" for="fechaNac">Fecha de nacimiento del representante</label>
+              <input class="form-input" type="date" id="fechaNac" name="fechaNac" max="2008-07-26">
+              <span class="form-error" id="fechaNacError">Debes ser mayor de 18 a&ntilde;os para registrar a tu familia</span>
+            </div>
             <div class="form-group">
               <label class="form-label" for="email">Correo electr&oacute;nico</label>
               <input class="form-input" type="email" id="email" name="email" placeholder="tu@correo.com" required>
