@@ -2,7 +2,6 @@ var STAMP_MAP = [
   { id: 1, name: 'Bendición Canina', type: 'actividad' },
   { id: 2, name: 'Huellas del Alma', type: 'actividad' },
   { id: 3, name: 'Adiestramiento', type: 'actividad' },
-  { id: 5, name: 'Mercadito Pet-Friendly', type: 'actividad' },
   { id: 6, name: 'Pasarela de Adopción', type: 'actividad' },
   { id: 7, name: 'Doggies Paradise', type: 'patrocinador' },
   { id: 8, name: 'Freshly', type: 'patrocinador' },
@@ -243,8 +242,10 @@ function loadTeamVendors() {
       d.vendors.forEach(function (v) {
         var item = document.createElement('div');
         item.className = 'vendor-item';
+        var standName = STAMP_NAME_MAP[v.stand_num] || ('Stand ' + v.stand_num);
         item.innerHTML = '<div class="vendor-info"><div class="vendor-name">' + v.nombre + '</div>' +
-          '<div class="vendor-email">' + v.email + '</div></div>';
+          '<div class="vendor-email">' + v.email + '</div></div>' +
+          '<span class="vendor-stand">' + standName + '</span>';
         container.appendChild(item);
       });
     })
@@ -464,9 +465,10 @@ function loadVendors() {
       d.vendors.forEach(function (v) {
         var item = document.createElement('div');
         item.className = 'vendor-item';
+        var standName = STAMP_NAME_MAP[v.stand_num] || ('Stand ' + v.stand_num);
         item.innerHTML = '<div class="vendor-info"><div class="vendor-name">' + v.nombre + '</div>' +
           '<div class="vendor-email">' + v.email + '</div></div>' +
-          '<span class="vendor-stand">Stand ' + v.stand_num + '</span>' +
+          '<span class="vendor-stand">' + standName + '</span>' +
           '<button class="btn-change-pw" onclick="showChangePassword(\'' + v.email.replace(/'/g, "\\'") + '\', \'' + v.nombre.replace(/'/g, "\\'") + '\')">Cambiar contraseña</button>';
         container.appendChild(item);
       });

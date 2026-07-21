@@ -28,7 +28,6 @@ var STAMP_MAP = [
   { id: 1, name: 'Bendición Canina', type: 'actividad', img: null },
   { id: 2, name: 'Huellas del Alma', type: 'actividad', img: null },
   { id: 3, name: 'Adiestramiento', type: 'actividad', img: null },
-  { id: 5, name: 'Mercadito Pet-Friendly', type: 'actividad', img: null },
   { id: 6, name: 'Pasarela de Adopción', type: 'actividad', img: null },
   { id: 7, name: 'Doggies Paradise', type: 'patrocinador', img: 'img/patrocinadores/DOGGIES%20PARADISE%20.jpeg' },
   { id: 8, name: 'Freshly', type: 'patrocinador', img: 'img/patrocinadores/FRESHLY.jpeg' },
