@@ -541,6 +541,24 @@ function filterRegistros() {
   renderRegistros(filtered);
 }
 
+function exportRegistrosExcel() {
+  if (!allRegistros.length) { alert('No hay registros para exportar.'); return; }
+  var BOM = '﻿';
+  var csv = BOM + 'Nombre,Correo,Telefono\r\n';
+  allRegistros.forEach(function(r) {
+    var nombre = (r.nombre + ' ' + r.apellido).replace(/"/g, '""');
+    var email = (r.email || '').replace(/"/g, '""');
+    var tel = (r.telefono || '').replace(/"/g, '""');
+    csv += '"' + nombre + '","' + email + '","' + tel + '"\r\n';
+  });
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  var link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'registros_dogmingo.csv';
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
 function renderRegistros(list) {
   var container = document.getElementById('registroList');
   if (list.length === 0) {

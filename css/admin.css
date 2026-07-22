@@ -602,6 +602,20 @@ body {
   letter-spacing: 0.05em;
 }
 
+.btn-export {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--campo);
+  color: #FFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-export:hover { opacity: 0.85; }
+
 /* REGISTRO LIST */
 .registro-list { margin-top: 0.5rem; }
 .registro-item {
