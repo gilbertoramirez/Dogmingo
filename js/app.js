@@ -51,6 +51,7 @@ var STAMP_MAP = [
   { id: 26, name: 'Nucan', type: 'patrocinador', img: 'img/patrocinadores/nucan.jpeg' },
   { id: 27, name: 'Croquetas Balú', type: 'patrocinador', img: 'img/patrocinadores/balu.jpeg' },
   { id: 28, name: 'DolceFresa', type: 'patrocinador', img: 'img/patrocinadores/dolcefresa.jpeg' },
+  { id: 29, name: 'Snack SandGo', type: 'patrocinador', img: 'img/patrocinadores/snacksNGo.jpeg' },
 ];
 var ALL_STAMP_IDS = STAMP_MAP.map(function(s) { return s.id; });
 var TOTAL_STAMPS = STAMP_MAP.length;
