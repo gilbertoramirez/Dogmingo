@@ -50,6 +50,7 @@ var STAMP_MAP = [
   { id: 25, name: 'Avanda Lavandería', type: 'patrocinador', img: 'img/patrocinadores/lavanderias.jpeg' },
   { id: 26, name: 'Nucan', type: 'patrocinador', img: 'img/patrocinadores/nucan.jpeg' },
   { id: 27, name: 'Croquetas Balú', type: 'patrocinador', img: 'img/patrocinadores/balu.jpeg' },
+  { id: 28, name: 'DolceFresa', type: 'patrocinador', img: 'img/patrocinadores/dolcefresa.jpeg' },
 ];
 var ALL_STAMP_IDS = STAMP_MAP.map(function(s) { return s.id; });
 var TOTAL_STAMPS = STAMP_MAP.length;
