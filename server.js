@@ -9,7 +9,7 @@ const { neon } = require('@neondatabase/serverless');
 
 const CODE_SECRET = process.env.VENDOR_SECRET || 'dgm2025-vendor-key';
 
-const ALL_STAMP_IDS = [1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
+const ALL_STAMP_IDS = [1,2,3,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27];
 const TOTAL_STAMPS = ALL_STAMP_IDS.length;
 const RAFFLE_STAMPS = 6;
 
@@ -77,6 +77,11 @@ app.get('/api/setup', async (req, res) => {
     await sql`
       ALTER TABLE vendedores ADD COLUMN IF NOT EXISTS es_subadmin BOOLEAN DEFAULT FALSE
     `;
+    await sql`CREATE INDEX IF NOT EXISTS idx_registros_email ON registros(email)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_registros_telefono ON registros(telefono)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_sellos_folio ON sellos(folio)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_vendedores_telefono ON vendedores(telefono)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_vendedores_stand ON vendedores(stand_num)`;
     const tables = await sql`
       SELECT table_name FROM information_schema.tables
       WHERE table_schema = 'public' ORDER BY table_name
@@ -832,6 +837,11 @@ async function autoMigrate() {
     await sql`ALTER TABLE vendedores ADD COLUMN IF NOT EXISTS es_subadmin BOOLEAN DEFAULT FALSE`;
     await sql`ALTER TABLE registros ADD COLUMN IF NOT EXISTS gano_rifa BOOLEAN DEFAULT FALSE`;
     await sql`ALTER TABLE vendedores ADD COLUMN IF NOT EXISTS telefono TEXT`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_registros_email ON registros(email)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_registros_telefono ON registros(telefono)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_sellos_folio ON sellos(folio)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_vendedores_telefono ON vendedores(telefono)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_vendedores_stand ON vendedores(stand_num)`;
   } catch (err) {
     console.error('Auto-migrate error (non-fatal):', err.message);
   }
