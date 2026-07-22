@@ -9,7 +9,7 @@ const { neon } = require('@neondatabase/serverless');
 
 const CODE_SECRET = process.env.VENDOR_SECRET || 'dgm2025-vendor-key';
 
-const ALL_STAMP_IDS = [1,2,3,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29];
+const ALL_STAMP_IDS = [1,2,3,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
 const TOTAL_STAMPS = ALL_STAMP_IDS.length;
 const RAFFLE_STAMPS = 6;
 
