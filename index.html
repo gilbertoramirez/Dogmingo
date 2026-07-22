@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
 <title>Dogmingo — El Domingo más Perrón del Año</title>
 <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -43,7 +44,7 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="#pasaporte">Pasaporte</a></li>
       <li><a href="#actividades">Actividades</a></li>
-      <li><a href="#boletos">Boletos</a></li>
+      <li><a href="#boletos">Acceso</a></li>
       <li><a href="#registro">Registro</a></li>
       <li><a href="#misSellos">Mis Sellos</a></li>
     </ul>
@@ -72,28 +73,31 @@
       <div class="passport-info-text">
         <h3>Colecciona sellos, gana premios</h3>
         <p>Al registrarte recibir&aacute;s tu Pasaporte Perruno digital con un c&oacute;digo QR &uacute;nico. Visita cada estaci&oacute;n del evento para que los stands escaneen tu c&oacute;digo y sellen tu pasaporte digitalmente.</p>
-        <p>Al completar todos los sellos, presenta tu pasaporte en el stand principal y recibe un regalo especial para ti y tu peludo.</p>
+        <p>Al completar 6 sellos de tu pasaporte, participas autom&aacute;ticamente en la rifa con premios incre&iacute;bles.</p>
         <ol class="passport-steps">
           <li><span class="step-num">1</span><span>Reg&iacute;strate y obt&eacute;n tu c&oacute;digo QR</span></li>
-          <li><span class="step-num">2</span><span>Cada stand escanea tu QR y te da un c&oacute;digo de sello</span></li>
-          <li><span class="step-num">3</span><span>Ingresa los 6 c&oacute;digos en tu pasaporte y reclama tu premio</span></li>
+          <li><span class="step-num">2</span><span>Visita cada stand y patrocinador para que escaneen tu QR</span></li>
+          <li><span class="step-num">3</span><span>Completa 6 sellos y entra a la rifa</span></li>
         </ol>
         <a href="#registro" class="btn-secondary">Obtener mi pasaporte</a>
       </div>
       <div class="passport-preview">
         <div class="passport-preview-inner">
           <h4>Pasaporte Perruno</h4>
-          <p class="pp-sub">Dogmingo 2025</p>
+          <p class="pp-sub">Dogmingo 2026</p>
           <canvas class="dog-canvas" data-dog="golden" width="120" height="120" style="width:60px;height:60px;margin:0 auto 0.75rem;display:block;"></canvas>
-          <div class="stamp-grid-preview">
+          <div class="stamp-grid-preview wide">
             <div class="stamp-slot-preview filled"></div>
             <div class="stamp-slot-preview filled"></div>
+            <div class="stamp-slot-preview filled"></div>
+            <div class="stamp-slot-preview">sello</div>
+            <div class="stamp-slot-preview">sello</div>
             <div class="stamp-slot-preview">sello</div>
             <div class="stamp-slot-preview">sello</div>
             <div class="stamp-slot-preview">sello</div>
             <div class="stamp-slot-preview">sello</div>
           </div>
-          <p style="font-family:system-ui,sans-serif;font-size:0.65rem;color:#8A7E6E;">Completa 6 sellos &rarr; Premio</p>
+          <p style="font-family:system-ui,sans-serif;font-size:0.65rem;color:#8A7E6E;">Completa 6 sellos &rarr; Rifa</p>
         </div>
       </div>
     </div>
@@ -106,13 +110,8 @@
     <h2 class="display section-title">Todo lo recaudado se donar&aacute;</h2>
     <div class="causa-grid">
       <div style="display:flex;flex-direction:column;align-items:center;">
-        <div class="causa-badge">
-          <svg viewBox="0 0 80 80" fill="none" stroke="#FBF7F0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M40 68C40 68 12 52 12 32C12 22 20 14 30 14C34.5 14 38.5 16.5 40 20C41.5 16.5 45.5 14 50 14C60 14 68 22 68 32C68 52 40 68 40 68Z"/>
-          </svg>
-        </div>
+        <img src="img/patrocinadores/EsperanzaCaninca.jpeg" alt="Esperanza Canina" class="causa-logo">
         <span class="causa-highlight">Esperanza Canina</span>
-        <img class="causa-photo dog-photo" data-breed="retriever/golden" alt="Perro rescatado" loading="lazy">
       </div>
       <div class="causa-text">
         <h3>Un evento perr&oacute;n con prop&oacute;sito</h3>
@@ -123,7 +122,7 @@
   </div>
 </section>
 
-<div class="section dog-gallery" style="padding:3rem 1.5rem;background:var(--bg);">
+<div class="section dog-gallery" style="padding:3rem 1.5rem;background:var(--bg);overflow:hidden;">
   <p class="dog-gallery-title" style="text-align:center;font-family:system-ui,sans-serif;font-weight:800;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--salsa);margin-bottom:1.5rem;">Perritos reales que inspiran</p>
   <div class="dog-photo-strip large" id="midDogs"></div>
 </div>
@@ -153,22 +152,16 @@
         <span class="activity-stamp">Sello 3</span>
       </div>
       <div class="activity-card">
-        <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 36L16 20L24 28L32 16L40 36"/><line x1="8" y1="36" x2="40" y2="36"/><circle cx="16" cy="20" r="2"/><circle cx="32" cy="16" r="2"/></svg>
-        <h3 class="activity-name">Circuito de Agilidad</h3>
-        <p class="activity-desc">Pon a prueba las habilidades de tu perro en un recorrido de obst&aacute;culos lleno de diversi&oacute;n.</p>
-        <span class="activity-stamp">Sello 4</span>
-      </div>
-      <div class="activity-card">
         <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14H42V38H6Z"/><path d="M6 14L24 6L42 14"/><line x1="16" y1="22" x2="16" y2="32"/><line x1="24" y1="22" x2="24" y2="32"/><line x1="32" y1="22" x2="32" y2="32"/></svg>
         <h3 class="activity-name">Mercadito Pet-Friendly</h3>
-        <p class="activity-desc">Encuentra productos, accesorios, premios y todo lo que tu mascota necesita de emprendedores locales.</p>
-        <span class="activity-stamp">Sello 5</span>
+        <p class="activity-desc">Recorre los stands de nuestros patrocinadores: encuentra productos, accesorios, premios y todo lo que tu mascota necesita.</p>
+        <span class="activity-stamp">Sello 4</span>
       </div>
       <div class="activity-card">
         <svg class="activity-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M24 42C24 42 8 32 8 20C8 14 12 8 18 8C21 8 23.5 9.5 24 12C24.5 9.5 27 8 30 8C36 8 40 14 40 20C40 32 24 42 24 42Z"/><path d="M18 24L22 28L30 20"/></svg>
         <h3 class="activity-name">Pasarela de Adopci&oacute;n</h3>
         <p class="activity-desc">Conoce perritos que buscan un hogar. Tal vez tu nuevo mejor amigo te est&eacute; esperando aqu&iacute;.</p>
-        <span class="activity-stamp">Sello 6</span>
+        <span class="activity-stamp">Sello 5</span>
       </div>
     </div>
     <div class="dogs-row">
@@ -179,7 +172,7 @@
   </div>
 </section>
 
-<section class="section info" id="info">
+<section class="section info" id="boletos">
   <div class="section-inner">
     <span class="label section-eyebrow">Detalles</span>
     <h2 class="display section-title">Lo que necesitas saber</h2>
@@ -199,33 +192,13 @@
       <div class="info-block">
         <svg class="info-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 4C14 4 6 8 6 20C6 26 10 32 20 38C30 32 34 26 34 20C34 8 26 4 20 4Z"/><path d="M14 18L18 22L26 14"/></svg>
         <p class="label info-label">Acceso</p>
-        <p class="info-value">$100 MXN</p>
+        <p class="info-value">$100 MXN individual / $150 MXN familiar</p>
+        <p class="info-detail">100% destinado a Esperanza Canina. Se paga el d&iacute;a del evento en efectivo o transferencia.</p>
         <p class="info-detail">Menores de 10 a&ntilde;os: gratis</p>
+        <p class="info-detail">Incluye Pasaporte Perruno + QR</p>
       </div>
     </div>
-  </div>
-</section>
-
-<section class="section tickets" id="boletos">
-  <div class="section-inner">
-    <span class="label section-eyebrow">Acceso</span>
-    <h2 class="display section-title">Donativo de entrada</h2>
-    <p class="section-intro">Tu donativo es tu boleto. Todo lo recaudado se dona &iacute;ntegro a Esperanza Canina.</p>
-    <div class="ticket-cards">
-      <div class="ticket-card featured">
-        <p class="ticket-type">General</p>
-        <p class="ticket-price"><span>$</span>100</p>
-        <p class="ticket-note">Donativo por persona</p>
-        <p class="ticket-passport">Incluye Pasaporte Perruno + QR</p>
-      </div>
-      <div class="ticket-card">
-        <p class="ticket-type">Ni&ntilde;os &lt; 10 a&ntilde;os</p>
-        <p class="ticket-price">Gratis</p>
-        <p class="ticket-note">Entrada gratuita</p>
-        <p class="ticket-passport">Incluye Pasaporte Perruno + QR</p>
-      </div>
-    </div>
-    <p class="donate-note">Tambi&eacute;n puedes traer tus <strong>donativos en croquetas</strong> para los perritos rescatados. &iexcl;Cada granito ayuda!</p>
+    <p class="donate-note">&iquest;Quieres apoyar a&uacute;n m&aacute;s?<br>&iexcl;Recibimos <strong>donativos en croquetas</strong> para los perritos del refugio! Todo suma.</p>
   </div>
 </section>
 
@@ -236,17 +209,17 @@
     <div class="registro-layout">
       <div class="registro-info">
         <div class="registro-venue-badge">
-          <img src="img/zitara-golf-horizontal-light.png" alt="Zitara Golf Club" class="registro-venue-logo">
+          <img src="img/LOGOTIPO_ZITARA%20CLUB%20%26%20GOLF-07.png" alt="Zitara Club &amp; Golf" class="registro-venue-logo">
           <span class="label" style="color:var(--text-secondary);margin-top:0.5rem;display:block;">Sede oficial del evento</span>
         </div>
         <h3>Reg&iacute;strate y obt&eacute;n tu Pasaporte Perruno</h3>
-        <p>Completa el formulario para confirmar tu asistencia. Al finalizar recibir&aacute;s tu c&oacute;digo QR y pasaporte con 6 espacios para sellos digitales.</p>
-        <p>El donativo de acceso ($100 MXN) se paga el d&iacute;a del evento en la entrada.</p>
+        <p>Completa el formulario para confirmar tu asistencia. Al finalizar recibir&aacute;s tu c&oacute;digo QR y pasaporte digital con espacios para sellos.</p>
+        <p>Acceso: <strong>$100 MXN individual</strong> o <strong>$150 MXN familiar</strong>. Se paga el d&iacute;a del evento en la entrada, en <strong>efectivo o transferencia</strong>.</p>
         <ul class="registro-perks">
           <li>Confirma tu lugar sin pagar por adelantado</li>
           <li>Obt&eacute;n tu c&oacute;digo QR al registrarte</li>
           <li>Los stands escanean tu QR para sellarte</li>
-          <li>Colecciona 6 sellos y gana un premio</li>
+          <li>Completa 6 sellos y participa en la rifa</li>
           <li>Ni&ntilde;os menores de 10 a&ntilde;os entran gratis</li>
           <li>Puedes traer donativos en croquetas</li>
         </ul>
@@ -254,10 +227,15 @@
       </div>
       <div>
         <div class="form-card">
+          <div class="reg-tabs">
+            <button type="button" class="reg-tab active" onclick="switchRegTab('individual')">Individual</button>
+            <button type="button" class="reg-tab" onclick="switchRegTab('familia')">Familia</button>
+          </div>
           <form id="registroForm" novalidate>
+            <input type="hidden" id="regType" name="regType" value="individual">
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label" for="nombre">Nombre</label>
+                <label class="form-label" for="nombre" id="lblNombre">Nombre</label>
                 <input class="form-input" type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
                 <span class="form-error">Ingresa tu nombre</span>
               </div>
@@ -267,6 +245,12 @@
                 <span class="form-error">Ingresa tu apellido</span>
               </div>
             </div>
+            <p class="reg-family-note" id="familyNote" style="display:none;">Registro familiar: <strong>$150 MXN</strong>. El representante debe ser mayor de 18 a&ntilde;os.</p>
+            <div class="form-group family-fields" id="fechaNacField" style="display:none;">
+              <label class="form-label" for="fechaNac">Fecha de nacimiento del representante</label>
+              <input class="form-input" type="date" id="fechaNac" name="fechaNac" max="2008-07-26">
+              <span class="form-error" id="fechaNacError">Debes ser mayor de 18 a&ntilde;os para registrar a tu familia</span>
+            </div>
             <div class="form-group">
               <label class="form-label" for="email">Correo electr&oacute;nico</label>
               <input class="form-input" type="email" id="email" name="email" placeholder="tu@correo.com" required>
@@ -274,23 +258,25 @@
             </div>
             <div class="form-group">
               <label class="form-label" for="telefono">Tel&eacute;fono</label>
-              <input class="form-input" type="tel" id="telefono" name="telefono" placeholder="449 123 4567" required>
-              <span class="form-error">Ingresa tu tel&eacute;fono</span>
+              <input class="form-input" type="tel" id="telefono" name="telefono" placeholder="4491234567" maxlength="10" required>
+              <span class="form-error">Ingresa un tel&eacute;fono v&aacute;lido a 10 d&iacute;gitos</span>
             </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="adultos">Adultos</label>
-                <select class="form-select" id="adultos" name="adultos">
-                  <option value="1">1 persona</option><option value="2">2 personas</option>
-                  <option value="3">3 personas</option><option value="4">4 personas</option><option value="5">5 personas</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="ninos">Ni&ntilde;os (&lt; 10 a&ntilde;os)</label>
-                <select class="form-select" id="ninos" name="ninos">
-                  <option value="0">Sin ni&ntilde;os</option><option value="1">1 ni&ntilde;o</option>
-                  <option value="2">2 ni&ntilde;os</option><option value="3">3 ni&ntilde;os</option><option value="4">4 ni&ntilde;os</option>
-                </select>
+            <div class="family-fields" id="familyFields" style="display:none;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="adultos">Adultos (incluy&eacute;ndote)</label>
+                  <select class="form-select" id="adultos" name="adultos">
+                    <option value="2">2 personas</option>
+                    <option value="3">3 personas</option><option value="4">4 personas</option><option value="5">5 personas</option><option value="6">6 personas</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="ninos">Ni&ntilde;os (&lt; 10 a&ntilde;os)</label>
+                  <select class="form-select" id="ninos" name="ninos">
+                    <option value="0">Sin ni&ntilde;os</option><option value="1">1 ni&ntilde;o</option>
+                    <option value="2">2 ni&ntilde;os</option><option value="3">3 ni&ntilde;os</option><option value="4">4 ni&ntilde;os</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="form-checkbox-row">
@@ -304,12 +290,13 @@
               </div>
             </div>
             <div class="terms-section">
-              <div class="terms-header">
+              <div class="terms-header" id="termsToggle" onclick="this.parentElement.classList.toggle('terms-open')">
                 <svg class="terms-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4H22C23.1 4 24 4.9 24 6V26C24 27.1 23.1 28 22 28H10C8.9 28 8 27.1 8 26V6C8 4.9 8.9 4 10 4Z"/><path d="M12 10H20"/><path d="M12 14H20"/><path d="M12 18H17"/></svg>
                 <div>
                   <h4>T&eacute;rminos, Condiciones y Reglamento</h4>
                   <p>Al registrarte y asistir, aceptas cumplir con las siguientes normas de convivencia:</p>
                 </div>
+                <svg class="terms-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
               </div>
               <div class="terms-rules">
                 <div class="terms-rule">
@@ -360,7 +347,7 @@
           <div class="verification-step" id="verificationStep" style="display:none;">
             <div style="text-align:center;margin-bottom:1.5rem;">
               <div class="form-success-icon" style="background:#3A5A3E;">
-                <svg viewBox="0 0 32 32" fill="none" stroke="#FBF7F0" stroke-width="2.5" stroke-linecap="round"><path d="M6 16L10 6H22L26 16V24C26 25.1 25.1 26 24 26H8C6.9 26 6 25.1 6 24V16Z"/><path d="M6 16H26"/><circle cx="12" cy="21" r="1.5"/><circle cx="20" cy="21" r="1.5"/></svg>
+                <svg viewBox="0 0 32 32" fill="none" stroke="#F4E6D0" stroke-width="2.5" stroke-linecap="round"><path d="M6 16L10 6H22L26 16V24C26 25.1 25.1 26 24 26H8C6.9 26 6 25.1 6 24V16Z"/><path d="M6 16H26"/><circle cx="12" cy="21" r="1.5"/><circle cx="20" cy="21" r="1.5"/></svg>
               </div>
               <h3 style="margin:0.5rem 0;">Verifica tu correo</h3>
               <p style="color:var(--text-secondary);font-size:0.9rem;">Enviamos un c&oacute;digo de 6 d&iacute;gitos a <strong id="verifyEmailDisplay"></strong></p>
@@ -374,7 +361,7 @@
           </div>
           <div class="form-success" id="formSuccess">
             <div class="form-success-icon">
-              <svg viewBox="0 0 32 32" fill="none" stroke="#FBF7F0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16L14 22L24 10"/></svg>
+              <svg viewBox="0 0 32 32" fill="none" stroke="#F4E6D0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16L14 22L24 10"/></svg>
             </div>
             <h3>&iexcl;Registro exitoso!</h3>
             <p>Te esperamos el <strong>26 de julio</strong> en Zitara Club & Golf.</p>
@@ -391,10 +378,10 @@
   <div class="section-inner">
     <span class="label section-eyebrow">Tu progreso</span>
     <h2 class="display section-title">Mis Sellos</h2>
-    <p class="section-intro">Ingresa tu correo electr&oacute;nico para consultar cu&aacute;ntos sellos llevas.</p>
+    <p class="section-intro">Ingresa tu correo electr&oacute;nico o n&uacute;mero de tel&eacute;fono para consultar cu&aacute;ntos sellos llevas.</p>
     <div class="sellos-lookup-card">
       <div class="sellos-lookup-form">
-        <input class="form-input" type="email" id="sellosEmail" placeholder="tu@correo.com">
+        <input class="form-input sellos-input-lg" type="text" id="sellosQuery" placeholder="tu@correo.com o n&uacute;mero de tel&eacute;fono" autocomplete="off">
         <button class="form-submit" id="sellosBtn" onclick="lookupSellos()">Consultar</button>
       </div>
       <div class="sellos-result" id="sellosResult" style="display:none;">
@@ -416,9 +403,9 @@
     <h2 class="display section-title">Ubicaci&oacute;n</h2>
     <div class="location-flex">
       <div>
-        <img src="img/zitara-golf-horizontal-light.png" alt="Zitara Golf Club" class="location-logo">
+        <img src="img/LOGOTIPO_ZITARA%20CLUB%20%26%20GOLF-07.png" alt="Zitara Club &amp; Golf" class="location-logo">
         <h3 class="location-name">Zitara Club & Golf</h3>
-        <p class="location-address">Salida a Calvillo<br>A 500 metros del Segundo Anillo<br>Aguascalientes, M&eacute;xico</p>
+        <p class="location-address">Salida a Calvillo<br>A 500 metros del Tercer Anillo<br>Aguascalientes, M&eacute;xico</p>
         <div class="location-contact">
           <div class="contact-row">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 3H8L10 8L7.5 9.5C8.5 11.5 10 13 12 14L13.5 11.5L18 13.5V17C18 17.6 17.6 18 17 18C9 18 2 11 2 3C2 2.4 2.4 2 3 2"/></svg>
@@ -442,26 +429,146 @@
   </div>
 </section>
 
+<section class="section section-sponsors" id="patrocinadores">
+  <div class="section-inner">
+    <span class="label section-eyebrow">Gracias a quienes lo hacen posible</span>
+    <h2 class="display section-title">Nuestros Patrocinadores</h2>
+    <div class="sponsors-grid">
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/DOGGIES%20PARADISE%20.jpeg" alt="Doggies Paradise" class="sponsor-logo">
+        <span class="sponsor-name">Doggies Paradise</span>
+        <a href="https://www.instagram.com/doggiesparadisemx" target="_blank" rel="noopener" class="sponsor-ig">@doggiesparadisemx</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/FRESHLY.jpeg" alt="Freshly" class="sponsor-logo">
+        <span class="sponsor-name">Freshly</span>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/Logotipos%20Ba'Alche-02%20(1).png" alt="Ba'Alche" class="sponsor-logo">
+        <span class="sponsor-name">Ba'Alche</span>
+        <a href="https://www.instagram.com/baalche.pets" target="_blank" rel="noopener" class="sponsor-ig">@baalche.pets</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/ZOO%20BODEGA.jpeg" alt="Zoo Bodega" class="sponsor-logo">
+        <span class="sponsor-name">Zoo Bodega</span>
+        <a href="https://www.instagram.com/zoobodega_ags" target="_blank" rel="noopener" class="sponsor-ig">@zoobodega_ags</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/GU%CC%88ESOS%20LOGO%20con%20slogan%20PNG.png" alt="G&uuml;esos" class="sponsor-logo">
+        <span class="sponsor-name">G&uuml;esos</span>
+        <a href="https://www.instagram.com/ags_guesos" target="_blank" rel="noopener" class="sponsor-ig">@ags_guesos</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/WhatsApp%20Image%202026-07-14%20at%201.09.11%20PM.jpeg" alt="Edu.Can" class="sponsor-logo">
+        <span class="sponsor-name">Edu.Can</span>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/EsperanzaCaninca.jpeg" alt="Esperanza Canina" class="sponsor-logo">
+        <span class="sponsor-name">Esperanza Canina</span>
+        <a href="https://www.instagram.com/esperanzacaninaags" target="_blank" rel="noopener" class="sponsor-ig">@esperanzacaninaags</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/CDC_CAROS_DOG_CLUB.png" alt="Caro's Dog Club" class="sponsor-logo">
+        <span class="sponsor-name">Caro's Dog Club</span>
+        <a href="https://www.instagram.com/carosdogclub" target="_blank" rel="noopener" class="sponsor-ig">@carosdogclub</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/WOOF_MUNCHIES.png" alt="Woof Munchies" class="sponsor-logo">
+        <span class="sponsor-name">Woof Munchies</span>
+        <a href="https://www.instagram.com/woof_munchies" target="_blank" rel="noopener" class="sponsor-ig">@woof_munchies</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/VIDANUPET.png" alt="VidaN&uacute;Pet" class="sponsor-logo">
+        <span class="sponsor-name">VidaN&uacute;Pet</span>
+        <a href="https://www.instagram.com/vida_nupet" target="_blank" rel="noopener" class="sponsor-ig">@vida_nupet</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/ZitaraFooter.jpeg" alt="Zitara" class="sponsor-logo">
+        <span class="sponsor-name">Zitara</span>
+        <a href="https://www.instagram.com/zitaracdresidencial" target="_blank" rel="noopener" class="sponsor-ig">@zitaracdresidencial</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/ZITARA_GOLF_CLUB.png" alt="Zitara Golf Club" class="sponsor-logo">
+        <span class="sponsor-name">Zitara Golf Club</span>
+        <a href="https://www.instagram.com/zitaraclubgolf" target="_blank" rel="noopener" class="sponsor-ig">@zitaraclubgolf</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/barking_town.jpg" alt="Barking Town" class="sponsor-logo">
+        <span class="sponsor-name">Barking Town</span>
+        <a href="https://www.instagram.com/barking_town" target="_blank" rel="noopener" class="sponsor-ig">@barking_town</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/BARBERDOG.png" alt="Barber Dog" class="sponsor-logo">
+        <span class="sponsor-name">Barber Dog</span>
+        <a href="https://www.instagram.com/barberdog.mx" target="_blank" rel="noopener" class="sponsor-ig">@barberdog.mx</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/HOSPET.png" alt="Hospetalia" class="sponsor-logo">
+        <span class="sponsor-name">Hospetalia</span>
+        <a href="https://www.instagram.com/hospetalia" target="_blank" rel="noopener" class="sponsor-ig">@hospetalia</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/patasDeGallo.jpeg" alt="Patas de Gallo" class="sponsor-logo">
+        <span class="sponsor-name">Patas de Gallo</span>
+        <a href="https://www.facebook.com/share/1EVz8Eo87y/" target="_blank" rel="noopener" class="sponsor-ig">Facebook</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/peternos.jpeg" alt="Peternos" class="sponsor-logo">
+        <span class="sponsor-name">Peternos</span>
+        <a href="https://www.instagram.com/peternosmx" target="_blank" rel="noopener" class="sponsor-ig">@peternosmx</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/IMG-20260718-WA0102.jpg" alt="Iliana Event Planner" class="sponsor-logo">
+        <span class="sponsor-name">Iliana Event Planner</span>
+        <a href="https://www.instagram.com/ilianaeventplanner" target="_blank" rel="noopener" class="sponsor-ig">@ilianaeventplanner</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/lavanderias.jpeg" alt="Avanda Lavander&iacute;a" class="sponsor-logo">
+        <span class="sponsor-name">Avanda Lavander&iacute;a</span>
+        <a href="https://www.instagram.com/avandalavanderia" target="_blank" rel="noopener" class="sponsor-ig">@avandalavanderia</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/nucan.jpeg" alt="Nucan" class="sponsor-logo">
+        <span class="sponsor-name">Nucan</span>
+        <a href="https://www.instagram.com/nucan.mx" target="_blank" rel="noopener" class="sponsor-ig">@nucan.mx</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/balu.jpeg" alt="Croquetas Bal&uacute;" class="sponsor-logo">
+        <span class="sponsor-name">Croquetas Bal&uacute;</span>
+        <a href="https://www.instagram.com/croquetasbalu" target="_blank" rel="noopener" class="sponsor-ig">@croquetasbalu</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/dolcefresa.jpeg" alt="DolceFresa" class="sponsor-logo">
+        <span class="sponsor-name">DolceFresa</span>
+        <a href="https://www.instagram.com/dolce.fresa_ags" target="_blank" rel="noopener" class="sponsor-ig">@dolce.fresa_ags</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/snacksNGo.jpeg" alt="Snack SandGo" class="sponsor-logo">
+        <span class="sponsor-name">Snack SandGo</span>
+        <a href="https://www.instagram.com/snack.sandgo" target="_blank" rel="noopener" class="sponsor-ig">@snack.sandgo</a>
+      </div>
+      <div class="sponsor-card">
+        <img src="img/patrocinadores/Captura%20de%20pantalla%202026-07-22%20a%20la(s)%2014.41.41.png" alt="Nata Bakery" class="sponsor-logo">
+        <span class="sponsor-name">Nata Bakery</span>
+        <a href="https://www.instagram.com/nata.bakery.mx" target="_blank" rel="noopener" class="sponsor-ig">@nata.bakery.mx</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer class="footer">
   <p class="footer-logo">DOGMINGO</p>
-  <p class="footer-tagline">El Domingo m&aacute;s Perr&oacute;n del A&ntilde;o &middot; 26 de Julio 2025</p>
+  <p class="footer-tagline">El Domingo m&aacute;s Perr&oacute;n del A&ntilde;o &middot; 26 de Julio 2026</p>
   <div class="footer-sponsors">
-    <div class="footer-sponsor">
-      <span class="label" style="color:var(--text-secondary);margin-bottom:0.5rem;display:block;">Sede del evento</span>
-      <img src="img/zitara-golf-vertical-light.png" alt="Zitara Golf Club" class="footer-sponsor-logo">
-    </div>
-    <div class="footer-sponsor">
-      <span class="label" style="color:var(--text-secondary);margin-bottom:0.5rem;display:block;">Ciudad Residencial</span>
-      <img src="img/zitara-residencial-vertical.png" alt="Zitara Ciudad Residencial & Golf Club" class="footer-sponsor-logo">
-    </div>
+    <img src="img/patrocinadores/ZitaraFooter.jpeg" alt="Zitara" class="footer-sponsor-logo">
   </div>
   <ul class="footer-links">
     <li><a href="#pasaporte">Pasaporte</a></li>
     <li><a href="#actividades">Actividades</a></li>
-    <li><a href="#boletos">Boletos</a></li>
+    <li><a href="#boletos">Acceso</a></li>
     <li><a href="#registro">Registro</a></li>
-    <li><a href="#stand" onclick="openStand();return false;">Portal Stands</a></li>
-    <li><a href="admin.html">Panel Admin</a></li>
+    <li><a href="#misSellos">Mis Sellos</a></li>
+    <li><a href="#patrocinadores">Patrocinadores</a></li>
     <li><a href="#ubicacion">Ubicaci&oacute;n</a></li>
   </ul>
   <p class="footer-copy">Evento organizado por Zitara Club & Golf en beneficio de Esperanza Canina</p>

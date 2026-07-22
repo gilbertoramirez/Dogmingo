@@ -3,11 +3,15 @@ const path = require('path');
 const crypto = require('crypto');
 const { getDb, registros, sellos, vendedores } = require('./db');
 const { createToken, verifyToken, hashPassword } = require('./api/_auth');
-const { eq, and, asc, count } = require('drizzle-orm');
+const { eq, or, and, asc, desc, count } = require('drizzle-orm');
 const nodemailer = require('nodemailer');
 const { neon } = require('@neondatabase/serverless');
 
 const CODE_SECRET = process.env.VENDOR_SECRET || 'dgm2025-vendor-key';
+
+const ALL_STAMP_IDS = [1,2,3,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
+const TOTAL_STAMPS = ALL_STAMP_IDS.length;
+const RAFFLE_STAMPS = 6;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +27,7 @@ function cors(req, res, next) {
   next();
 }
 app.use('/api', cors);
+app.use('/api', function (req, res, next) { autoMigrate().then(next).catch(next); });
 
 // ── Setup (create tables) ──
 app.get('/api/setup', async (req, res) => {
@@ -64,10 +69,19 @@ app.get('/api/setup', async (req, res) => {
         password_hash TEXT NOT NULL,
         stand_num     INTEGER NOT NULL,
         es_admin      BOOLEAN DEFAULT FALSE,
+        es_subadmin   BOOLEAN DEFAULT FALSE,
         activo        BOOLEAN DEFAULT TRUE,
         created_at    TIMESTAMPTZ DEFAULT NOW()
       )
     `;
+    await sql`
+      ALTER TABLE vendedores ADD COLUMN IF NOT EXISTS es_subadmin BOOLEAN DEFAULT FALSE
+    `;
+    await sql`CREATE INDEX IF NOT EXISTS idx_registros_email ON registros(email)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_registros_telefono ON registros(telefono)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_sellos_folio ON sellos(folio)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_vendedores_telefono ON vendedores(telefono)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_vendedores_stand ON vendedores(stand_num)`;
     const tables = await sql`
       SELECT table_name FROM information_schema.tables
       WHERE table_schema = 'public' ORDER BY table_name
@@ -128,12 +142,12 @@ app.post('/api/send-code', async (req, res) => {
       subject: 'Tu código de verificación - Dogmingo',
       html: [
         '<div style="font-family:system-ui,sans-serif;max-width:400px;margin:0 auto;background:#FAF8F3;padding:2rem;border-radius:16px;text-align:center;">',
-        '<h1 style="color:#D93B1E;font-size:1.8rem;margin:0 0 0.5rem;">DOGMINGO</h1>',
+        '<h1 style="color:#BF7634;font-size:1.8rem;margin:0 0 0.5rem;">DOGMINGO</h1>',
         '<p style="color:#5C584F;margin:0 0 1.5rem;">El Domingo más Perrón del Año</p>',
         '<hr style="border:none;border-top:2px dashed #D4C9B5;margin:0 0 1.5rem;">',
         '<p style="color:#191714;font-size:1rem;margin:0 0 1rem;">Tu código de verificación es:</p>',
         '<div style="background:#FFFFFF;padding:1rem;border-radius:12px;margin:0 0 1rem;">',
-        '<span style="font-size:2.5rem;font-weight:800;letter-spacing:0.3em;color:#2D6A3F;">' + code + '</span>',
+        '<span style="font-size:2.5rem;font-weight:800;letter-spacing:0.3em;color:#313323;">' + code + '</span>',
         '</div>',
         '<p style="color:#8A8378;font-size:0.85rem;margin:0;">Este código expira en 10 minutos.</p>',
         '</div>',
@@ -164,6 +178,12 @@ app.post('/api/register', async (req, res) => {
   const { folio, nombre, apellido, email, telefono, adultos, ninos, traePerro, nombrePerro, verificationToken, verificationCode } = req.body || {};
   if (!folio || !nombre || !apellido || !email || !telefono) {
     return res.status(400).json({ error: 'Missing required fields' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    return res.status(400).json({ error: 'Correo electrónico no válido' });
+  }
+  if (telefono.replace(/\D/g, '').length !== 10) {
+    return res.status(400).json({ error: 'El teléfono debe ser de 10 dígitos' });
   }
   if (!verificationToken || !verificationCode) {
     return res.status(400).json({ error: 'Código de verificación requerido' });
@@ -268,17 +288,22 @@ app.get('/api/stamps', async (req, res) => {
 
 // ── Stamps lookup by email (public) ──
 app.get('/api/stamps/lookup', async (req, res) => {
-  const email = (req.query.email || '').toLowerCase().trim();
-  if (!email) return res.status(400).json({ error: 'Email requerido' });
+  const q = (req.query.q || req.query.email || '').trim();
+  if (!q) return res.status(400).json({ error: 'Correo o teléfono requerido' });
 
   const db = getDb();
   if (!db) return res.json({ ok: false, error: 'Base de datos no disponible' });
 
+  const isEmail = q.includes('@');
+  const searchVal = isEmail ? q.toLowerCase() : q.replace(/\D/g, '');
+
   try {
     const reg = await db.select({
       folio: registros.folio, nombre: registros.nombre, apellido: registros.apellido,
-    }).from(registros).where(eq(registros.email, email));
-    if (reg.length === 0) return res.json({ ok: false, error: 'No se encontró un registro con ese correo.' });
+    }).from(registros).where(
+      isEmail ? eq(registros.email, searchVal) : eq(registros.telefono, searchVal)
+    );
+    if (reg.length === 0) return res.json({ ok: false, error: 'No se encontró un registro con ese correo o teléfono.' });
 
     const stamps = await db.select({ stand_num: sellos.stand_num })
       .from(sellos).where(eq(sellos.folio, reg[0].folio)).orderBy(asc(sellos.stand_num));
@@ -315,13 +340,13 @@ app.post('/api/send-passport', async (req, res) => {
       subject: 'Tu Pasaporte Perruno - Dogmingo',
       html: [
         '<div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;background:#FAF8F3;padding:2rem;border-radius:16px;">',
-        '<h1 style="color:#D93B1E;text-align:center;font-size:2rem;margin:0 0 0.5rem;">DOGMINGO</h1>',
+        '<h1 style="color:#BF7634;text-align:center;font-size:2rem;margin:0 0 0.5rem;">DOGMINGO</h1>',
         '<p style="text-align:center;color:#5C584F;margin:0 0 1.5rem;">El Domingo más Perrón del Año</p>',
         '<hr style="border:none;border-top:2px dashed #D4C9B5;margin:0 0 1.5rem;">',
         '<h2 style="color:#191714;text-align:center;margin:0 0 0.5rem;">¡Hola ' + nombre + '!</h2>',
         '<p style="color:#5C584F;text-align:center;margin:0 0 1.5rem;">Tu registro ha sido confirmado. Aquí está tu Pasaporte Perruno digital.</p>',
         '<div style="background:#FFFFFF;padding:1.5rem;border-radius:12px;margin:0 0 1.5rem;text-align:center;">',
-        '<p style="font-weight:700;color:#2D6A3F;margin:0 0 0.5rem;">Tu folio: ' + folio + '</p>',
+        '<p style="font-weight:700;color:#313323;margin:0 0 0.5rem;">Tu folio: ' + folio + '</p>',
         '<p style="color:#8A8378;font-size:0.9rem;margin:0;">Muestra este folio o tu código QR en cada stand para que te sellen tu pasaporte.</p>',
         '</div>',
         '<p style="color:#5C584F;text-align:center;margin:0 0 1.5rem;">Tu pasaporte está adjunto como imagen.</p>',
@@ -346,10 +371,33 @@ app.post('/api/vendor/login', async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
 
-  if (email === 'admin' && password === (process.env.ADMIN_PASSWORD || '')) {
-    if (!process.env.ADMIN_PASSWORD) return res.status(500).json({ error: 'Admin password not configured' });
-    const token = createToken({ id: 0, stand_num: 0, es_admin: true });
-    return res.json({ ok: true, token, vendor: { nombre: 'Administrador', stand_num: 0, es_admin: true } });
+  if (email === 'admin') {
+    const db = getDb();
+    if (db) {
+      try {
+        const existing = await db.select({ id: vendedores.id, password_hash: vendedores.password_hash })
+          .from(vendedores).where(and(eq(vendedores.email, 'admin'), eq(vendedores.es_admin, true)));
+        if (existing.length > 0) {
+          const inputHash = hashPassword(password);
+          if (existing[0].password_hash !== inputHash) return res.status(401).json({ error: 'Credenciales inválidas' });
+          const token = createToken({ id: existing[0].id, stand_num: 0, es_admin: true });
+          return res.json({ ok: true, token, vendor: { nombre: 'Administrador', stand_num: 0, es_admin: true } });
+        }
+        if (password !== (process.env.ADMIN_PASSWORD || 'admin')) return res.status(401).json({ error: 'Credenciales inválidas' });
+        const hash = hashPassword(password);
+        const rows = await db.insert(vendedores).values({ nombre: 'Administrador', email: 'admin', password_hash: hash, stand_num: 0, es_admin: true })
+          .returning({ id: vendedores.id });
+        const token = createToken({ id: rows[0].id, stand_num: 0, es_admin: true });
+        return res.json({ ok: true, token, vendor: { nombre: 'Administrador', stand_num: 0, es_admin: true } });
+      } catch (err) {
+        console.error('Admin login DB error:', err);
+      }
+    }
+    if (password === (process.env.ADMIN_PASSWORD || 'admin')) {
+      const token = createToken({ id: 0, stand_num: 0, es_admin: true });
+      return res.json({ ok: true, token, vendor: { nombre: 'Administrador', stand_num: 0, es_admin: true } });
+    }
+    return res.status(401).json({ error: 'Credenciales inválidas' });
   }
 
   const db = getDb();
@@ -359,15 +407,19 @@ app.post('/api/vendor/login', async (req, res) => {
     const hash = hashPassword(password);
     const rows = await db.select({
       id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email,
-      stand_num: vendedores.stand_num, es_admin: vendedores.es_admin,
+      stand_num: vendedores.stand_num, es_admin: vendedores.es_admin, es_subadmin: vendedores.es_subadmin,
     }).from(vendedores).where(
-      and(eq(vendedores.email, email), eq(vendedores.password_hash, hash), eq(vendedores.activo, true))
+      and(
+        or(eq(vendedores.email, email), eq(vendedores.telefono, email)),
+        eq(vendedores.password_hash, hash),
+        eq(vendedores.activo, true)
+      )
     );
     if (rows.length === 0) return res.status(401).json({ error: 'Credenciales inválidas' });
 
     const vendor = rows[0];
     const token = createToken(vendor);
-    return res.json({ ok: true, token, vendor: { nombre: vendor.nombre, stand_num: vendor.stand_num, es_admin: vendor.es_admin } });
+    return res.json({ ok: true, token, vendor: { nombre: vendor.nombre, stand_num: vendor.stand_num, es_admin: vendor.es_admin, es_subadmin: vendor.es_subadmin } });
   } catch (err) {
     console.error('Login error:', err);
     return res.status(500).json({ error: 'Login failed' });
@@ -424,7 +476,7 @@ app.post('/api/vendor/stamp', async (req, res) => {
   if (!folio) return res.status(400).json({ error: 'Folio required' });
 
   const standNum = auth.admin ? (stand_num || 0) : auth.stand;
-  if (standNum < 1 || standNum > 6) return res.status(400).json({ error: 'Stand inválido (1-6)' });
+  if (ALL_STAMP_IDS.indexOf(standNum) === -1) return res.status(400).json({ error: 'Stand inválido' });
 
   const db = getDb();
   if (!db) return res.status(500).json({ error: 'Database not configured' });
@@ -444,7 +496,7 @@ app.post('/api/vendor/stamp', async (req, res) => {
     const allStamps = await db.select({ stand_num: sellos.stand_num }).from(sellos).where(eq(sellos.folio, folio));
     const totalStamps = allStamps.length;
 
-    if (totalStamps === 6) {
+    if (totalStamps === RAFFLE_STAMPS) {
       try {
         const fullReg = await db.select({ email: registros.email, nombre: registros.nombre, apellido: registros.apellido })
           .from(registros).where(eq(registros.folio, folio));
@@ -454,14 +506,14 @@ app.post('/api/vendor/stamp', async (req, res) => {
           await transporter.sendMail({
             from: process.env.GMAIL_USER,
             to: fullReg[0].email,
-            subject: '¡Completaste todos los sellos! 🐾 - Dogmingo',
+            subject: '¡Ya participas en la rifa! 🐾 - Dogmingo',
             html: [
               '<div style="font-family:system-ui,sans-serif;max-width:480px;margin:0 auto;background:#FAF8F3;padding:2rem;border-radius:16px;text-align:center;">',
               '<h1 style="color:#3A5A3E;font-size:1.8rem;margin:0 0 0.5rem;">¡FELICIDADES!</h1>',
-              '<p style="color:#C4923A;font-weight:700;font-size:1.2rem;margin:0 0 1rem;">🐾 🐾 🐾 🐾 🐾 🐾</p>',
-              '<p style="color:#191714;font-size:1.1rem;margin:0 0 1rem;"><strong>' + nombre + '</strong>, completaste los 6 sellos de tu Pasaporte Perruno.</p>',
+              '<p style="color:#C4923A;font-weight:700;font-size:1.2rem;margin:0 0 1rem;">🐾 🐾 🐾</p>',
+              '<p style="color:#191714;font-size:1.1rem;margin:0 0 1rem;"><strong>' + nombre + '</strong>, completaste ' + RAFFLE_STAMPS + ' sellos de tu Pasaporte Perruno.</p>',
               '<div style="background:#3A5A3E;color:#FBF7F0;padding:1.25rem;border-radius:12px;margin:0 0 1.5rem;">',
-              '<p style="margin:0;font-size:1rem;font-weight:700;">Presenta tu pasaporte en el stand principal para reclamar tu premio.</p>',
+              '<p style="margin:0;font-size:1rem;font-weight:700;">¡Ya participas en la rifa! El ganador se anunciará al final del evento.</p>',
               '</div>',
               '<p style="color:#6B6558;font-size:0.85rem;margin:0;">Folio: <strong>' + folio + '</strong></p>',
               '<hr style="border:none;border-top:2px dashed #D4C9B5;margin:1.5rem 0;">',
@@ -489,24 +541,161 @@ app.post('/api/vendor/stamp', async (req, res) => {
 app.post('/api/vendor/create', async (req, res) => {
   const token = (req.headers.authorization || '').replace('Bearer ', '');
   const auth = verifyToken(token);
-  if (!auth || !auth.admin) return res.status(403).json({ error: 'Acceso de administrador requerido' });
+  if (!auth) return res.status(403).json({ error: 'No autorizado' });
+  if (!auth.admin && !auth.subadmin) return res.status(403).json({ error: 'No tienes permisos para crear vendedores' });
 
-  const { nombre, email, password, stand_num } = req.body || {};
-  if (!nombre || !email || !password || !stand_num) return res.status(400).json({ error: 'Todos los campos son requeridos' });
-  if (stand_num < 1 || stand_num > 6) return res.status(400).json({ error: 'Stand debe ser 1-6' });
+  const { nombre, email: identifier, password, stand_num } = req.body || {};
+  if (!nombre || !identifier || !password) return res.status(400).json({ error: 'Todos los campos son requeridos' });
+
+  const isPhone = /^\d{10}$/.test(identifier.replace(/\D/g, ''));
+  const vendorEmail = isPhone ? identifier.replace(/\D/g, '') : identifier;
+  const vendorTelefono = isPhone ? identifier.replace(/\D/g, '') : null;
+
+  const assignedStand = auth.admin ? (parseInt(stand_num) || 1) : auth.stand;
+  if (ALL_STAMP_IDS.indexOf(assignedStand) === -1) return res.status(400).json({ error: 'Stand inválido' });
+
+  const isSubadmin = auth.admin ? true : false;
 
   const db = getDb();
   if (!db) return res.status(500).json({ error: 'Database not configured' });
 
   try {
     const hash = hashPassword(password);
-    const rows = await db.insert(vendedores).values({ nombre, email, password_hash: hash, stand_num })
-      .onConflictDoUpdate({ target: vendedores.email, set: { nombre, password_hash: hash, stand_num, activo: true } })
+    const rows = await db.insert(vendedores).values({ nombre, email: vendorEmail, telefono: vendorTelefono, password_hash: hash, stand_num: assignedStand, es_subadmin: isSubadmin })
+      .onConflictDoUpdate({ target: vendedores.email, set: { nombre, password_hash: hash, stand_num: assignedStand, es_subadmin: isSubadmin, telefono: vendorTelefono, activo: true } })
       .returning({ id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email, stand_num: vendedores.stand_num, activo: vendedores.activo });
     return res.status(201).json({ ok: true, vendor: rows[0] });
   } catch (err) {
     console.error('Create vendor error:', err);
-    return res.status(500).json({ error: 'Failed to create vendor' });
+    return res.status(500).json({ error: 'Error al crear vendedor' });
+  }
+});
+
+// ── Vendor: Change password ──
+app.post('/api/vendor/change-password', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth) return res.status(403).json({ error: 'No autorizado' });
+
+  const { vendor_email, new_password, current_password } = req.body || {};
+
+  if (auth.admin && vendor_email) {
+    if (!new_password || new_password.length < 4) return res.status(400).json({ error: 'La contraseña debe tener al menos 4 caracteres' });
+    const db = getDb();
+    if (!db) return res.status(500).json({ error: 'Database not configured' });
+    try {
+      const hash = hashPassword(new_password);
+      const rows = await db.update(vendedores).set({ password_hash: hash }).where(eq(vendedores.email, vendor_email)).returning({ id: vendedores.id });
+      if (rows.length === 0) return res.status(404).json({ error: 'Vendedor no encontrado' });
+      return res.json({ ok: true });
+    } catch (err) {
+      console.error('Change password error:', err);
+      return res.status(500).json({ error: 'Error al cambiar contraseña' });
+    }
+  }
+
+  if (!current_password) return res.status(400).json({ error: 'Contraseña actual requerida' });
+  if (!new_password || new_password.length < 4) return res.status(400).json({ error: 'La nueva contraseña debe tener al menos 4 caracteres' });
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+  try {
+    const currentHash = hashPassword(current_password);
+    const existing = await db.select({ id: vendedores.id }).from(vendedores)
+      .where(and(eq(vendedores.id, auth.id), eq(vendedores.password_hash, currentHash)));
+    if (existing.length === 0) return res.status(403).json({ error: 'Contraseña actual incorrecta' });
+
+    const hash = hashPassword(new_password);
+    const rows = await db.update(vendedores).set({ password_hash: hash }).where(eq(vendedores.id, auth.id)).returning({ id: vendedores.id });
+    if (rows.length === 0) return res.status(404).json({ error: 'Vendedor no encontrado' });
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error('Change password error:', err);
+    return res.status(500).json({ error: 'Error al cambiar contraseña' });
+  }
+});
+
+// ── Admin: Change vendor stand ──
+app.post('/api/vendor/change-stand', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth || !auth.admin) return res.status(403).json({ error: 'Acceso de administrador requerido' });
+
+  const { vendor_email, new_stand } = req.body || {};
+  if (!vendor_email || !new_stand) return res.status(400).json({ error: 'Datos incompletos' });
+  const standNum = parseInt(new_stand, 10);
+  if (isNaN(standNum)) return res.status(400).json({ error: 'Stand inválido' });
+
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+  try {
+    const rows = await db.update(vendedores).set({ stand_num: standNum }).where(eq(vendedores.email, vendor_email)).returning({ id: vendedores.id });
+    if (rows.length === 0) return res.status(404).json({ error: 'Vendedor no encontrado' });
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error('Change stand error:', err);
+    return res.status(500).json({ error: 'Error al cambiar stand' });
+  }
+});
+
+// ── Admin: List registros ──
+app.get('/api/admin/registros', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth || !auth.admin) return res.status(403).json({ error: 'Acceso de administrador requerido' });
+
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+
+  try {
+    const regs = await db.select({
+      folio: registros.folio, nombre: registros.nombre, apellido: registros.apellido,
+      email: registros.email, telefono: registros.telefono,
+      adultos: registros.adultos, ninos: registros.ninos,
+      trae_perro: registros.trae_perro, nombre_perro: registros.nombre_perro,
+      created_at: registros.created_at,
+    }).from(registros).orderBy(desc(registros.created_at));
+
+    const allStamps = await db.select({
+      folio: sellos.folio, stand_num: sellos.stand_num,
+    }).from(sellos);
+
+    const stampMap = {};
+    allStamps.forEach(s => {
+      if (!stampMap[s.folio]) stampMap[s.folio] = [];
+      stampMap[s.folio].push(s.stand_num);
+    });
+
+    const result = regs.map(r => ({
+      ...r,
+      stamps: stampMap[r.folio] || [],
+    }));
+
+    return res.json({ ok: true, registros: result });
+  } catch (err) {
+    console.error('Admin registros error:', err);
+    return res.status(500).json({ error: 'Error al cargar registros' });
+  }
+});
+
+// ── Vendor: Team (same stand) ──
+app.get('/api/vendor/team', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth) return res.status(401).json({ error: 'No autorizado' });
+
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+
+  try {
+    const vendors = await db.select({
+      id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email,
+    }).from(vendedores).where(
+      and(eq(vendedores.stand_num, auth.stand), eq(vendedores.activo, true))
+    ).orderBy(asc(vendedores.nombre));
+    return res.json({ ok: true, vendors });
+  } catch (err) {
+    console.error('Team list error:', err);
+    return res.status(500).json({ error: 'Error al cargar equipo' });
   }
 });
 
@@ -520,7 +709,10 @@ app.get('/api/vendor/list', async (req, res) => {
   if (!db) return res.status(500).json({ error: 'Database not configured' });
 
   try {
-    const vendors = await db.select().from(vendedores).orderBy(asc(vendedores.stand_num), asc(vendedores.nombre));
+    const vendors = await db.select({
+      id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email,
+      stand_num: vendedores.stand_num, es_admin: vendedores.es_admin, activo: vendedores.activo,
+    }).from(vendedores).orderBy(asc(vendedores.stand_num), asc(vendedores.nombre));
     const regCount = await db.select({ total: count() }).from(registros);
     const stampCount = await db.select({ total: count() }).from(sellos);
     return res.json({
@@ -533,9 +725,133 @@ app.get('/api/vendor/list', async (req, res) => {
   }
 });
 
+// ── Admin: Raffle eligible ──
+app.get('/api/admin/raffle-eligible', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth || !auth.admin) return res.status(403).json({ error: 'Acceso de administrador requerido' });
+
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+
+  try {
+    const regs = await db.select({
+      folio: registros.folio, nombre: registros.nombre, apellido: registros.apellido,
+      email: registros.email, telefono: registros.telefono,
+      gano_rifa: registros.gano_rifa,
+    }).from(registros).orderBy(asc(registros.nombre));
+
+    const allStamps = await db.select({
+      folio: sellos.folio, stand_num: sellos.stand_num,
+    }).from(sellos);
+
+    const stampMap = {};
+    allStamps.forEach(s => {
+      if (!stampMap[s.folio]) stampMap[s.folio] = [];
+      stampMap[s.folio].push(s.stand_num);
+    });
+
+    const eligible = regs.filter(r => {
+      const userStamps = stampMap[r.folio] || [];
+      return userStamps.length >= RAFFLE_STAMPS && !r.gano_rifa;
+    });
+
+    return res.json({ ok: true, eligible, total_required: RAFFLE_STAMPS });
+  } catch (err) {
+    console.error('Raffle eligible error:', err);
+    return res.status(500).json({ error: 'Error al cargar participantes' });
+  }
+});
+
+app.post('/api/admin/raffle-winner', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth || !auth.admin) return res.status(403).json({ error: 'Acceso de administrador requerido' });
+
+  const { folio } = req.body || {};
+  if (!folio) return res.status(400).json({ error: 'Folio requerido' });
+
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+
+  try {
+    await db.update(registros).set({ gano_rifa: true }).where(eq(registros.folio, folio));
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error('Raffle winner error:', err);
+    return res.status(500).json({ error: 'Error al marcar ganador' });
+  }
+});
+
+// ── Seed test data (temporary, remove before production) ──
+app.post('/api/admin/seed-test', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth || !auth.admin) return res.status(403).json({ error: 'Admin requerido' });
+
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+
+  const testUsers = [
+    { nombre: 'María', apellido: 'López', email: 'maria.test@demo.com', telefono: '4491000001', adultos: 2, ninos: 1, trae_perro: true, nombre_perro: 'Firulais' },
+    { nombre: 'Carlos', apellido: 'Hernández', email: 'carlos.test@demo.com', telefono: '4491000002', adultos: 1, ninos: 0, trae_perro: true, nombre_perro: 'Luna' },
+    { nombre: 'Ana', apellido: 'García', email: 'ana.test@demo.com', telefono: '4491000003', adultos: 2, ninos: 2, trae_perro: false, nombre_perro: '' },
+    { nombre: 'Roberto', apellido: 'Martínez', email: 'roberto.test@demo.com', telefono: '4491000004', adultos: 1, ninos: 0, trae_perro: true, nombre_perro: 'Max' },
+    { nombre: 'Sofía', apellido: 'Ramírez', email: 'sofia.test@demo.com', telefono: '4491000005', adultos: 1, ninos: 1, trae_perro: true, nombre_perro: 'Coco' },
+    { nombre: 'Diego', apellido: 'Torres', email: 'diego.test@demo.com', telefono: '4491000006', adultos: 2, ninos: 0, trae_perro: true, nombre_perro: 'Rocky' },
+    { nombre: 'Laura', apellido: 'Sánchez', email: 'laura.test@demo.com', telefono: '4491000007', adultos: 1, ninos: 0, trae_perro: false, nombre_perro: '' },
+    { nombre: 'Pedro', apellido: 'Flores', email: 'pedro.test@demo.com', telefono: '4491000008', adultos: 1, ninos: 3, trae_perro: true, nombre_perro: 'Canela' },
+  ];
+
+  try {
+    let created = 0;
+    for (const user of testUsers) {
+      const folio = 'DGM-TEST' + (created + 1);
+      try {
+        await db.insert(registros).values({ folio, ...user }).onConflictDoNothing();
+        created++;
+
+        // Assign random stamps (6-10 per user so most qualify for raffle)
+        const numStamps = 6 + Math.floor(Math.random() * 5);
+        const shuffled = ALL_STAMP_IDS.slice().sort(() => Math.random() - 0.5);
+        const userStamps = shuffled.slice(0, numStamps);
+        for (const stampId of userStamps) {
+          const code = makeStampCode(folio, stampId);
+          await db.insert(sellos).values({ folio, stand_num: stampId, stamp_code: code }).onConflictDoNothing();
+        }
+      } catch (e) { /* skip duplicates */ }
+    }
+    return res.json({ ok: true, message: created + ' registros de prueba creados con sellos aleatorios (6-10 cada uno)' });
+  } catch (err) {
+    console.error('Seed error:', err);
+    return res.status(500).json({ error: 'Error al crear datos de prueba' });
+  }
+});
+
+let migrated = false;
+async function autoMigrate() {
+  if (migrated || !process.env.DATABASE_URL) return;
+  migrated = true;
+  try {
+    const sql = neon(process.env.DATABASE_URL);
+    await sql`ALTER TABLE vendedores ADD COLUMN IF NOT EXISTS es_subadmin BOOLEAN DEFAULT FALSE`;
+    await sql`ALTER TABLE registros ADD COLUMN IF NOT EXISTS gano_rifa BOOLEAN DEFAULT FALSE`;
+    await sql`ALTER TABLE vendedores ADD COLUMN IF NOT EXISTS telefono TEXT`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_registros_email ON registros(email)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_registros_telefono ON registros(telefono)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_sellos_folio ON sellos(folio)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_vendedores_telefono ON vendedores(telefono)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_vendedores_stand ON vendedores(stand_num)`;
+  } catch (err) {
+    console.error('Auto-migrate error (non-fatal):', err.message);
+  }
+}
+
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log('Dogmingo server running on port ' + PORT);
+  autoMigrate().then(() => {
+    app.listen(PORT, () => {
+      console.log('Dogmingo server running on port ' + PORT);
+    });
   });
 }
 

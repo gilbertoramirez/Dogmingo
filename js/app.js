@@ -9,7 +9,7 @@ function renderQRToCanvas(text, size) {
   var cellSize = size / count;
   ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(0, 0, size, size);
-  ctx.fillStyle = '#2C2A24';
+  ctx.fillStyle = '#313323';
   for (var row = 0; row < count; row++) {
     for (var col = 0; col < count; col++) {
       if (qr.isDark(row, col)) {
@@ -24,7 +24,42 @@ function renderQRToCanvas(text, size) {
 // Stamp verification system
 // ══════════════════════════════════════════════════════
 var STAMP_SECRET = 'dgm2025zitara';
-var STATION_NAMES = ['Bendicion', 'Huellas', 'Adiestramiento', 'Agilidad', 'Mercadito', 'Adopcion'];
+var STAMP_MAP = [
+  { id: 1, name: 'Bendición Canina', type: 'actividad', img: null },
+  { id: 2, name: 'Huellas del Alma', type: 'actividad', img: null },
+  { id: 3, name: 'Adiestramiento', type: 'actividad', img: null },
+  { id: 6, name: 'Pasarela de Adopción', type: 'actividad', img: null },
+  { id: 7, name: 'Doggies Paradise', type: 'patrocinador', img: 'img/patrocinadores/DOGGIES%20PARADISE%20.jpeg' },
+  { id: 8, name: 'Freshly', type: 'patrocinador', img: 'img/patrocinadores/FRESHLY.jpeg' },
+  { id: 9, name: "Ba'Alche", type: 'patrocinador', img: 'img/patrocinadores/Logotipos%20Ba%27Alche-02%20(1).png' },
+  { id: 10, name: 'Zoo Bodega', type: 'patrocinador', img: 'img/patrocinadores/ZOO%20BODEGA.jpeg' },
+  { id: 11, name: 'Güesos', type: 'patrocinador', img: 'img/patrocinadores/GU%CC%88ESOS%20LOGO%20con%20slogan%20PNG.png' },
+  { id: 12, name: 'Edu.Can', type: 'patrocinador', img: 'img/patrocinadores/WhatsApp%20Image%202026-07-14%20at%201.09.11%20PM.jpeg' },
+  { id: 13, name: 'Esperanza Canina', type: 'patrocinador', img: 'img/patrocinadores/EsperanzaCaninca.jpeg' },
+  { id: 14, name: "Caro's Dog Club", type: 'patrocinador', img: 'img/patrocinadores/CDC_CAROS_DOG_CLUB.png' },
+  { id: 15, name: 'Woof Munchies', type: 'patrocinador', img: 'img/patrocinadores/WOOF_MUNCHIES.png' },
+  { id: 16, name: 'VidaNúPet', type: 'patrocinador', img: 'img/patrocinadores/VIDANUPET.png' },
+  { id: 17, name: 'Zitara', type: 'patrocinador', img: 'img/patrocinadores/ZITARA.png' },
+  { id: 18, name: 'Zitara Golf Club', type: 'patrocinador', img: 'img/patrocinadores/ZITARA_GOLF_CLUB.png' },
+  { id: 19, name: 'Barking Town', type: 'patrocinador', img: 'img/patrocinadores/barking_town.jpg' },
+  { id: 20, name: 'Barber Dog', type: 'patrocinador', img: 'img/patrocinadores/BARBERDOG.png' },
+  { id: 21, name: 'Hospetalia', type: 'patrocinador', img: 'img/patrocinadores/HOSPET.png' },
+  { id: 22, name: 'Patas de Gallo', type: 'patrocinador', img: 'img/patrocinadores/patasDeGallo.jpeg' },
+  { id: 23, name: 'Peternos', type: 'patrocinador', img: 'img/patrocinadores/peternos.jpeg' },
+  { id: 24, name: 'Iliana Event Planner', type: 'patrocinador', img: 'img/patrocinadores/IMG-20260718-WA0102.jpg' },
+  { id: 25, name: 'Avanda Lavandería', type: 'patrocinador', img: 'img/patrocinadores/lavanderias.jpeg' },
+  { id: 26, name: 'Nucan', type: 'patrocinador', img: 'img/patrocinadores/nucan.jpeg' },
+  { id: 27, name: 'Croquetas Balú', type: 'patrocinador', img: 'img/patrocinadores/balu.jpeg' },
+  { id: 28, name: 'DolceFresa', type: 'patrocinador', img: 'img/patrocinadores/dolcefresa.jpeg' },
+  { id: 29, name: 'Snack SandGo', type: 'patrocinador', img: 'img/patrocinadores/snacksNGo.jpeg' },
+  { id: 30, name: 'Nata Bakery', type: 'patrocinador', img: 'img/patrocinadores/Captura%20de%20pantalla%202026-07-22%20a%20la(s)%2014.41.41.png' },
+];
+var ALL_STAMP_IDS = STAMP_MAP.map(function(s) { return s.id; });
+var TOTAL_STAMPS = STAMP_MAP.length;
+var RAFFLE_STAMPS = 6;
+var STAMP_NAME_MAP = {};
+var STAMP_IMG_MAP = {};
+STAMP_MAP.forEach(function(s) { STAMP_NAME_MAP[s.id] = s.name; STAMP_IMG_MAP[s.id] = s.img; });
 
 function stampHash(folio, stand) {
   var s = folio + '-' + stand + '-' + STAMP_SECRET;
@@ -42,8 +77,9 @@ function makeStampCode(folio, stand) {
 
 function verifyStampCode(folio, code) {
   code = code.trim().toUpperCase();
-  for (var i = 1; i <= 6; i++) {
-    if (code === makeStampCode(folio, i)) return i;
+  for (var i = 0; i < ALL_STAMP_IDS.length; i++) {
+    var id = ALL_STAMP_IDS[i];
+    if (code === makeStampCode(folio, id)) return id;
   }
   return 0;
 }
@@ -193,7 +229,7 @@ var pawsList = [];
 function hResize() { hCanvas.width = hCanvas.offsetWidth * devicePixelRatio; hCanvas.height = hCanvas.offsetHeight * devicePixelRatio; hCtx.scale(devicePixelRatio, devicePixelRatio); }
 hResize(); window.addEventListener('resize', hResize);
 function drawPaw(x, y, sz, rot, a) {
-  hCtx.save(); hCtx.translate(x, y); hCtx.rotate(rot); hCtx.globalAlpha = a; hCtx.fillStyle = '#C4923A';
+  hCtx.save(); hCtx.translate(x, y); hCtx.rotate(rot); hCtx.globalAlpha = a; hCtx.fillStyle = '#BF7634';
   hCtx.beginPath(); hCtx.ellipse(0, sz*0.3, sz*0.45, sz*0.35, 0, 0, Math.PI*2); hCtx.fill();
   [[-sz*0.35,-sz*0.15,sz*0.18],[-sz*0.12,-sz*0.35,sz*0.16],[sz*0.12,-sz*0.35,sz*0.16],[sz*0.35,-sz*0.15,sz*0.18]].forEach(function(p){
     hCtx.beginPath(); hCtx.ellipse(p[0], p[1], p[2], p[2]*1.15, 0, 0, Math.PI*2); hCtx.fill();
@@ -231,50 +267,75 @@ var currentStamps = [];
 function generatePassport(data, stamps) {
   var c = document.getElementById('passportCanvas');
   var ctx = c.getContext('2d');
-  var W = 800, H = 1300;
+  var W = 800, H = 2200;
   c.width = W; c.height = H;
-  ctx.fillStyle = '#FBF7F0'; ctx.beginPath(); ctx.roundRect(0, 0, W, H, 20); ctx.fill();
+  ctx.fillStyle = '#F4E6D0'; ctx.beginPath(); ctx.roundRect(0, 0, W, H, 20); ctx.fill();
   ctx.strokeStyle = '#D4C9B5'; ctx.lineWidth = 3; ctx.setLineDash([8, 4]);
   ctx.beginPath(); ctx.roundRect(20, 20, W-40, H-40, 16); ctx.stroke(); ctx.setLineDash([]);
-  ctx.fillStyle = '#C4923A'; ctx.beginPath(); ctx.roundRect(40, 40, W-80, 100, [12, 12, 0, 0]); ctx.fill();
+  ctx.fillStyle = '#BF7634'; ctx.beginPath(); ctx.roundRect(40, 40, W-80, 100, [12, 12, 0, 0]); ctx.fill();
   ctx.fillStyle = '#FFFFFF'; ctx.font = '900 36px system-ui, sans-serif'; ctx.textAlign = 'center';
   ctx.fillText('PASAPORTE PERRUNO', W/2, 105);
   ctx.fillStyle = '#8A7E6E'; ctx.font = '700 16px system-ui, sans-serif';
-  ctx.fillText('DOGMINGO · 26 JULIO 2025', W/2, 175);
+  ctx.fillText('DOGMINGO · 26 JULIO 2026', W/2, 175);
   var dogCanvas = document.createElement('canvas'); dogCanvas.width = 200; dogCanvas.height = 200;
   drawDog(dogCanvas, 'golden'); ctx.drawImage(dogCanvas, W/2-60, 195, 120, 120);
-  ctx.fillStyle = '#2C2A24'; ctx.font = '800 28px system-ui, sans-serif';
+  ctx.fillStyle = '#313323'; ctx.font = '800 28px system-ui, sans-serif';
   ctx.fillText(data.nombre + ' ' + data.apellido, W/2, 355);
   if (data.nombre_perro) { ctx.fillStyle = '#6B6558'; ctx.font = '600 20px system-ui, sans-serif'; ctx.fillText('y su perro ' + data.nombre_perro, W/2, 385); }
-  ctx.fillStyle = '#3A5A3E'; ctx.font = '700 14px system-ui, sans-serif'; ctx.fillText('Folio: ' + data.folio, W/2, 420);
+  ctx.fillStyle = '#313323'; ctx.font = '700 14px system-ui, sans-serif'; ctx.fillText('Folio: ' + data.folio, W/2, 420);
   ctx.strokeStyle = '#D4C9B5'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(80, 445); ctx.lineTo(W-80, 445); ctx.stroke();
-  ctx.fillStyle = '#2C2A24'; ctx.font = '800 22px system-ui, sans-serif'; ctx.fillText('SELLOS DE ESTACIONES', W/2, 485);
+
+  var activities = STAMP_MAP.filter(function(s) { return s.type === 'actividad'; });
+  var sponsors = STAMP_MAP.filter(function(s) { return s.type === 'patrocinador'; });
+
+  ctx.fillStyle = '#313323'; ctx.font = '800 22px system-ui, sans-serif'; ctx.fillText('ACTIVIDADES', W/2, 485);
   ctx.fillStyle = '#8A7E6E'; ctx.font = '400 14px system-ui, sans-serif'; ctx.fillText('Visita cada estación para obtener tu sello', W/2, 510);
-  var stations = ['Bendición\nCanina', 'Huellas\ndel Alma', 'Exhibición\nAdiestramiento', 'Circuito\nAgilidad', 'Mercadito\nPet-Friendly', 'Pasarela\nAdopción'];
-  var cols = 3, rows = 2, slotSize = 140, gapX = 40, gapY = 30;
+
+  var cols = 3, slotSize = 110, gapX = 30, gapY = 25;
+  var aRows = Math.ceil(activities.length / cols);
   var gridW = cols * slotSize + (cols-1) * gapX;
   var startX = (W - gridW) / 2, startY = 540;
-  stations.forEach(function(name, i) {
-    var col = i % cols, row = Math.floor(i / cols);
+
+  function drawStampSlot(item, idx, startX, startY, cols, slotSize, gapX, gapY) {
+    var col = idx % cols, row = Math.floor(idx / cols);
     var x = startX + col * (slotSize + gapX) + slotSize/2;
     var y = startY + row * (slotSize + gapY) + slotSize/2;
-    var isStamped = stamps.indexOf(i + 1) >= 0;
+    var isStamped = stamps.indexOf(item.id) >= 0;
     if (isStamped) {
       ctx.fillStyle = 'rgba(45,106,63,0.1)'; ctx.beginPath(); ctx.arc(x, y, slotSize/2 - 5, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = '#3A5A3E'; ctx.lineWidth = 3; ctx.setLineDash([]); ctx.beginPath(); ctx.arc(x, y, slotSize/2 - 5, 0, Math.PI * 2); ctx.stroke();
-      ctx.fillStyle = '#3A5A3E'; ctx.font = '800 36px system-ui, sans-serif'; ctx.fillText('✓', x, y + 12);
+      ctx.strokeStyle = '#313323'; ctx.lineWidth = 3; ctx.setLineDash([]); ctx.beginPath(); ctx.arc(x, y, slotSize/2 - 5, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = '#313323'; ctx.font = '800 28px system-ui, sans-serif'; ctx.fillText('✓', x, y + 8);
     } else {
       ctx.strokeStyle = '#C9BDA8'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.arc(x, y, slotSize/2 - 5, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
     }
-    ctx.fillStyle = isStamped ? '#3A5A3E' : '#B5A998'; ctx.font = '600 12px system-ui, sans-serif'; ctx.textAlign = 'center';
-    var lines = name.split('\n');
-    lines.forEach(function(line, li) { ctx.fillText(line, x, y + (isStamped ? 30 : 0) + (li - (lines.length-1)/2) * 16); });
-    ctx.fillStyle = '#D4C9B5'; ctx.font = '800 11px system-ui, sans-serif'; ctx.fillText((i+1).toString(), x, y + slotSize/2 - 15);
-  });
-  var bottomY = startY + rows * (slotSize + gapY) + 20;
-  ctx.fillStyle = '#C4923A'; ctx.beginPath(); ctx.roundRect(40, bottomY, W-80, 80, [0, 0, 12, 12]); ctx.fill();
+    ctx.fillStyle = isStamped ? '#313323' : '#B5A998'; ctx.font = '600 10px system-ui, sans-serif'; ctx.textAlign = 'center';
+    var words = item.name.split(' ');
+    var lines = []; var line = '';
+    words.forEach(function(w) { if ((line + ' ' + w).length > 14 && line) { lines.push(line); line = w; } else { line = line ? line + ' ' + w : w; } });
+    if (line) lines.push(line);
+    var textY = y + (isStamped ? 24 : 0) - ((lines.length-1) * 13) / 2;
+    lines.forEach(function(l, li) { ctx.fillText(l, x, textY + li * 13); });
+  }
+
+  activities.forEach(function(item, i) { drawStampSlot(item, i, startX, startY, cols, slotSize, gapX, gapY); });
+
+  var sponsorStartY = startY + aRows * (slotSize + gapY) + 30;
+  ctx.fillStyle = '#313323'; ctx.font = '800 22px system-ui, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('PATROCINADORES', W/2, sponsorStartY);
+  ctx.fillStyle = '#8A7E6E'; ctx.font = '400 14px system-ui, sans-serif';
+  ctx.fillText('Visita cada patrocinador para completar tu pasaporte', W/2, sponsorStartY + 25);
+
+  var sCols = 4, sSlotSize = 100, sGapX = 25, sGapY = 22;
+  var sRows = Math.ceil(sponsors.length / sCols);
+  var sGridW = sCols * sSlotSize + (sCols-1) * sGapX;
+  var sStartX = (W - sGridW) / 2, sStartY = sponsorStartY + 50;
+
+  sponsors.forEach(function(item, i) { drawStampSlot(item, i, sStartX, sStartY, sCols, sSlotSize, sGapX, sGapY); });
+
+  var bottomY = sStartY + sRows * (sSlotSize + sGapY) + 20;
+  ctx.fillStyle = '#BF7634'; ctx.beginPath(); ctx.roundRect(40, bottomY, W-80, 80, [0, 0, 12, 12]); ctx.fill();
   ctx.fillStyle = '#FFFFFF'; ctx.font = '700 16px system-ui, sans-serif'; ctx.textAlign = 'center';
-  ctx.fillText('¡Completa los 6 sellos y reclama tu premio!', W/2, bottomY + 35);
+  ctx.fillText('¡Completa ' + RAFFLE_STAMPS + ' sellos y participa en la rifa!', W/2, bottomY + 35);
   ctx.font = '400 13px system-ui, sans-serif';
   ctx.fillText('Presenta tu pasaporte en el stand principal de Dogmingo', W/2, bottomY + 58);
   var qrSize = 120;
@@ -289,7 +350,7 @@ function generatePassport(data, stamps) {
   ctx.fillStyle = '#8A7E6E'; ctx.font = '600 12px system-ui, sans-serif'; ctx.textAlign = 'center';
   ctx.fillText('Escanea para verificar tu folio', W/2, qrY + qrSize + 20);
 
-  ctx.globalAlpha = 0.04; ctx.fillStyle = '#C4923A';
+  ctx.globalAlpha = 0.04; ctx.fillStyle = '#BF7634';
   for (var i = 0; i < 8; i++) { drawPawOnCtx(ctx, 80 + Math.random() * (W-160), 200 + Math.random() * (H-300), 20 + Math.random() * 15, Math.random() * Math.PI * 2); }
   ctx.globalAlpha = 1;
 }
@@ -301,16 +362,24 @@ function renderStampGrid(stamps) {
   var grid = document.getElementById('stampGrid');
   if (!grid) return;
   grid.innerHTML = '';
-  STATION_NAMES.forEach(function(name, i) {
+  STAMP_MAP.forEach(function(item) {
+    var has = stamps.indexOf(item.id) >= 0;
     var slot = document.createElement('div');
-    slot.className = 'stamp-tracker-slot' + (stamps.indexOf(i + 1) >= 0 ? ' stamped' : '');
+    slot.className = 'stamp-tracker-slot' + (has ? ' stamped' : '');
+    if (has && item.img) {
+      var img = document.createElement('img');
+      img.src = item.img;
+      img.alt = item.name;
+      img.className = 'stamp-tracker-img';
+      slot.appendChild(img);
+    }
     var span = document.createElement('span');
-    span.textContent = name;
+    span.textContent = item.name;
     slot.appendChild(span);
     grid.appendChild(slot);
   });
   var complete = document.getElementById('stampComplete');
-  if (complete) complete.classList.toggle('visible', stamps.length >= 6);
+  if (complete) complete.classList.toggle('visible', stamps.length >= RAFFLE_STAMPS);
 }
 
 function addStampCode() {
@@ -321,10 +390,10 @@ function addStampCode() {
   if (!code) { msg.className = 'stamp-msg error'; msg.textContent = 'Ingresa un código de sello.'; return; }
   var standNum = verifyStampCode(currentUserData.folio, code);
   if (standNum === 0) { msg.className = 'stamp-msg error'; msg.textContent = 'Código inválido. Verifica e intenta de nuevo.'; return; }
-  if (currentStamps.indexOf(standNum) >= 0) { msg.className = 'stamp-msg error'; msg.textContent = 'Ya tienes el sello de ' + STATION_NAMES[standNum - 1] + '.'; return; }
+  if (currentStamps.indexOf(standNum) >= 0) { msg.className = 'stamp-msg error'; msg.textContent = 'Ya tienes el sello de ' + STAMP_NAME_MAP[standNum] + '.'; return; }
   currentStamps.push(standNum);
   msg.className = 'stamp-msg success';
-  msg.textContent = '¡Sello ' + standNum + ' (' + STATION_NAMES[standNum - 1] + ') agregado!';
+  msg.textContent = '¡Sello de ' + STAMP_NAME_MAP[standNum] + ' agregado!';
   input.value = '';
   renderStampGrid(currentStamps);
   generatePassport(currentUserData, currentStamps);
@@ -376,13 +445,44 @@ traePerro.addEventListener('change', function() {
   if (!traePerro.checked) document.getElementById('nombrePerro').value = '';
 });
 
+function switchRegTab(type) {
+  var tabs = document.querySelectorAll('.reg-tab');
+  tabs.forEach(function(t) { t.classList.remove('active'); });
+  var familyEls = document.querySelectorAll('.family-fields');
+  if (type === 'familia') {
+    tabs[1].classList.add('active');
+    document.getElementById('regType').value = 'familia';
+    document.getElementById('familyNote').style.display = '';
+    familyEls.forEach(function(el) { el.style.display = ''; });
+    document.getElementById('lblNombre').textContent = 'Nombre del representante';
+  } else {
+    tabs[0].classList.add('active');
+    document.getElementById('regType').value = 'individual';
+    document.getElementById('familyNote').style.display = 'none';
+    familyEls.forEach(function(el) { el.style.display = 'none'; });
+    document.getElementById('lblNombre').textContent = 'Nombre';
+    document.getElementById('adultos').value = '1';
+    document.getElementById('ninos').value = '0';
+    document.getElementById('fechaNac').value = '';
+    var fnGroup = document.getElementById('fechaNacField');
+    if (fnGroup) fnGroup.classList.remove('has-error');
+  }
+}
+
+function calcAge(birthDate, eventDate) {
+  var age = eventDate.getFullYear() - birthDate.getFullYear();
+  var m = eventDate.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && eventDate.getDate() < birthDate.getDate())) age--;
+  return age;
+}
+
 function validateField(field) {
   var group = field.closest('.form-group');
   if (!group) return true;
   var valid = true;
   if (field.required && !field.value.trim()) valid = false;
   if (field.type === 'email' && field.value.trim()) valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim());
-  if (field.type === 'tel' && field.value.trim()) valid = field.value.replace(/\D/g, '').length >= 7;
+  if (field.type === 'tel' && field.value.trim()) valid = field.value.replace(/\D/g, '').length === 10;
   group.classList.toggle('has-error', !valid);
   return valid;
 }
@@ -441,14 +541,32 @@ form.addEventListener('submit', function(e) {
 
   var email = document.getElementById('email').value.trim();
 
+  var isFamily = document.getElementById('regType').value === 'familia';
+
+  if (isFamily) {
+    var fechaNacVal = document.getElementById('fechaNac').value;
+    var fnGroup = document.getElementById('fechaNacField');
+    if (!fechaNacVal) {
+      fnGroup.classList.add('has-error');
+      return;
+    }
+    var birthDate = new Date(fechaNacVal + 'T00:00:00');
+    var eventDate = new Date('2026-07-26T00:00:00');
+    if (calcAge(birthDate, eventDate) < 18) {
+      fnGroup.classList.add('has-error');
+      return;
+    }
+    fnGroup.classList.remove('has-error');
+  }
+
   pendingPayload = {
     folio: 'DGM-' + Date.now().toString(36).toUpperCase(),
     nombre: document.getElementById('nombre').value.trim(),
     apellido: document.getElementById('apellido').value.trim(),
     email: email,
     telefono: document.getElementById('telefono').value.trim(),
-    adultos: parseInt(document.getElementById('adultos').value),
-    ninos: parseInt(document.getElementById('ninos').value),
+    adultos: isFamily ? parseInt(document.getElementById('adultos').value) : 1,
+    ninos: isFamily ? parseInt(document.getElementById('ninos').value) : 0,
     traePerro: traePerro.checked,
     nombrePerro: document.getElementById('nombrePerro').value.trim()
   };
@@ -561,12 +679,12 @@ var selectedStand = 0;
 
 function initStandSelect() {
   var container = document.getElementById('standSelect');
-  STATION_NAMES.forEach(function(name, i) {
+  STAMP_MAP.forEach(function(item) {
     var btn = document.createElement('button');
     btn.className = 'stand-btn';
-    btn.innerHTML = 'Stand ' + (i + 1) + '<small>' + name + '</small>';
+    btn.innerHTML = (item.id) + '<small>' + item.name + '</small>';
     btn.addEventListener('click', function() {
-      selectedStand = i + 1;
+      selectedStand = item.id;
       container.querySelectorAll('.stand-btn').forEach(function(b) { b.classList.remove('selected'); });
       btn.classList.add('selected');
       updateStandHistory();
@@ -584,7 +702,7 @@ function processStamp() {
   var result = document.getElementById('standResult');
   if (selectedStand === 0) {
     result.className = 'stand-result visible error';
-    result.innerHTML = '<h4>Selecciona tu stand</h4><p>Primero elige qué stand eres (1-6).</p>';
+    result.innerHTML = '<h4>Selecciona tu stand</h4><p>Primero elige qué stand o patrocinador eres.</p>';
     return;
   }
   var folio = document.getElementById('standFolioInput').value.trim().toUpperCase();
@@ -603,7 +721,7 @@ function processStamp() {
   stampedList.push(folio);
   localStorage.setItem('dogmingo_stand_' + selectedStand, JSON.stringify(stampedList));
   result.className = 'stand-result visible success';
-  result.innerHTML = '<h4>¡Sello registrado!</h4><p>Dile al usuario que ingrese este código en su pasaporte:</p><div class="stamp-code-display">' + code + '</div><p class="note">Stand ' + selectedStand + ' — ' + STATION_NAMES[selectedStand - 1] + ' — Folio: ' + folio + '</p>';
+  result.innerHTML = '<h4>¡Sello registrado!</h4><p>Dile al usuario que ingrese este código en su pasaporte:</p><div class="stamp-code-display">' + code + '</div><p class="note">' + STAMP_NAME_MAP[selectedStand] + ' — Folio: ' + folio + '</p>';
   document.getElementById('standFolioInput').value = '';
   updateStandHistory();
 }
@@ -647,41 +765,47 @@ if (location.hash === '#stand') openStand();
 // Mis Sellos — stamp progress lookup
 // ══════════════════════════════════════════════════════
 function lookupSellos() {
-  var email = document.getElementById('sellosEmail').value.trim();
+  var query = document.getElementById('sellosQuery').value.trim();
   var result = document.getElementById('sellosResult');
   var error = document.getElementById('sellosError');
   var btn = document.getElementById('sellosBtn');
-  if (!email) { error.textContent = 'Ingresa tu correo electrónico.'; error.style.display = 'block'; result.style.display = 'none'; return; }
+  if (!query) { error.textContent = 'Ingresa tu correo electrónico o número de teléfono.'; error.style.display = 'block'; result.style.display = 'none'; return; }
   error.style.display = 'none';
   btn.disabled = true; btn.textContent = 'Consultando...';
 
-  fetch('/api/stamps/lookup?email=' + encodeURIComponent(email))
+  fetch('/api/stamps/lookup?q=' + encodeURIComponent(query))
     .then(function(r) { return r.json(); })
     .then(function(d) {
       btn.disabled = false; btn.textContent = 'Consultar';
-      if (!d.ok) { error.textContent = d.error || 'No se encontró un registro con ese correo.'; error.style.display = 'block'; result.style.display = 'none'; return; }
+      if (!d.ok) { error.textContent = d.error || 'No se encontró un registro con ese correo o teléfono.'; error.style.display = 'block'; result.style.display = 'none'; return; }
       result.style.display = 'block';
       document.getElementById('sellosUserInfo').textContent = d.nombre + ' — Folio: ' + d.folio;
       var grid = document.getElementById('sellosGrid');
       grid.innerHTML = '';
-      STATION_NAMES.forEach(function(name, i) {
-        var standNum = i + 1;
-        var has = d.stamps.indexOf(standNum) >= 0;
+      STAMP_MAP.forEach(function(stamp) {
+        var has = d.stamps.indexOf(stamp.id) >= 0;
         var item = document.createElement('div');
         item.className = 'sello-item' + (has ? ' collected' : '');
-        item.innerHTML = '<div class="sello-icon">' + (has ? '🐾' : '○') + '</div><div class="sello-name">' + name + '</div>';
+        var iconHtml;
+        if (has && stamp.img) {
+          iconHtml = '<img src="' + stamp.img + '" alt="' + stamp.name + '" class="sello-img">';
+        } else {
+          iconHtml = '<div class="sello-icon">' + (has ? '🐾' : '○') + '</div>';
+        }
+        item.innerHTML = iconHtml + '<div class="sello-name">' + stamp.name + '</div>';
         grid.appendChild(item);
       });
-      var pct = Math.round((d.stamps.length / 6) * 100);
+      var count = Math.min(d.stamps.length, RAFFLE_STAMPS);
+      var pct = Math.round((count / RAFFLE_STAMPS) * 100);
       document.getElementById('sellosProgressFill').style.width = pct + '%';
-      document.getElementById('sellosProgressText').textContent = d.stamps.length + ' de 6 sellos';
+      document.getElementById('sellosProgressText').textContent = d.stamps.length + ' de ' + RAFFLE_STAMPS + ' sellos para la rifa';
       var existing = document.getElementById('sellosComplete');
       if (existing) existing.remove();
-      if (d.stamps.length === 6) {
+      if (d.stamps.length >= RAFFLE_STAMPS) {
         var msg = document.createElement('div');
         msg.className = 'sellos-complete';
         msg.id = 'sellosComplete';
-        msg.textContent = '¡Felicidades! Tienes todos los sellos. Presenta tu pasaporte en el stand principal para reclamar tu premio.';
+        msg.textContent = '¡Felicidades! Tienes ' + d.stamps.length + ' sellos. Participas automáticamente en la rifa.';
         result.appendChild(msg);
       }
     })

@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dogmingo — Panel de Vendedores</title>
+<meta name="color-scheme" content="light only">
+<title>Dogmingo — Panel</title>
 <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
@@ -14,11 +15,11 @@
   <div class="login-screen" id="loginScreen">
     <div class="login-card">
       <h1 class="login-logo">DOGMINGO</h1>
-      <p class="login-subtitle">Panel de Vendedores</p>
+      <p class="login-subtitle">Panel de Administraci&oacute;n</p>
       <form id="loginForm" novalidate>
         <div class="field">
-          <label for="loginEmail">Correo o "admin"</label>
-          <input type="text" id="loginEmail" placeholder="tu@correo.com" required autocomplete="username">
+          <label for="loginEmail">Correo, tel&eacute;fono o "admin"</label>
+          <input type="text" id="loginEmail" placeholder="correo o tel&eacute;fono" required autocomplete="username">
         </div>
         <div class="field">
           <label for="loginPassword">Contrase&ntilde;a</label>
@@ -42,59 +43,102 @@
       </div>
     </header>
 
-    <!-- TABS (admin only) -->
-    <div class="dash-tabs" id="dashTabs" style="display:none;">
-      <button class="tab active" data-tab="scanner" onclick="switchTab('scanner')">Esc&aacute;ner</button>
-      <button class="tab" data-tab="vendors" onclick="switchTab('vendors')">Vendedores</button>
-      <button class="tab" data-tab="stats" onclick="switchTab('stats')">Registros</button>
+    <!-- MAIN MENU -->
+    <div class="panel-view active" id="view-menu">
+      <div class="menu-welcome" id="menuWelcome"></div>
+      <div class="menu-grid" id="menuGrid"></div>
     </div>
 
-    <!-- SCANNER TAB -->
-    <div class="tab-content active" id="tab-scanner">
-      <div class="scanner-section">
-        <div class="stand-indicator" id="standIndicator"></div>
-
-        <!-- Stand selector for admin -->
-        <div class="admin-stand-select" id="adminStandSelect" style="display:none;">
-          <label>Seleccionar stand:</label>
-          <div class="stand-buttons" id="adminStandBtns"></div>
-        </div>
-
-        <div class="scanner-box">
-          <h3>Escanear QR del usuario</h3>
-          <div id="qrReader"></div>
-          <button class="btn-scan" id="startScanBtn" onclick="toggleScanner()">Abrir c&aacute;mara</button>
-          <div class="manual-input">
-            <p>O ingresar folio manualmente:</p>
-            <div class="folio-input-row">
-              <input type="text" id="folioInput" placeholder="DGM-XXXXXX" maxlength="20">
-              <button onclick="lookupFolio()">Buscar</button>
-            </div>
+    <!-- SCANNER -->
+    <div class="panel-view" id="view-scanner">
+      <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
+      <div class="stand-indicator" id="standIndicator"></div>
+      <div class="scanner-box">
+        <h3>Escanear QR del usuario</h3>
+        <div id="qrReader"></div>
+        <button class="btn-scan" id="startScanBtn" onclick="toggleScanner()">Abrir c&aacute;mara</button>
+        <div class="manual-input">
+          <p>O ingresar folio manualmente:</p>
+          <div class="folio-input-row">
+            <input type="text" id="folioInput" placeholder="DGM-XXXXXX" maxlength="20">
+            <button onclick="lookupFolio()">Buscar</button>
           </div>
         </div>
-
-        <!-- User info after scan -->
-        <div class="user-card" id="userCard" style="display:none;">
-          <div class="user-card-header">
-            <h3 id="userName"></h3>
-            <span class="folio-badge" id="userFolio"></span>
-          </div>
-          <div class="user-details" id="userDetails"></div>
-          <div class="user-stamps" id="userStamps"></div>
-          <button class="btn-stamp" id="stampBtn" onclick="applyStamp()">Sellar Pasaporte</button>
-          <div class="stamp-result" id="stampResult"></div>
+      </div>
+      <div class="user-card" id="userCard" style="display:none;">
+        <div class="user-card-header">
+          <h3 id="userName"></h3>
+          <span class="folio-badge" id="userFolio"></span>
         </div>
+        <div class="user-details" id="userDetails"></div>
+        <div class="user-stamps" id="userStamps"></div>
+        <button class="btn-stamp" id="stampBtn" onclick="applyStamp()">Sellar Pasaporte</button>
+        <div class="stamp-result" id="stampResult"></div>
+      </div>
+      <div class="recent-stamps" id="recentStamps">
+        <h4>Sellos recientes</h4>
+        <ul id="recentList"></ul>
+      </div>
+    </div>
 
-        <!-- Recent stamps -->
-        <div class="recent-stamps" id="recentStamps">
-          <h4>Sellos recientes</h4>
-          <ul id="recentList"></ul>
+    <!-- MY ACCOUNT -->
+    <div class="panel-view" id="view-account">
+      <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
+      <div class="vendor-settings-card">
+        <h3>Mi cuenta</h3>
+        <div class="vendor-settings-info" id="vendorSettingsInfo"></div>
+        <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0;">
+        <h4>Cambiar contrase&ntilde;a</h4>
+        <div class="field">
+          <label for="selfCurrentPw">Contrase&ntilde;a actual</label>
+          <input type="password" id="selfCurrentPw" placeholder="Tu contrase&ntilde;a actual">
+        </div>
+        <div class="field">
+          <label for="selfNewPw">Nueva contrase&ntilde;a</label>
+          <input type="password" id="selfNewPw" placeholder="M&iacute;nimo 4 caracteres">
+        </div>
+        <div class="field">
+          <label for="selfConfirmPw">Confirmar nueva contrase&ntilde;a</label>
+          <input type="password" id="selfConfirmPw" placeholder="Repite la nueva contrase&ntilde;a">
+        </div>
+        <button class="btn-create" onclick="selfChangePassword()">Guardar contrase&ntilde;a</button>
+        <p class="form-msg" id="selfPwMsg"></p>
+      </div>
+    </div>
+
+    <!-- TEAM (vendor sub-admin) -->
+    <div class="panel-view" id="view-helpers">
+      <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
+      <div class="vendor-settings-card">
+        <h3>Agregar vendedor</h3>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">Se asignar&aacute; autom&aacute;ticamente a tu stand.</p>
+        <p class="stand-assign-badge" id="helpStandBadge"></p>
+        <div class="field">
+          <label for="helpNombre">Nombre</label>
+          <input type="text" id="helpNombre" placeholder="Nombre del vendedor">
+        </div>
+        <div class="field">
+          <label for="helpEmail">Correo</label>
+          <input type="email" id="helpEmail" placeholder="vendedor@correo.com">
+        </div>
+        <div class="field">
+          <label for="helpPassword">Contrase&ntilde;a</label>
+          <input type="password" id="helpPassword" placeholder="Contrase&ntilde;a para el vendedor">
+        </div>
+        <button class="btn-create" onclick="createHelper()">Crear vendedor</button>
+        <p class="form-msg" id="helpMsg"></p>
+      </div>
+      <div class="vendor-list-section" style="margin-top:1.5rem;">
+        <h4 style="font-size:0.95rem;margin-bottom:0.75rem;">Vendedores de tu stand</h4>
+        <div class="vendor-list" id="helpVendorList">
+          <p class="empty-msg">Cargando...</p>
         </div>
       </div>
     </div>
 
-    <!-- VENDORS TAB (admin only) -->
-    <div class="tab-content" id="tab-vendors">
+    <!-- VENDORS (admin only) -->
+    <div class="panel-view" id="view-vendors">
+      <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
       <div class="vendors-section">
         <h3>Crear vendedor</h3>
         <form id="createVendorForm" class="vendor-form" novalidate>
@@ -103,22 +147,48 @@
             <input type="text" id="vNombre" placeholder="Nombre del vendedor" required>
           </div>
           <div class="field">
-            <label for="vEmail">Correo</label>
-            <input type="email" id="vEmail" placeholder="vendedor@correo.com" required>
+            <label for="vEmail">Correo o tel&eacute;fono (10 d&iacute;gitos)</label>
+            <input type="text" id="vEmail" placeholder="correo@ejemplo.com o 4491234567" required>
           </div>
           <div class="field">
             <label for="vPassword">Contrase&ntilde;a</label>
-            <input type="text" id="vPassword" placeholder="Contrase&ntilde;a" required>
+            <input type="password" id="vPassword" placeholder="Contrase&ntilde;a" required>
           </div>
           <div class="field">
-            <label for="vStand">Stand asignado</label>
+            <label for="vStand">Stand / Patrocinador asignado</label>
             <select id="vStand" required>
-              <option value="1">1 — Bendici&oacute;n Canina</option>
-              <option value="2">2 — Huellas del Alma</option>
-              <option value="3">3 — Adiestramiento</option>
-              <option value="4">4 — Circuito Agilidad</option>
-              <option value="5">5 — Mercadito Pet-Friendly</option>
-              <option value="6">6 — Pasarela Adopci&oacute;n</option>
+              <optgroup label="Actividades">
+                <option value="1">Bendici&oacute;n Canina</option>
+                <option value="2">Huellas del Alma</option>
+                <option value="3">Adiestramiento</option>
+                <option value="6">Pasarela de Adopci&oacute;n</option>
+              </optgroup>
+              <optgroup label="Patrocinadores">
+                <option value="7">Doggies Paradise</option>
+                <option value="8">Freshly</option>
+                <option value="9">Ba'Alche</option>
+                <option value="10">Zoo Bodega</option>
+                <option value="11">G&uuml;esos</option>
+                <option value="12">Edu.Can</option>
+                <option value="13">Esperanza Canina</option>
+                <option value="14">Caro's Dog Club</option>
+                <option value="15">Woof Munchies</option>
+                <option value="16">VidaN&uacute;Pet</option>
+                <option value="17">Zitara</option>
+                <option value="18">Zitara Golf Club</option>
+                <option value="19">Barking Town</option>
+                <option value="20">Barber Dog</option>
+                <option value="21">Hospetalia</option>
+                <option value="22">Patas de Gallo</option>
+                <option value="23">Peternos</option>
+                <option value="24">Iliana Event Planner</option>
+                <option value="25">Avanda Lavander&iacute;a</option>
+                <option value="26">Nucan</option>
+                <option value="27">Croquetas Bal&uacute;</option>
+                <option value="28">DolceFresa</option>
+                <option value="29">Snack SandGo</option>
+                <option value="30">Nata Bakery</option>
+              </optgroup>
             </select>
           </div>
           <button type="submit" class="btn-create">Crear vendedor</button>
@@ -132,8 +202,9 @@
       </div>
     </div>
 
-    <!-- STATS TAB (admin only) -->
-    <div class="tab-content" id="tab-stats">
+    <!-- REGISTROS (admin only) -->
+    <div class="panel-view" id="view-registros">
+      <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
       <div class="stats-section">
         <h3>Estad&iacute;sticas</h3>
         <div class="stats-grid" id="statsGrid">
@@ -150,6 +221,27 @@
             <span class="stat-label">Vendedores</span>
           </div>
         </div>
+
+        <button class="btn-export" onclick="exportRegistrosExcel()">&#128229; Descargar Excel</button>
+        <h3 style="margin-top:2rem;">Usuarios registrados</h3>
+        <div class="field" style="margin-top:0.75rem;">
+          <input type="text" id="registroSearch" placeholder="Buscar por nombre, correo o folio..." oninput="filterRegistros()">
+        </div>
+        <div class="registro-list" id="registroList">
+          <p class="empty-msg">Cargando...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIFA (admin only) -->
+    <div class="panel-view" id="view-rifa">
+      <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
+      <div class="rifa-section">
+        <h3>Rifa Dogmingo</h3>
+        <p class="rifa-desc">Participan los usuarios con 6 o m&aacute;s sellos. Los ganadores no pueden participar de nuevo.</p>
+        <p class="rifa-count" id="rifaCount">Cargando...</p>
+        <button class="btn-rifa" id="rifaBtn" onclick="realizarRifa()" disabled>Realizar Sorteo</button>
+        <div class="rifa-winner" id="rifaWinner" style="display:none;"></div>
       </div>
     </div>
 
