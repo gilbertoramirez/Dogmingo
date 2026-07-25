@@ -48,7 +48,9 @@ app.get('/api/setup', async (req, res) => {
         ninos         INTEGER DEFAULT 0,
         trae_perro    BOOLEAN DEFAULT FALSE,
         nombre_perro  TEXT,
-        created_at    TIMESTAMPTZ DEFAULT NOW()
+        created_at    TIMESTAMPTZ DEFAULT NOW(),
+        checked_in    BOOLEAN DEFAULT FALSE,
+        checked_in_at TIMESTAMPTZ
       )
     `;
     await sql`
@@ -653,6 +655,7 @@ app.get('/api/admin/registros', async (req, res) => {
       adultos: registros.adultos, ninos: registros.ninos,
       trae_perro: registros.trae_perro, nombre_perro: registros.nombre_perro,
       created_at: registros.created_at,
+      checked_in: registros.checked_in, checked_in_at: registros.checked_in_at,
     }).from(registros).orderBy(desc(registros.created_at));
 
     const allStamps = await db.select({
@@ -674,6 +677,51 @@ app.get('/api/admin/registros', async (req, res) => {
   } catch (err) {
     console.error('Admin registros error:', err);
     return res.status(500).json({ error: 'Error al cargar registros' });
+  }
+});
+
+// ── Check-in ──
+app.post('/api/admin/checkin', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth || !auth.admin) return res.status(403).json({ error: 'Acceso de administrador requerido' });
+
+  const { folio } = req.body;
+  if (!folio) return res.status(400).json({ error: 'Folio requerido' });
+
+  const db = getDb();
+  if (!db) return res.status(500).json({ error: 'Database not configured' });
+
+  try {
+    const sql = neon(process.env.DATABASE_URL);
+    const rows = await sql`SELECT folio, nombre, apellido, adultos, ninos, checked_in FROM registros WHERE folio = ${folio.trim().toUpperCase()}`;
+    if (rows.length === 0) return res.status(404).json({ error: 'Folio no encontrado' });
+
+    const reg = rows[0];
+    if (reg.checked_in) return res.status(409).json({ error: 'Este folio ya fue registrado en la entrada', registro: reg });
+
+    await sql`UPDATE registros SET checked_in = TRUE, checked_in_at = NOW() WHERE folio = ${folio.trim().toUpperCase()}`;
+    return res.json({ ok: true, registro: { ...reg, checked_in: true } });
+  } catch (err) {
+    console.error('Check-in error:', err);
+    return res.status(500).json({ error: 'Error al hacer check-in' });
+  }
+});
+
+app.get('/api/admin/checkin-stats', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const auth = verifyToken(token);
+  if (!auth || !auth.admin) return res.status(403).json({ error: 'Acceso de administrador requerido' });
+
+  try {
+    const sql = neon(process.env.DATABASE_URL);
+    const total = await sql`SELECT COUNT(*) as c FROM registros`;
+    const checked = await sql`SELECT COUNT(*) as c FROM registros WHERE checked_in = TRUE`;
+    const recent = await sql`SELECT folio, nombre, apellido, adultos, ninos, checked_in_at FROM registros WHERE checked_in = TRUE ORDER BY checked_in_at DESC LIMIT 20`;
+    return res.json({ ok: true, total: parseInt(total[0].c), checked_in: parseInt(checked[0].c), recent });
+  } catch (err) {
+    console.error('Check-in stats error:', err);
+    return res.status(500).json({ error: 'Error al cargar estadísticas' });
   }
 });
 
@@ -842,6 +890,8 @@ async function autoMigrate() {
     await sql`CREATE INDEX IF NOT EXISTS idx_sellos_folio ON sellos(folio)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_vendedores_telefono ON vendedores(telefono)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_vendedores_stand ON vendedores(stand_num)`;
+    await sql`ALTER TABLE registros ADD COLUMN IF NOT EXISTS checked_in BOOLEAN DEFAULT FALSE`;
+    await sql`ALTER TABLE registros ADD COLUMN IF NOT EXISTS checked_in_at TIMESTAMPTZ`;
   } catch (err) {
     console.error('Auto-migrate error (non-fatal):', err.message);
   }

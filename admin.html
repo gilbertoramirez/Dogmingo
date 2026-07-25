@@ -202,6 +202,34 @@
       </div>
     </div>
 
+    <!-- CHECK-IN (admin only) -->
+    <div class="panel-view" id="view-checkin">
+      <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>
+      <div class="checkin-section">
+        <h3>Check-in de Entrada</h3>
+        <p class="checkin-desc">Ingresa o escanea el folio del pasaporte para registrar la entrada.</p>
+        <div class="checkin-stats-row">
+          <div class="stat-card">
+            <span class="stat-num" id="checkinTotal">—</span>
+            <span class="stat-label">Registrados</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="checkinDone">—</span>
+            <span class="stat-label">Ingresaron</span>
+          </div>
+        </div>
+        <div class="checkin-input-area">
+          <input type="text" id="checkinFolio" placeholder="DGM-XXXXXX" maxlength="20" onkeydown="if(event.key==='Enter')doCheckin()">
+          <button class="btn-checkin" onclick="doCheckin()">Check-in</button>
+        </div>
+        <div class="checkin-result" id="checkinResult"></div>
+        <h4 style="margin-top:1.5rem;">Entradas recientes</h4>
+        <div class="checkin-recent" id="checkinRecent">
+          <p class="empty-msg">Cargando...</p>
+        </div>
+      </div>
+    </div>
+
     <!-- REGISTROS (admin only) -->
     <div class="panel-view" id="view-registros">
       <button class="btn-back" onclick="goMenu()">&larr; Men&uacute;</button>

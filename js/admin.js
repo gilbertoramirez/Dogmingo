@@ -65,6 +65,7 @@ function showView(viewId) {
   document.querySelectorAll('.panel-view').forEach(function (v) { v.classList.remove('active'); });
   document.getElementById('view-' + viewId).classList.add('active');
 
+  if (viewId === 'checkin') loadCheckinStats();
   if (viewId === 'vendors') loadVendors();
   if (viewId === 'registros') loadStats();
   if (viewId === 'account') populateAccount();
@@ -121,6 +122,7 @@ function buildMenu() {
   }
 
   if (isAdmin) {
+    items.push({ id: 'checkin', icon: '🚪', label: 'Check-in', desc: 'Registrar entrada con folio del pasaporte' });
     items.push({ id: 'vendors', icon: '🏪', label: 'Vendedores', desc: 'Crear y gestionar vendedores por stand' });
     items.push({ id: 'registros', icon: '📊', label: 'Registros', desc: 'Métricas y usuarios registrados' });
     items.push({ id: 'rifa', icon: '🎟️', label: 'Rifa', desc: 'Sorteo entre quienes tienen 6+ sellos' });
@@ -737,6 +739,69 @@ function seedTestData() {
     .catch(function (err) {
       btn.textContent = 'Error: ' + err.message;
       btn.disabled = false;
+    });
+}
+
+// ── CHECK-IN ──
+function loadCheckinStats() {
+  api('/api/admin/checkin-stats')
+    .then(function(d) {
+      document.getElementById('checkinTotal').textContent = d.total;
+      document.getElementById('checkinDone').textContent = d.checked_in;
+      renderCheckinRecent(d.recent || []);
+    })
+    .catch(function() {
+      document.getElementById('checkinRecent').innerHTML = '<p class="empty-msg">Error al cargar.</p>';
+    });
+}
+
+function renderCheckinRecent(list) {
+  var container = document.getElementById('checkinRecent');
+  if (list.length === 0) {
+    container.innerHTML = '<p class="empty-msg">Nadie ha ingresado a&uacute;n.</p>';
+    return;
+  }
+  container.innerHTML = '';
+  list.forEach(function(r) {
+    var time = r.checked_in_at ? new Date(r.checked_in_at).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }) : '';
+    var div = document.createElement('div');
+    div.className = 'checkin-recent-item';
+    div.innerHTML =
+      '<span class="checkin-recent-name">' + r.nombre + ' ' + r.apellido + '</span>' +
+      '<span class="checkin-recent-folio">' + r.folio + '</span>' +
+      '<span class="checkin-recent-people">' + r.adultos + ' adulto(s)' + (r.ninos > 0 ? ', ' + r.ninos + ' niño(s)' : '') + '</span>' +
+      '<span class="checkin-recent-time">' + time + '</span>';
+    container.appendChild(div);
+  });
+}
+
+function doCheckin() {
+  var input = document.getElementById('checkinFolio');
+  var folio = input.value.trim().toUpperCase();
+  var result = document.getElementById('checkinResult');
+  if (!folio) { result.innerHTML = '<p class="checkin-warn">Ingresa un folio.</p>'; return; }
+
+  result.innerHTML = '<p class="checkin-loading">Verificando...</p>';
+  api('/api/admin/checkin', { method: 'POST', body: { folio: folio } })
+    .then(function(d) {
+      var r = d.registro;
+      result.innerHTML =
+        '<div class="checkin-success">' +
+          '<span class="checkin-ok-icon">&#10003;</span>' +
+          '<strong>' + r.nombre + ' ' + r.apellido + '</strong>' +
+          '<span>' + r.adultos + ' adulto(s)' + (r.ninos > 0 ? ', ' + r.ninos + ' niño(s)' : '') + '</span>' +
+        '</div>';
+      input.value = '';
+      input.focus();
+      loadCheckinStats();
+    })
+    .catch(function(err) {
+      if (err.message.indexOf('ya fue registrado') >= 0) {
+        result.innerHTML = '<div class="checkin-duplicate"><span class="checkin-dup-icon">&#9888;</span> ' + err.message + '</div>';
+      } else {
+        result.innerHTML = '<div class="checkin-error">' + err.message + '</div>';
+      }
+      input.select();
     });
 }
 

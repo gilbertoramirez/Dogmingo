@@ -13,6 +13,8 @@ const registros = pgTable('registros', {
   trae_perro: boolean('trae_perro').default(false),
   nombre_perro: text('nombre_perro'),
   gano_rifa: boolean('gano_rifa').default(false),
+  checked_in: boolean('checked_in').default(false),
+  checked_in_at: timestamp('checked_in_at', { withTimezone: true }),
   created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
 });
 
