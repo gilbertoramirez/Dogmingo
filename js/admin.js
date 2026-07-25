@@ -80,6 +80,12 @@ function goMenu() {
     document.getElementById('startScanBtn').textContent = 'Abrir cámara';
     document.getElementById('startScanBtn').classList.remove('active');
   }
+  if (checkinScanner && checkinScannerActive) {
+    checkinScanner.stop().catch(function () {});
+    checkinScannerActive = false;
+    var cb = document.getElementById('checkinScanBtn');
+    if (cb) { cb.innerHTML = '&#128247; Escanear QR'; cb.classList.remove('active'); }
+  }
   showView('menu');
 }
 
@@ -743,6 +749,43 @@ function seedTestData() {
 }
 
 // ── CHECK-IN ──
+var checkinScanner = null;
+var checkinScannerActive = false;
+
+function toggleCheckinScanner() {
+  var btn = document.getElementById('checkinScanBtn');
+  if (checkinScannerActive) {
+    checkinScanner.stop().then(function() {
+      checkinScannerActive = false;
+      btn.innerHTML = '&#128247; Escanear QR';
+      btn.classList.remove('active');
+    }).catch(function() {});
+    return;
+  }
+  if (!checkinScanner) {
+    checkinScanner = new Html5Qrcode('checkinQrReader');
+  }
+  checkinScanner.start(
+    { facingMode: 'environment' },
+    { fps: 10, qrbox: { width: 250, height: 250 } },
+    function(text) {
+      checkinScanner.stop().then(function() {
+        checkinScannerActive = false;
+        btn.innerHTML = '&#128247; Escanear QR';
+        btn.classList.remove('active');
+      });
+      document.getElementById('checkinFolio').value = text.trim().toUpperCase();
+      doCheckin();
+    }
+  ).then(function() {
+    checkinScannerActive = true;
+    btn.innerHTML = '&#10005; Cerrar c&aacute;mara';
+    btn.classList.add('active');
+  }).catch(function(err) {
+    alert('No se pudo acceder a la cámara: ' + err);
+  });
+}
+
 function loadCheckinStats() {
   api('/api/admin/checkin-stats')
     .then(function(d) {

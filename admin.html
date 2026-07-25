@@ -218,6 +218,11 @@
             <span class="stat-label">Ingresaron</span>
           </div>
         </div>
+        <div class="checkin-scanner-area">
+          <button class="btn-scan-checkin" id="checkinScanBtn" onclick="toggleCheckinScanner()">&#128247; Escanear QR</button>
+          <div id="checkinQrReader" class="checkin-qr-reader"></div>
+        </div>
+        <p class="checkin-or">— o ingresa el folio manualmente —</p>
         <div class="checkin-input-area">
           <input type="text" id="checkinFolio" placeholder="DGM-XXXXXX" maxlength="20" onkeydown="if(event.key==='Enter')doCheckin()">
           <button class="btn-checkin" onclick="doCheckin()">Check-in</button>
