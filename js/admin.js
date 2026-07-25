@@ -28,6 +28,7 @@ var STAMP_MAP = [
   { id: 29, name: 'Snack SandGo', type: 'patrocinador' },
   { id: 30, name: 'Nata Bakery', type: 'patrocinador' },
   { id: 31, name: 'La Casona de July', type: 'patrocinador' },
+  { id: 32, name: 'Alex Padilla Cocktails & Shots', type: 'patrocinador' },
 ];
 var ALL_STAMP_IDS = STAMP_MAP.map(function(s) { return s.id; });
 var TOTAL_STAMPS = STAMP_MAP.length;
