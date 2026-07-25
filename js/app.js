@@ -55,6 +55,7 @@ var STAMP_MAP = [
   { id: 30, name: 'Nata Bakery', type: 'patrocinador', img: 'img/patrocinadores/Captura%20de%20pantalla%202026-07-22%20a%20la(s)%2014.41.41.png' },
   { id: 31, name: 'La Casona de July', type: 'patrocinador', img: 'img/patrocinadores/lacasonadejuly.png' },
   { id: 32, name: 'Alex Padilla Cocktails & Shots', type: 'patrocinador', img: 'img/patrocinadores/IMG-20260725-WA0136.jpg' },
+  { id: 33, name: 'Mar Arte', type: 'patrocinador', img: 'img/patrocinadores/IMG-20260725-WA0137.jpg' },
 ];
 var ALL_STAMP_IDS = STAMP_MAP.map(function(s) { return s.id; });
 var TOTAL_STAMPS = STAMP_MAP.length;
