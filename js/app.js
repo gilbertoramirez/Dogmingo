@@ -53,6 +53,7 @@ var STAMP_MAP = [
   { id: 28, name: 'DolceFresa', type: 'patrocinador', img: 'img/patrocinadores/dolcefresa.jpeg' },
   { id: 29, name: 'Snack SandGo', type: 'patrocinador', img: 'img/patrocinadores/snacksNGo.jpeg' },
   { id: 30, name: 'Nata Bakery', type: 'patrocinador', img: 'img/patrocinadores/Captura%20de%20pantalla%202026-07-22%20a%20la(s)%2014.41.41.png' },
+  { id: 31, name: 'La Casona de July', type: 'patrocinador', img: 'img/patrocinadores/lacasonadejuly.png' },
 ];
 var ALL_STAMP_IDS = STAMP_MAP.map(function(s) { return s.id; });
 var TOTAL_STAMPS = STAMP_MAP.length;
