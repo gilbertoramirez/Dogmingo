@@ -553,8 +553,8 @@ app.post('/api/vendor/create', async (req, res) => {
   const vendorEmail = isPhone ? identifier.replace(/\D/g, '') : identifier;
   const vendorTelefono = isPhone ? identifier.replace(/\D/g, '') : null;
 
-  const assignedStand = auth.admin ? (parseInt(stand_num) || 1) : auth.stand;
-  if (ALL_STAMP_IDS.indexOf(assignedStand) === -1) return res.status(400).json({ error: 'Stand inválido' });
+  const assignedStand = auth.admin ? (parseInt(stand_num) || 0) : auth.stand;
+  if (assignedStand !== 0 && ALL_STAMP_IDS.indexOf(assignedStand) === -1) return res.status(400).json({ error: 'Stand inválido' });
 
   const isSubadmin = auth.admin ? true : false;
 
@@ -623,9 +623,10 @@ app.post('/api/vendor/change-stand', async (req, res) => {
   if (!auth || !auth.admin) return res.status(403).json({ error: 'Acceso de administrador requerido' });
 
   const { vendor_email, new_stand } = req.body || {};
-  if (!vendor_email || !new_stand) return res.status(400).json({ error: 'Datos incompletos' });
+  if (!vendor_email || new_stand === undefined) return res.status(400).json({ error: 'Datos incompletos' });
   const standNum = parseInt(new_stand, 10);
   if (isNaN(standNum)) return res.status(400).json({ error: 'Stand inválido' });
+  if (standNum !== 0 && ALL_STAMP_IDS.indexOf(standNum) === -1) return res.status(400).json({ error: 'Stand inválido' });
 
   const db = getDb();
   if (!db) return res.status(500).json({ error: 'Database not configured' });

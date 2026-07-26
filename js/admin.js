@@ -34,7 +34,7 @@ var STAMP_MAP = [
 var ALL_STAMP_IDS = STAMP_MAP.map(function(s) { return s.id; });
 var TOTAL_STAMPS = STAMP_MAP.length;
 var RAFFLE_STAMPS = 6;
-var STAMP_NAME_MAP = {};
+var STAMP_NAME_MAP = { 0: 'Independiente' };
 STAMP_MAP.forEach(function(s) { STAMP_NAME_MAP[s.id] = s.name; });
 var token = sessionStorage.getItem('dgm_vendor_token');
 var vendor = null;
@@ -471,6 +471,7 @@ function buildStandOptions(selectedId) {
   var html = '';
   var acts = STAMP_MAP.filter(function(s) { return s.type === 'actividad'; });
   var pats = STAMP_MAP.filter(function(s) { return s.type === 'patrocinador'; });
+  html += '<option value="0"' + (selectedId === 0 ? ' selected' : '') + '>— Independiente —</option>';
   html += '<optgroup label="Actividades">';
   acts.forEach(function(s) { html += '<option value="' + s.id + '"' + (s.id === selectedId ? ' selected' : '') + '>' + s.name + '</option>'; });
   html += '</optgroup><optgroup label="Patrocinadores">';
