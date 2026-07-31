@@ -759,7 +759,7 @@ app.get('/api/vendor/list', async (req, res) => {
 
   try {
     const vendors = await db.select({
-      id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email,
+      id: vendedores.id, nombre: vendedores.nombre, email: vendedores.email, telefono: vendedores.telefono,
       stand_num: vendedores.stand_num, es_admin: vendedores.es_admin, activo: vendedores.activo,
     }).from(vendedores).orderBy(asc(vendedores.stand_num), asc(vendedores.nombre));
     const regCount = await db.select({ total: count() }).from(registros);

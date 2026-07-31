@@ -491,9 +491,31 @@ function changeVendorStand(email, selectEl) {
   }).catch(function() { alert('Error de conexión'); });
 }
 
+var allVendors = [];
+
+function exportVendorsExcel() {
+  if (!allVendors.length) { alert('No hay vendedores para exportar.'); return; }
+  var BOM = '﻿';
+  var csv = BOM + 'Nombre,Correo,Telefono,Stand\r\n';
+  allVendors.forEach(function(v) {
+    var nombre = (v.nombre || '').replace(/"/g, '""');
+    var email = (v.email || '').replace(/"/g, '""');
+    var tel = (v.telefono || '').replace(/"/g, '""');
+    var stand = (STAMP_NAME_MAP[v.stand_num] || 'Stand ' + v.stand_num).replace(/"/g, '""');
+    csv += '"' + nombre + '","' + email + '","' + tel + '","' + stand + '"\r\n';
+  });
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  var link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'vendedores_dogmingo.csv';
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
 function loadVendors() {
   api('/api/vendor/list')
     .then(function (d) {
+      allVendors = d.vendors || [];
       var container = document.getElementById('vendorList');
       if (d.vendors.length === 0) {
         container.innerHTML = '<p class="empty-msg">No hay vendedores. Crea uno arriba.</p>';
