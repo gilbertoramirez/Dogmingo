@@ -7,6 +7,7 @@ function createToken(vendor) {
     id: vendor.id,
     stand: vendor.stand_num,
     admin: !!vendor.es_admin,
+    subadmin: !!vendor.es_subadmin,
     exp: Date.now() + 24 * 60 * 60 * 1000
   });
   const sig = crypto.createHmac('sha256', SECRET).update(payload).digest('hex').slice(0, 16);
